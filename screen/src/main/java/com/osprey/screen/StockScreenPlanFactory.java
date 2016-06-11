@@ -1,5 +1,6 @@
 package com.osprey.screen;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +41,15 @@ public class StockScreenPlanFactory {
 		this.criterias = criterias;
 	}
 
-	public Map<Integer, StockScreenPlan> build() {
-		Map<Integer, StockScreenPlan> plans = new HashMap<>(OspreyJavaMath.calcMapInitialSize(securities.size()));
+	public Map<String, StockScreenPlan> build() {
+		Map<String, StockScreenPlan> plans = new HashMap<>(OspreyJavaMath.calcMapInitialSize(securities.size()));
+
+		// flip the order since they're dropped onto a stack;
+		Collections.reverse(criterias);
 
 		for (Entry<ExtendedPricedSecurity, List<HistoricalSecurity>> entry : securities.entrySet()) {
 			StockScreenPlan plan = new StockScreenPlan(entry.getKey(), entry.getValue());
-			plans.put(entry.getKey().getSecurityId(), plan);
+			plans.put(entry.getKey().getTicker(), plan);
 
 			for (IStockScreenCriteria criteria : criterias) {
 				plan.add(buildScreen(criteria));

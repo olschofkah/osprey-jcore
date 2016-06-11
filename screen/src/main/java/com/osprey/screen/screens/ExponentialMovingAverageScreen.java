@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.osprey.math.OspreyQuantMath;
+import com.osprey.math.result.SMAPair;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.securitymaster.ExtendedPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
@@ -23,29 +24,9 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(ExtendedPricedSecurity s, List<HistoricalSecurity> h) {
 
-		int d1 = criteria.getD1();
-		int d2 = criteria.getD2();
-		int r = d1 > d2 ? d1 : d2;
-
-		double sma1 = 0;
-		double sma2 = 0;
-
-		double histPrice = 0;
-		for (int i = 0; i < r; ++i) {
-			histPrice = h.get(i).getClosingPrice();
-			if (i <= d1) {
-				sma1 += histPrice;
-			}
-			if (i <= d2) {
-				sma2 += histPrice;
-			}
-		}
-
-		sma1 /= d1;
-		sma2 /= d2;
-
-		double ema1 = OspreyQuantMath.ema(sma1, d1, h);
-		double ema2 = OspreyQuantMath.ema(sma2, d2, h);
+		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getP1(), criteria.getP2(), h);
+		double ema1 = OspreyQuantMath.ema(smaPair.getSma1(), smaPair.getPeriod1(), h);
+		double ema2 = OspreyQuantMath.ema(smaPair.getSma2(), smaPair.getPeriod2(), h);
 
 		switch (criteria.getOperator()) {
 		case _EQ:

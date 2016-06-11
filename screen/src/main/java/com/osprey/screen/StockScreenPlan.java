@@ -13,7 +13,7 @@ public class StockScreenPlan {
 	private final ExtendedPricedSecurity security;
 	private final List<HistoricalSecurity> history;
 
-	public boolean passed = true;
+	private boolean passed = true;
 
 	public StockScreenPlan(ExtendedPricedSecurity security, List<HistoricalSecurity> history) {
 		this.security = security;
@@ -34,7 +34,7 @@ public class StockScreenPlan {
 
 		IStockScreen lastScreen;
 		while (passed && !screens.isEmpty()) {
-			lastScreen = screens.pop().doScreen(security, history);
+			lastScreen = screens.pop().doScreen(getSecurity(), history);
 			passed = lastScreen.passed();
 		}
 
@@ -43,5 +43,9 @@ public class StockScreenPlan {
 
 	public boolean passed() {
 		return passed;
+	}
+
+	public ExtendedPricedSecurity getSecurity() {
+		return security;
 	}
 }
