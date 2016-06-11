@@ -50,7 +50,6 @@ public class StockScreenPlanFactory {
 			for (IStockScreenCriteria criteria : criterias) {
 				plan.add(buildScreen(criteria));
 			}
-
 		}
 
 		return plans;
