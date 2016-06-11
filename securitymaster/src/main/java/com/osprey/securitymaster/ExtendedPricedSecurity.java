@@ -1,5 +1,8 @@
 package com.osprey.securitymaster;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class ExtendedPricedSecurity extends PricedSecurity {
 
 	private double open;
@@ -137,6 +140,10 @@ public class ExtendedPricedSecurity extends PricedSecurity {
 
 	public void setHistoricalVolatility(double historicalVolatility) {
 		this.historicalVolatility = historicalVolatility;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 
 }

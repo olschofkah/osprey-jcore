@@ -18,6 +18,8 @@ public class StockScreenPlan {
 	public StockScreenPlan(ExtendedPricedSecurity security, List<HistoricalSecurity> history) {
 		this.security = security;
 		this.history = history;
+		
+		screens = new Stack<>();
 	}
 
 	public StockScreenPlan add(IStockScreen screen) {

@@ -2,6 +2,9 @@ package com.osprey.securitymaster;
 
 import java.time.ZonedDateTime;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class HistoricalSecurity {
 
 	private int securityId;
@@ -94,6 +97,10 @@ public class HistoricalSecurity {
 		} else if (!ticker.equals(other.ticker))
 			return false;
 		return true;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 
 }
