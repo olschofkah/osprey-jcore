@@ -1,0 +1,19 @@
+package com.osprey.screen;
+
+import java.util.List;
+import java.util.Map;
+
+import com.osprey.securitymaster.ExtendedPricedSecurity;
+import com.osprey.securitymaster.HistoricalSecurity;
+
+public class StockScreenPlanFactory {
+
+	public StockScreenPlanFactory() {
+
+	}
+
+	public void setSecurityUniverse(Map<ExtendedPricedSecurity, List<HistoricalSecurity>> securities) {
+
+	}
+
+}

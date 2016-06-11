@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 public class HistoricalSecurity {
 
 	private int securityId;
+	private String ticker;
 	private double closingPrice;
 	private double minPrice;
 	private double maxPrice;
@@ -57,6 +58,42 @@ public class HistoricalSecurity {
 
 	public void setHistoricalDate(ZonedDateTime historicalDate) {
 		this.historicalDate = historicalDate;
+	}
+
+	public String getTicker() {
+		return ticker;
+	}
+
+	public void setTicker(String ticker) {
+		this.ticker = ticker;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + securityId;
+		result = prime * result + ((ticker == null) ? 0 : ticker.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HistoricalSecurity other = (HistoricalSecurity) obj;
+		if (securityId != other.securityId)
+			return false;
+		if (ticker == null) {
+			if (other.ticker != null)
+				return false;
+		} else if (!ticker.equals(other.ticker))
+			return false;
+		return true;
 	}
 
 }

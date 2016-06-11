@@ -1,0 +1,18 @@
+package com.osprey.screen;
+
+import java.util.List;
+
+import com.osprey.screen.screens.IStockScreen;
+
+public class StockScreenPlan {
+	private List<IStockScreen> screens;
+
+	public StockScreenPlan() {
+
+	}
+
+	public StockScreenPlan add(IStockScreen screen) {
+		screens.add(screen);
+		return this;
+	}
+}

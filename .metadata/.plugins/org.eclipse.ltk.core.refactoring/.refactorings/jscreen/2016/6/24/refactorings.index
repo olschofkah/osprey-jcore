@@ -25,3 +25,6 @@
 1465617012570	Copy compilation unit
 1465617059624	Copy compilation unit
 1465618729865	Move compilation unit
+1465620496699	Move compilation units
+1465621739745	Encapsulate field 'ticker'
+1465622327734	Rename type 'OspreyMath'
