@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
-import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.securitymaster.ExtendedPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 import com.osprey.securitymaster.constants.ISMConstants;
