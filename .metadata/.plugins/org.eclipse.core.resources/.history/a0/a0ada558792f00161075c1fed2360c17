@@ -1,0 +1,13 @@
+package com.osprey.screen;
+
+import java.util.Map;
+
+public class SimpleMovingAverage implements StockScreen {
+
+	@Override
+	public StockScreen screen() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+
+}

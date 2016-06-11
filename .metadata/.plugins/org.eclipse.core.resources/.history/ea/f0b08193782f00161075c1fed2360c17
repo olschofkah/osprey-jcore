@@ -1,0 +1,5 @@
+package com.osprey.screen;
+
+public enum StockScreenType {
+
+}

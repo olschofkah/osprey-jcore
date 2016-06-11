@@ -1,0 +1,6 @@
+package com.osprey.screen;
+
+public interface StockScreen {
+
+	public IStockScreen screen();
+}

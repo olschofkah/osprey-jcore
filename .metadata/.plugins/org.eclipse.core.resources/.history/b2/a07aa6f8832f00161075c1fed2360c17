@@ -1,0 +1,74 @@
+package com.osprey.screen;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+
+import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.securitymaster.ExtendedPricedSecurity;
+import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.constants.ISMConstants;
+
+public class SimpleMovingAverage implements IStockScreen {
+
+	private SimpleMovingAverageCriteria c;
+	private boolean pass = true;
+
+	public SimpleMovingAverage(SimpleMovingAverageCriteria criteria) {
+		this.c = criteria;
+	}
+
+	@Override
+	public IStockScreen screen(ExtendedPricedSecurity s, List<HistoricalSecurity> h) {
+
+		int d1 = c.getD1();
+		int d2 = c.getD2();
+		int r = d1 > d2 ? d1 : d2;
+
+		double sma1 = 0;
+		double sma2 = 0;
+
+		double histPrice = 0;
+		for (int i = 0; i < r; ++i) {
+			histPrice = h.get(i).getClosingPrice();
+			if (i <= d1) {
+				sma1 += histPrice;
+			}
+			if (i <= d2) {
+				sma2 += histPrice;
+			}
+		}
+
+		sma1 /= d1;
+		sma2 /= d2;
+
+		switch (c.getOperator()) {
+		case _EQ:
+			pass = new BigDecimal(sma1).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(sma2).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;
+			break;
+		case _GE:
+			pass = new BigDecimal(sma1).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(sma2).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) >= 0;
+			break;
+		case _GT:
+			pass = sma1 > sma2;
+			break;
+		case _LE:
+			pass = new BigDecimal(sma1).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(sma2).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) <= 0;
+			break;
+		case _LT:
+			pass = sma1 < sma2;
+			break;
+		default:
+			pass = false;
+			break;
+
+		}
+
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

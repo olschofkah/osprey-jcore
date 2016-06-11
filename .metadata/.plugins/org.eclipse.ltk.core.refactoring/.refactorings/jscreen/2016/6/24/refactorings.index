@@ -1,0 +1,27 @@
+1465605953066	Rename type 'FundamentalSecurity'
+1465607327502	Delete element
+1465607335030	Move compilation unit
+1465608544396	Delete element
+1465610913730	Delete element
+1465611317044	Rename type 'IStockScreenConfig'
+1465611327147	Move compilation unit
+1465611438378	Move compilation unit
+1465611692625	Rename type 'SimpleMovingAverage'
+1465611730661	Rename type 'ISimpleMovingAverage'
+1465611735332	Rename type 'StockScreen'
+1465612633113	Encapsulate field 'days'
+1465613581739	Rename type 'CriteriaEquality'
+1465613597347	Rename type 'RelationalComparator'
+1465614245789	Rename field 'days'
+1465614253352	Rename method 'getDays'
+1465615221903	Rename type 'ISecurityMasterConstants'
+1465615729436	Rename method 'screen'
+1465615937284	Rename field 'c'
+1465616099146	Copy compilation unit
+1465616202431	Encapsulate field 'price'
+1465616610309	Copy compilation unit
+1465616616521	Rename type 'SimpleMovingAverage'
+1465616786634	Rename type 'PreviousCLosePriceScreen'
+1465617012570	Copy compilation unit
+1465617059624	Copy compilation unit
+1465618729865	Move compilation unit

@@ -1,0 +1,43 @@
+package com.osprey.screen;
+
+import java.util.List;
+
+import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.securitymaster.ExtendedPricedSecurity;
+import com.osprey.securitymaster.HistoricalSecurity;
+
+public class SimpleMovingAverage implements IStockScreen {
+
+	private SimpleMovingAverageCriteria c;
+	private boolean pass = true;
+
+	public SimpleMovingAverage(SimpleMovingAverageCriteria criteria) {
+		this.c = criteria;
+	}
+
+	@Override
+	public IStockScreen screen(ExtendedPricedSecurity s, List<HistoricalSecurity> h) {
+
+		int d1 = c.getD1();
+		int d2 = c.getD2();
+		int r = d1 > d2 ? d1 : d2;
+
+		double sma1 = 0;
+		double sma2 = 0;
+
+		double histPrice = 0;
+		for (int i = 1; i < r; ++i) {
+			histPrice = h.get(i).getClosingPrice();
+			if (i <= d1) {
+				sma1 += histPrice;
+			}
+			if (i <= d2) {
+				sma2 += histPrice;
+			}
+		}
+
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

@@ -1,0 +1,26 @@
+package com.osprey.screen;
+
+import java.util.List;
+import java.util.Map;
+
+import com.osprey.securitymaster.ExtendedPricedSecurity;
+import com.osprey.securitymaster.HistoricalSecurity;
+
+public class SeedStockScreen implements StockScreen {
+
+	protected ExtendedPricedSecurity s;
+	protected List<HistoricalSecurity> l;
+	protected List<HistoricalSecurity> b;
+
+	public SeedStockScreen(ExtendedPricedSecurity security, List<HistoricalSecurity> historicalPrices,
+			List<HistoricalSecurity> comparisonPrices) {
+
+	}
+
+	@Override
+	public StockScreen screen() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

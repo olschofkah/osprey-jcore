@@ -1,0 +1,10 @@
+package com.osprey.securitymaster;
+
+public class PricedSecurity extends Security {
+	
+	private double lastPrice;
+	private double closingPrice;
+	private double bid;
+	private double ask;
+	
+}

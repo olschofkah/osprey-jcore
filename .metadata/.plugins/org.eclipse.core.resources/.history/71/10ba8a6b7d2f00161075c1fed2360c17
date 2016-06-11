@@ -1,0 +1,24 @@
+package com.osprey.screen.criteria;
+
+public class SimpleMovingAverageCriteria implements IStockScreenCriteria {
+
+	private StockScreenType type;
+	private int days;
+
+	public SimpleMovingAverageCriteria(int days) {
+		type = StockScreenType.SMA;
+		this.setDays(days);
+	}
+
+	public StockScreenType getType() {
+		return type;
+	}
+
+	public int getDays() {
+		return days;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
+	}
+}

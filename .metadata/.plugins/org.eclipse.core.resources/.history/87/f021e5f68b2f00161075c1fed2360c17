@@ -1,0 +1,11 @@
+package com.osprey.math;
+
+public final class OspreyMath {
+
+	public static double ema(double sma, int p /** Period */
+	) {
+
+		int m = 2 / (d1 + 1); // multiplier
+	}
+
+}

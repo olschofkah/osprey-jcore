@@ -1,0 +1,8 @@
+package com.osprey.math;
+
+public final class OspreyMath {
+	
+	
+	public static double ema()
+
+}

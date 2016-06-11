@@ -1,0 +1,5 @@
+package com.osprey.securitymaster;
+
+public enum InstrumentType {
+
+}

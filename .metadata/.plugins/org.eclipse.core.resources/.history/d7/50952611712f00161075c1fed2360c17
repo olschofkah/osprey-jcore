@@ -1,0 +1,9 @@
+package com.osprey.securitymaster;
+
+public class Security {
+
+	private int securityId;
+	private String ticker;
+	private InstrumentType instrumentType;
+	
+}

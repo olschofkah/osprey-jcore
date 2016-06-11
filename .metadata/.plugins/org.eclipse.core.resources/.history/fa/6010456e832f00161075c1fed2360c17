@@ -1,0 +1,5 @@
+package com.osprey.securitymaster.constants;
+
+public interface ISecurityMasterConstants {
+	public static final int PRICE_SCALE = 6;
+}
