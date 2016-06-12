@@ -7,44 +7,61 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class HistoricalSecurity {
 
-	private int securityId;
 	private String ticker;
-	private double closingPrice;
-	private double minPrice;
-	private double maxPrice;
+	private double close;
+	private double adjClose;
+	private double open;
+	private double high;
+	private double low;
 	private double volume;
 	private ZonedDateTime historicalDate;
 
-	public int getSecurityId() {
-		return securityId;
+	public String getTicker() {
+		return ticker;
 	}
 
-	public void setSecurityId(int securityId) {
-		this.securityId = securityId;
+	public void setTicker(String ticker) {
+		this.ticker = ticker;
 	}
 
-	public double getClosingPrice() {
-		return closingPrice;
+	public double getClose() {
+		return close;
 	}
 
-	public void setClosingPrice(double closingPrice) {
-		this.closingPrice = closingPrice;
+	public void setClose(double close) {
+		this.close = close;
 	}
 
-	public double getMinPrice() {
-		return minPrice;
+	public double getAdjClose() {
+		return adjClose;
 	}
 
-	public void setMinPrice(double minPrice) {
-		this.minPrice = minPrice;
+	public void setAdjClose(double adjClose) {
+		this.adjClose = adjClose;
 	}
 
-	public double getMaxPrice() {
-		return maxPrice;
+	public double getOpen() {
+		return open;
 	}
 
-	public void setMaxPrice(double maxPrice) {
-		this.maxPrice = maxPrice;
+	public void setOpen(double open) {
+		this.open = open;
+	}
+
+	public double getHigh() {
+		return high;
+	}
+
+	public void setHigh(double high) {
+		this.high = high;
+	}
+
+	public double getLow() {
+		return low;
+	}
+
+	public void setLow(double low) {
+		this.low = low;
 	}
 
 	public double getVolume() {
@@ -63,19 +80,10 @@ public class HistoricalSecurity {
 		this.historicalDate = historicalDate;
 	}
 
-	public String getTicker() {
-		return ticker;
-	}
-
-	public void setTicker(String ticker) {
-		this.ticker = ticker;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + securityId;
 		result = prime * result + ((ticker == null) ? 0 : ticker.hashCode());
 		return result;
 	}
@@ -89,8 +97,6 @@ public class HistoricalSecurity {
 		if (getClass() != obj.getClass())
 			return false;
 		HistoricalSecurity other = (HistoricalSecurity) obj;
-		if (securityId != other.securityId)
-			return false;
 		if (ticker == null) {
 			if (other.ticker != null)
 				return false;

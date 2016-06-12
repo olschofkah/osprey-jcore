@@ -6,10 +6,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class ExtendedPricedSecurity extends PricedSecurity {
 
 	private double open;
-	private double _1DayMin;
-	private double _1DayMax;
-	private double _52WeekMin;
-	private double _52WeekMax;
+	private double dayHigh;
+	private double dayLow;
+	private double _52High;
+	private double _52Low;
 	private double marketCap;
 	private double sharesOutstanding;
 	private double eps;
@@ -28,38 +28,6 @@ public class ExtendedPricedSecurity extends PricedSecurity {
 
 	public void setOpen(double open) {
 		this.open = open;
-	}
-
-	public double get_1DayMin() {
-		return _1DayMin;
-	}
-
-	public void set_1DayMin(double _1DayMin) {
-		this._1DayMin = _1DayMin;
-	}
-
-	public double get_1DayMax() {
-		return _1DayMax;
-	}
-
-	public void set_1DayMax(double _1DayMax) {
-		this._1DayMax = _1DayMax;
-	}
-
-	public double get_52WeekMin() {
-		return _52WeekMin;
-	}
-
-	public void set_52WeekMin(double _52WeekMin) {
-		this._52WeekMin = _52WeekMin;
-	}
-
-	public double get_52WeekMax() {
-		return _52WeekMax;
-	}
-
-	public void set_52WeekMax(double _52WeekMax) {
-		this._52WeekMax = _52WeekMax;
 	}
 
 	public double getMarketCap() {
@@ -144,6 +112,38 @@ public class ExtendedPricedSecurity extends PricedSecurity {
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+	}
+
+	public double getDayHigh() {
+		return dayHigh;
+	}
+
+	public void setDayHigh(double dayHigh) {
+		this.dayHigh = dayHigh;
+	}
+
+	public double getDayLow() {
+		return dayLow;
+	}
+
+	public void setDayLow(double dayLow) {
+		this.dayLow = dayLow;
+	}
+
+	public double get_52High() {
+		return _52High;
+	}
+
+	public void set_52High(double _52High) {
+		this._52High = _52High;
+	}
+
+	public double get_52Low() {
+		return _52Low;
+	}
+
+	public void set_52Low(double _52Low) {
+		this._52Low = _52Low;
 	}
 
 }

@@ -4,17 +4,9 @@ import com.osprey.securitymaster.constants.InstrumentType;
 
 public class Security {
 
-	private int securityId;
+	private String cusip;
 	private String ticker;
 	private InstrumentType instrumentType;
-
-	public int getSecurityId() {
-		return securityId;
-	}
-
-	public void setSecurityId(int securityId) {
-		this.securityId = securityId;
-	}
 
 	public String getTicker() {
 		return ticker;
@@ -32,11 +24,19 @@ public class Security {
 		this.instrumentType = instrumentType;
 	}
 
+	public String getCusip() {
+		return cusip;
+	}
+
+	public void setCusip(String cusip) {
+		this.cusip = cusip;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + securityId;
+		result = prime * result + ((cusip == null) ? 0 : cusip.hashCode());
 		result = prime * result + ((ticker == null) ? 0 : ticker.hashCode());
 		return result;
 	}
@@ -50,7 +50,10 @@ public class Security {
 		if (getClass() != obj.getClass())
 			return false;
 		Security other = (Security) obj;
-		if (securityId != other.securityId)
+		if (cusip == null) {
+			if (other.cusip != null)
+				return false;
+		} else if (!cusip.equals(other.cusip))
 			return false;
 		if (ticker == null) {
 			if (other.ticker != null)

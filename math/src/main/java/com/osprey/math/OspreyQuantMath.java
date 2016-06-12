@@ -36,8 +36,8 @@ public final class OspreyQuantMath {
 		double m = 2.0 / (p + 1.0); // multiplier
 		double ema = sma;
 
-		for (int i = 0; i < p; ++i) {
-			ema = prices.get(p - 1 - i).getClosingPrice() * m + ema * (1 - m);
+		for (int i = 1; i < p; ++i) {
+			ema = prices.get(i).getClose() * m + ema * (1 - m);
 		}
 
 		return ema;
@@ -72,7 +72,7 @@ public final class OspreyQuantMath {
 
 		double histPrice = 0;
 		for (int i = 0; i < r; ++i) {
-			histPrice = prices.get(i).getClosingPrice();
+			histPrice = prices.get(i).getClose();
 			if (i <= p1) {
 				sma1 += histPrice;
 			}
@@ -109,7 +109,7 @@ public final class OspreyQuantMath {
 		double sma1 = 0;
 
 		for (int i = 0; i < p; ++i) {
-			sma1 += prices.get(i).getClosingPrice();
+			sma1 += prices.get(i).getClose();
 		}
 
 		sma1 /= p;

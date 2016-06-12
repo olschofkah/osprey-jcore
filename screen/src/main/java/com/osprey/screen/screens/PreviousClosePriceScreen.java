@@ -21,7 +21,7 @@ public class PreviousClosePriceScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(ExtendedPricedSecurity s, List<HistoricalSecurity> h) {
 
-		double closingPrice = s.getClosingPrice();
+		double closingPrice = s.getClose();
 		double price = criteria.getPrice();
 
 		switch (criteria.getOperator()) {

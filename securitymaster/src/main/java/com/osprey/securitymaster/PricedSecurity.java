@@ -3,7 +3,8 @@ package com.osprey.securitymaster;
 public class PricedSecurity extends Security {
 
 	private double lastPrice;
-	private double closingPrice;
+	private double close;
+	private double open;
 	private double bid;
 	private double ask;
 	private double volume;
@@ -14,14 +15,6 @@ public class PricedSecurity extends Security {
 
 	public void setLastPrice(double lastPrice) {
 		this.lastPrice = lastPrice;
-	}
-
-	public double getClosingPrice() {
-		return closingPrice;
-	}
-
-	public void setClosingPrice(double closingPrice) {
-		this.closingPrice = closingPrice;
 	}
 
 	public double getBid() {
@@ -46,6 +39,22 @@ public class PricedSecurity extends Security {
 
 	public void setVolume(double volume) {
 		this.volume = volume;
+	}
+
+	public double getClose() {
+		return close;
+	}
+
+	public void setClose(double close) {
+		this.close = close;
+	}
+
+	public double getOpen() {
+		return open;
+	}
+
+	public void setOpen(double open) {
+		this.open = open;
 	}
 
 }
