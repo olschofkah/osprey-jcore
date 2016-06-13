@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
-import com.osprey.securitymaster.ExtendedPricedSecurity;
+import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 import com.osprey.securitymaster.constants.ISMConstants;
 
@@ -19,7 +19,7 @@ public class PreviousClosePriceScreen implements IStockScreen {
 	}
 
 	@Override
-	public IStockScreen doScreen(ExtendedPricedSecurity s, List<HistoricalSecurity> h) {
+	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalSecurity> h) {
 
 		double closingPrice = s.getClose();
 		double price = criteria.getPrice();

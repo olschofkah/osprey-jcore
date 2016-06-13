@@ -5,12 +5,30 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>osprey-securitymaster</name>
   
-  <dependencies>
-  		<!-- http://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.4</version>
-</dependency>
-  </dependencies>
+	<properties>
+
+		<!-- Generic properties -->
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<spring-framework.version>4.2.6.RELEASE</spring-framework.version>
+		<log4j.version>2.6</log4j.version>
+		<junit.version>4.12</junit.version>
+		<apache.commons.version>3.4</apache.commons.version>
+		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${apache.commons.version}</version>
+		</dependency>
+	</dependencies>
 </project>

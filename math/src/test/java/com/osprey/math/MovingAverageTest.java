@@ -1,13 +1,13 @@
 package com.osprey.math;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.osprey.securitymaster.HistoricalSecurity;
-
-import junit.framework.Assert;
 
 public class MovingAverageTest {
 
@@ -17,57 +17,7 @@ public class MovingAverageTest {
 	@Test
 	public void testBasicSMA() throws Exception {
 
-		HistoricalSecurity hs0 = new HistoricalSecurity();
-		hs0.setClose(24);
-		hs0.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs1 = new HistoricalSecurity();
-		hs1.setClose(25);
-		hs1.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs2 = new HistoricalSecurity();
-		hs2.setClose(26);
-		hs2.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs3 = new HistoricalSecurity();
-		hs3.setClose(27);
-		hs3.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs4 = new HistoricalSecurity();
-		hs4.setClose(28);
-		hs4.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs5 = new HistoricalSecurity();
-		hs5.setClose(29);
-		hs5.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs6 = new HistoricalSecurity();
-		hs6.setClose(30);
-		hs6.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs7 = new HistoricalSecurity();
-		hs7.setClose(31);
-		hs7.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs8 = new HistoricalSecurity();
-		hs8.setClose(32);
-		hs8.setTicker(TEST_TICKER_1);
-
-		HistoricalSecurity hs9 = new HistoricalSecurity();
-		hs9.setClose(33);
-		hs9.setTicker(TEST_TICKER_1);
-
-		List<HistoricalSecurity> closingPrices = new ArrayList<HistoricalSecurity>(10);
-		closingPrices.add(hs0);
-		closingPrices.add(hs1);
-		closingPrices.add(hs2);
-		closingPrices.add(hs3);
-		closingPrices.add(hs4);
-		closingPrices.add(hs5);
-		closingPrices.add(hs6);
-		closingPrices.add(hs7);
-		closingPrices.add(hs8);
-		closingPrices.add(hs9);
+		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
 
 		double sma = OspreyQuantMath.sma(10, closingPrices);
 
@@ -77,45 +27,47 @@ public class MovingAverageTest {
 	@Test
 	public void testBasicEMA() throws Exception {
 
-		HistoricalSecurity hs0 = new HistoricalSecurity();
+		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+
+		int p = 10;
+		double sma = OspreyQuantMath.sma(p, closingPrices);
+		double ema = OspreyQuantMath.ema(sma, p, closingPrices);
+
+		Assert.assertEquals(29.97873696, ema, DOUBLE_TEST_DELTA);
+	}
+
+	private List<HistoricalSecurity> generateHistoricalPrices() {
+		ZonedDateTime now = ZonedDateTime.now();
+
+		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
 		hs0.setClose(24);
-		hs0.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs1 = new HistoricalSecurity();
+		HistoricalSecurity hs1 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(9));
 		hs1.setClose(25);
-		hs1.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs2 = new HistoricalSecurity();
+		HistoricalSecurity hs2 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
 		hs2.setClose(26);
-		hs2.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs3 = new HistoricalSecurity();
+		HistoricalSecurity hs3 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(7));
 		hs3.setClose(27);
-		hs3.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs4 = new HistoricalSecurity();
+		HistoricalSecurity hs4 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(6));
 		hs4.setClose(28);
-		hs4.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs5 = new HistoricalSecurity();
+		HistoricalSecurity hs5 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(5));
 		hs5.setClose(29);
-		hs5.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs6 = new HistoricalSecurity();
+		HistoricalSecurity hs6 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(4));
 		hs6.setClose(30);
-		hs6.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs7 = new HistoricalSecurity();
+		HistoricalSecurity hs7 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(3));
 		hs7.setClose(31);
-		hs7.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs8 = new HistoricalSecurity();
+		HistoricalSecurity hs8 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(2));
 		hs8.setClose(32);
-		hs8.setTicker(TEST_TICKER_1);
 
-		HistoricalSecurity hs9 = new HistoricalSecurity();
+		HistoricalSecurity hs9 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(1));
 		hs9.setClose(33);
-		hs9.setTicker(TEST_TICKER_1);
 
 		List<HistoricalSecurity> closingPrices = new ArrayList<HistoricalSecurity>(10);
 		closingPrices.add(hs0);
@@ -128,12 +80,7 @@ public class MovingAverageTest {
 		closingPrices.add(hs7);
 		closingPrices.add(hs8);
 		closingPrices.add(hs9);
-
-		int p = 10;
-		double sma = OspreyQuantMath.sma(p, closingPrices);
-		double ema = OspreyQuantMath.ema(sma, p, closingPrices);
-
-		Assert.assertEquals(29.97873696, ema, DOUBLE_TEST_DELTA);
+		return closingPrices;
 	}
 
 }

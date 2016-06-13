@@ -4,18 +4,18 @@ import java.util.List;
 import java.util.Stack;
 
 import com.osprey.screen.screens.IStockScreen;
-import com.osprey.securitymaster.ExtendedPricedSecurity;
+import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 
 public class StockScreenPlan {
 
 	private Stack<IStockScreen> screens;
-	private final ExtendedPricedSecurity security;
+	private final FundamentalPricedSecurity security;
 	private final List<HistoricalSecurity> history;
 
 	private boolean passed = true;
 
-	public StockScreenPlan(ExtendedPricedSecurity security, List<HistoricalSecurity> history) {
+	public StockScreenPlan(FundamentalPricedSecurity security, List<HistoricalSecurity> history) {
 		this.security = security;
 		this.history = history;
 		
@@ -47,7 +47,7 @@ public class StockScreenPlan {
 		return passed;
 	}
 
-	public ExtendedPricedSecurity getSecurity() {
+	public FundamentalPricedSecurity getSecurity() {
 		return security;
 	}
 }

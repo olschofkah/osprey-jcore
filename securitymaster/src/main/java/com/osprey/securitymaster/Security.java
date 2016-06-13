@@ -1,19 +1,24 @@
 package com.osprey.securitymaster;
 
+import java.time.ZonedDateTime;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.osprey.securitymaster.constants.InstrumentType;
 
 public class Security {
 
-	private String cusip;
-	private String ticker;
-	private InstrumentType instrumentType;
+	protected final String ticker;
+	protected InstrumentType instrumentType;
+	protected ZonedDateTime timestamp;
+
+	public Security(String ticker) {
+		this.ticker = ticker;
+	}
 
 	public String getTicker() {
 		return ticker;
-	}
-
-	public void setTicker(String ticker) {
-		this.ticker = ticker;
 	}
 
 	public InstrumentType getInstrumentType() {
@@ -24,19 +29,18 @@ public class Security {
 		this.instrumentType = instrumentType;
 	}
 
-	public String getCusip() {
-		return cusip;
+	public ZonedDateTime getTimestamp() {
+		return timestamp;
 	}
 
-	public void setCusip(String cusip) {
-		this.cusip = cusip;
+	public void setTimestamp(ZonedDateTime timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((cusip == null) ? 0 : cusip.hashCode());
 		result = prime * result + ((ticker == null) ? 0 : ticker.hashCode());
 		return result;
 	}
@@ -50,17 +54,16 @@ public class Security {
 		if (getClass() != obj.getClass())
 			return false;
 		Security other = (Security) obj;
-		if (cusip == null) {
-			if (other.cusip != null)
-				return false;
-		} else if (!cusip.equals(other.cusip))
-			return false;
 		if (ticker == null) {
 			if (other.ticker != null)
 				return false;
 		} else if (!ticker.equals(other.ticker))
 			return false;
 		return true;
+	}
+	
+	public String toString(){
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 
 }

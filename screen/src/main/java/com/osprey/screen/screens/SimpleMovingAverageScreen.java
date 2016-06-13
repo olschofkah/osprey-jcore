@@ -7,7 +7,7 @@ import java.util.List;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.result.SMAPair;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
-import com.osprey.securitymaster.ExtendedPricedSecurity;
+import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 import com.osprey.securitymaster.constants.ISMConstants;
 
@@ -22,7 +22,7 @@ public class SimpleMovingAverageScreen implements IStockScreen {
 	}
 
 	@Override
-	public IStockScreen doScreen(ExtendedPricedSecurity s, List<HistoricalSecurity> h) {
+	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalSecurity> h) {
 
 		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getP1(), criteria.getP2(), h);
 		double sma1 = smaPair.getSma1();

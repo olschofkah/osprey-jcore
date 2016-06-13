@@ -2,12 +2,21 @@ package com.osprey.securitymaster;
 
 public class PricedSecurity extends Security {
 
-	private double lastPrice;
-	private double close;
-	private double open;
-	private double bid;
-	private double ask;
-	private double volume;
+	protected double lastPrice;
+	protected double close;
+	protected double open;
+	protected double bid;
+	protected double ask;
+	protected double volume;
+
+	public PricedSecurity(String ticker) {
+		super(ticker);
+	}
+
+	public PricedSecurity(Security s) {
+		this(s.ticker);
+		this.instrumentType = s.instrumentType;
+	}
 
 	public double getLastPrice() {
 		return lastPrice;
