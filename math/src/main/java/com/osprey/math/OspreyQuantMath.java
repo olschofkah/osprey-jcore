@@ -1,5 +1,6 @@
 package com.osprey.math;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.osprey.math.exception.InsufficientHistoryException;
@@ -114,6 +115,37 @@ public final class OspreyQuantMath {
 
 		sma1 /= p;
 		return sma1;
+	}
+
+	public static double volatility(int period, List<HistoricalSecurity> prices) {
+
+		double dailyReturn;
+		double price;
+		double previousPrice = prices.get(0).getClose();
+		double averageDailyReturn = 0;
+
+		List<Double> dailyReturns = new ArrayList<>(period);
+
+		for (int i = 1; i < period; ++i) {
+			price = prices.get(i).getClose();
+
+			dailyReturn = price / previousPrice - 1;
+			dailyReturns.add(dailyReturn);
+
+			averageDailyReturn += dailyReturn;
+
+			previousPrice = price;
+		}
+
+		averageDailyReturn = averageDailyReturn / period;
+
+		double volatility = 0;
+		for (double dr : dailyReturns) {
+			volatility += dr - averageDailyReturn;
+		}
+
+		volatility = Math.pow(Math.pow(volatility, 2) / period, 0.5) * Math.pow(252, 0.5);
+		return volatility;
 	}
 
 }

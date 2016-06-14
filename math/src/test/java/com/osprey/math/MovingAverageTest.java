@@ -23,6 +23,16 @@ public class MovingAverageTest {
 
 		Assert.assertEquals(28.5, sma, DOUBLE_TEST_DELTA);
 	}
+	
+	@Test
+	public void testVolatility1() throws Exception {
+
+		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+
+		double vol = OspreyQuantMath.volatility(10, closingPrices);
+
+		Assert.assertEquals(0.1627489, vol, DOUBLE_TEST_DELTA);
+	}
 
 	@Test
 	public void testBasicEMA() throws Exception {
