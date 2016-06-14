@@ -18,7 +18,7 @@ public class StockScreenPlan {
 	public StockScreenPlan(FundamentalPricedSecurity security, List<HistoricalSecurity> history) {
 		this.security = security;
 		this.history = history;
-		
+
 		screens = new Stack<>();
 	}
 
@@ -27,9 +27,8 @@ public class StockScreenPlan {
 		return this;
 	}
 
-	public StockScreenPlan removePrevious() {
-		screens.pop();
-		return this;
+	public IStockScreen removePrevious() {
+		return screens.pop();
 	}
 
 	public StockScreenPlan execute() {

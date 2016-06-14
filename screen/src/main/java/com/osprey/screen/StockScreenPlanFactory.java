@@ -1,12 +1,11 @@
 package com.osprey.screen;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.osprey.math.OspreyJavaMath;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
@@ -21,15 +20,12 @@ import com.osprey.securitymaster.HistoricalSecurity;
 public class StockScreenPlanFactory {
 
 	private Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities;
-	private List<IStockScreenCriteria> criterias;
 
 	public StockScreenPlanFactory() {
 
 	}
 
-	public StockScreenPlanFactory(Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities,
-			List<IStockScreenCriteria> criteria) {
-		this.criterias = criteria;
+	public StockScreenPlanFactory(Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities) {
 		this.securities = securities;
 	}
 
@@ -37,19 +33,20 @@ public class StockScreenPlanFactory {
 		this.securities = securities;
 	}
 
-	public void setCriteria(List<IStockScreenCriteria> criterias) {
-		this.criterias = criterias;
-	}
-
-	public Map<String, StockScreenPlan> build() {
-		Map<String, StockScreenPlan> plans = new HashMap<>(OspreyJavaMath.calcMapInitialSize(securities.size()));
+	/**
+	 * Build a map of every security to the list of screens that it must pass.
+	 * 
+	 * @return Map of Security to it's screening plan.
+	 */
+	public List<StockScreenPlan> build(List<IStockScreenCriteria> criterias) {
+		List<StockScreenPlan> plans = new ArrayList<>(securities.size());
 
 		// flip the order since they're dropped onto a stack;
 		Collections.reverse(criterias);
 
 		for (Entry<FundamentalPricedSecurity, List<HistoricalSecurity>> entry : securities.entrySet()) {
 			StockScreenPlan plan = new StockScreenPlan(entry.getKey(), entry.getValue());
-			plans.put(entry.getKey().getTicker(), plan);
+			plans.add(plan);
 
 			for (IStockScreenCriteria criteria : criterias) {
 				plan.add(buildScreen(criteria));

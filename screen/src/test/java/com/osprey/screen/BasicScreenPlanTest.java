@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
 
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
@@ -38,13 +38,13 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
+
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -69,13 +69,12 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -100,13 +99,13 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
+
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -131,13 +130,13 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
+
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -162,13 +161,13 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
+
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -193,13 +192,13 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
+
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -224,13 +223,13 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
+
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -257,13 +256,13 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
+
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();
@@ -290,13 +289,12 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-		factory.setCriteria(criteria);
 		factory.setSecurityUniverse(securities);
 
-		Map<String, StockScreenPlan> planMap = factory.build();
+		List<StockScreenPlan> plans = factory.build(criteria);
 
 		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
-		executor.setPlans(planMap.values());
+		executor.setPlans(plans);
 		executor.execute();
 
 		Set<String> resultSet = executor.getResultSet();

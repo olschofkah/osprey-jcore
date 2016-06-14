@@ -9,7 +9,7 @@ import com.osprey.math.result.SMAPair;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
-import com.osprey.securitymaster.constants.ISMConstants;
+import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class ExponentialMovingAverageScreen implements IStockScreen {
 
@@ -30,19 +30,19 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 
 		switch (criteria.getOperator()) {
 		case _EQ:
-			passed = new BigDecimal(ema1).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(ema2).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;
+			passed = new BigDecimal(ema1).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(ema2).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;
 			break;
 		case _GE:
-			passed = new BigDecimal(ema1).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(ema2).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) >= 0;
+			passed = new BigDecimal(ema1).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(ema2).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) >= 0;
 			break;
 		case _GT:
 			passed = ema1 > ema2;
 			break;
 		case _LE:
-			passed = new BigDecimal(ema1).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(ema2).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) <= 0;
+			passed = new BigDecimal(ema1).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(ema2).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) <= 0;
 			break;
 		case _LT:
 			passed = ema1 < ema2;

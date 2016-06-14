@@ -7,7 +7,7 @@ public class PricedSecurity extends Security {
 	protected double open;
 	protected double bid;
 	protected double ask;
-	protected double volume;
+	protected long volume;
 
 	public PricedSecurity(String ticker) {
 		super(ticker);
@@ -42,11 +42,11 @@ public class PricedSecurity extends Security {
 		this.ask = ask;
 	}
 
-	public double getVolume() {
+	public long getVolume() {
 		return volume;
 	}
 
-	public void setVolume(double volume) {
+	public void setVolume(long volume) {
 		this.volume = volume;
 	}
 

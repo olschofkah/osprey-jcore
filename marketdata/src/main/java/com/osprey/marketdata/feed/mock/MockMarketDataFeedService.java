@@ -1,6 +1,7 @@
 package com.osprey.marketdata.feed.mock;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 import com.osprey.securitymaster.PricedSecurity;
 import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.constants.EarningsReportTime;
 
 @Service
 public class MockMarketDataFeedService
@@ -27,40 +29,54 @@ public class MockMarketDataFeedService
 	final static Logger logger = LogManager.getLogger(MockMarketDataFeedService.class);
 
 	@Override
-	public FundamentalPricedSecurity quoteFundamental(Set<Security> s) {
-		// TODO Auto-generated method stub
-		return null;
+	public FundamentalPricedSecurity quoteFundamental(Security s) {
+		logger.warn("Mock Quoting Fundamental for ticker {}", () -> s);
+		return generateRandomFundamentalPricedSecurity(s);
 	}
 
 	@Override
 	public Map<Security, FundamentalPricedSecurity> quoteFundamentalBatch(Set<Security> s) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.warn("Mock Quoting Fundamental for tickers {}", () -> s);
+
+		Map<Security, FundamentalPricedSecurity> resultMap = new HashMap<>(OspreyJavaMath.calcMapInitialSize(s.size()));
+		for (Security security : s) {
+			resultMap.put(security, generateRandomFundamentalPricedSecurity(security));
+		}
+
+		return resultMap;
 	}
 
 	@Override
 	public List<HistoricalSecurity> fetchHistorical(Security s, ZonedDateTime start, ZonedDateTime end) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.warn("Mock Historical Quote for ticker {}", () -> s);
+
+		List<HistoricalSecurity> result = generateHistoricalQuotes(s, start, end);
+		return result;
 	}
 
 	@Override
 	public Map<Security, List<HistoricalSecurity>> fetchHistoricalBatch(Set<Security> s, ZonedDateTime start,
 			ZonedDateTime end) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.warn("Mock Batch Historical Quote for ticker {}", () -> s);
+
+		Map<Security, List<HistoricalSecurity>> resultMap = new HashMap<>(OspreyJavaMath.calcMapInitialSize(s.size()));
+		for (Security security : s) {
+			resultMap.put(security, generateHistoricalQuotes(security, start, end));
+		}
+
+		return resultMap;
 	}
 
 	@Override
 	public PricedSecurity quote(Security s) {
-		logger.warn("Mock Quoting for ticker " + s);
+		logger.warn("Mock Quoting for ticker {}", () -> s);
 
 		return generateRandomPricedSecurity(s);
 	}
 
 	@Override
 	public Map<Security, PricedSecurity> quoteBatch(Set<Security> securities) {
-		logger.warn("Mock Quoting for tickers " + securities);
+		logger.warn("Mock Batch Quoting for tickers {}", () -> securities);
 
 		Map<Security, PricedSecurity> resultMap = new HashMap<>(OspreyJavaMath.calcMapInitialSize(securities.size()));
 		for (Security security : securities) {
@@ -68,6 +84,32 @@ public class MockMarketDataFeedService
 		}
 
 		return resultMap;
+	}
+
+	private FundamentalPricedSecurity generateRandomFundamentalPricedSecurity(Security s) {
+
+		PricedSecurity quote = generateRandomPricedSecurity(s);
+		FundamentalPricedSecurity fundamentalQuote = new FundamentalPricedSecurity(quote);
+
+		fundamentalQuote.set_52High(fundamentalQuote.getLastPrice() + RandomUtils.nextDouble(5, 100));
+		fundamentalQuote.set_52Low(fundamentalQuote.getLastPrice() - RandomUtils.nextDouble(1, 4));
+		fundamentalQuote.setAnnualYield(RandomUtils.nextDouble(0, 0.05));
+		fundamentalQuote.setAnnualDividend(fundamentalQuote.getAnnualYield() * 50);
+		fundamentalQuote.setBeta(RandomUtils.nextDouble(0, 4));
+		fundamentalQuote.setDayHigh(fundamentalQuote.getLastPrice() + RandomUtils.nextDouble(0, 10));
+		fundamentalQuote.setDayLow(fundamentalQuote.getLastPrice() - RandomUtils.nextDouble(1, 4));
+		fundamentalQuote.setEps(RandomUtils.nextDouble(0, 50));
+		fundamentalQuote.setHistoricalVolatility(RandomUtils.nextDouble(0.1, 0.9));
+		fundamentalQuote.setMarketCap(RandomUtils.nextDouble(1000000, 10000000000l));
+		fundamentalQuote.setNextDivDate(ZonedDateTime.now().plusDays(RandomUtils.nextInt(0, 75)));
+		fundamentalQuote.setNextEarningsDate(ZonedDateTime.now().plusDays(RandomUtils.nextInt(0, 75)));
+		fundamentalQuote.setNextEarningsReportTime(EarningsReportTime.PRE_MARKET);
+		fundamentalQuote.setPctHeldByInst(RandomUtils.nextDouble(0.01, 1.2));
+		fundamentalQuote.setPeRatio(RandomUtils.nextDouble(1, 200));
+		fundamentalQuote.setSharesOutstanding((long) (fundamentalQuote.getMarketCap() / fundamentalQuote.getClose()));
+		fundamentalQuote.setShortInt(RandomUtils.nextDouble(1, 20));
+
+		return fundamentalQuote;
 	}
 
 	private PricedSecurity generateRandomPricedSecurity(Security s) {
@@ -85,6 +127,56 @@ public class MockMarketDataFeedService
 		ps.setVolume(RandomUtils.nextInt(1000, 50000000));
 
 		return ps;
+	}
+
+	private List<HistoricalSecurity> generateHistoricalQuotes(Security s, ZonedDateTime start, ZonedDateTime end) {
+
+		ZonedDateTime day = start;
+
+		List<HistoricalSecurity> hist = new ArrayList<>();
+
+		HistoricalSecurity previousDay = null;
+		while (day.isAfter(end)) {
+
+			double seed;
+			if (previousDay == null) {
+				seed = RandomUtils.nextDouble(5, 120);
+			} else {
+				seed = previousDay.getClose();
+			}
+
+			HistoricalSecurity sec = new HistoricalSecurity(s.getTicker(), day);
+			sec.setAdjClose(seed + RandomUtils.nextDouble(0.01, 5.50));
+			sec.setClose(seed + RandomUtils.nextDouble(0.01, 5.50));
+			sec.setHigh(seed + RandomUtils.nextDouble(0.01, 5.50));
+			sec.setLow(seed - RandomUtils.nextDouble(0.01, 4.50));
+			sec.setOpen(seed);
+			sec.setVolume(RandomUtils.nextInt(1000, 50000000));
+
+			/**
+			 * TODO ... Set next & previous div/earnings dates in a series
+			 * 
+			 * sec.setNextDivDate(ZonedDateTime.now().plusDays(RandomUtils.
+			 * nextInt(0, 75)));
+			 * sec.setNextEarningsDate(ZonedDateTime.now().plusDays(RandomUtils.
+			 * nextInt(0, 75)));
+			 * sec.setNextEarningsReportTime(EarningsReportTime.PRE_MARKET);
+			 * 
+			 * sec.setPreviousDivDate(previousDivDate);
+			 * sec.setPreviousEarningsDate(previousEarningsDate);
+			 * sec.setPreviousEarningsReportTime(previousEarningsReportTime);
+			 * 
+			 * 
+			 */
+
+			sec.setTimestamp(ZonedDateTime.now());
+			
+			hist.add(sec);
+			
+			day = day.minusDays(1);
+		}
+
+		return hist;
 	}
 
 }

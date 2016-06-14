@@ -14,7 +14,7 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 	private double _52High;
 	private double _52Low;
 	private double marketCap;
-	private double sharesOutstanding;
+	private long sharesOutstanding;
 	private double eps;
 	private double peRatio;
 	private double annualDividend;
@@ -26,12 +26,9 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 	private double historicalVolatility;
 
 	private ZonedDateTime nextEarningsDate;
-	private ZonedDateTime previousEarningsDate;
 	private EarningsReportTime nextEarningsReportTime;
-	private EarningsReportTime previousEarningsReportTime;
 
 	private ZonedDateTime nextDivDate;
-	private ZonedDateTime previousDivDate;
 
 	public FundamentalPricedSecurity(String ticker) {
 		super(ticker);
@@ -52,6 +49,7 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this.ask = s.ask;
 		this.bid = s.bid;
 		this.volume = s.volume;
+		this.lastPrice = s.lastPrice;
 	}
 
 	/**
@@ -80,12 +78,8 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this.historicalVolatility = s.historicalVolatility;
 
 		this.nextEarningsDate = s.nextEarningsDate;
-		this.previousEarningsDate = s.previousEarningsDate;
 		this.nextEarningsReportTime = s.nextEarningsReportTime;
-		this.previousEarningsReportTime = s.previousEarningsReportTime;
-
 		this.nextDivDate = s.nextDivDate;
-		this.previousDivDate = s.previousDivDate;
 	}
 
 	public ZonedDateTime getNextEarningsDate() {
@@ -96,28 +90,12 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this.nextEarningsDate = nextEarningsDate;
 	}
 
-	public ZonedDateTime getPreviousEarningsDate() {
-		return previousEarningsDate;
-	}
-
-	public void setPreviousEarningsDate(ZonedDateTime previousEarningsDate) {
-		this.previousEarningsDate = previousEarningsDate;
-	}
-
 	public ZonedDateTime getNextDivDate() {
 		return nextDivDate;
 	}
 
 	public void setNextDivDate(ZonedDateTime nextDivDate) {
 		this.nextDivDate = nextDivDate;
-	}
-
-	public ZonedDateTime getPreviousDivDate() {
-		return previousDivDate;
-	}
-
-	public void setPreviousDivDate(ZonedDateTime previousDivDate) {
-		this.previousDivDate = previousDivDate;
 	}
 
 	public double getMarketCap() {
@@ -128,11 +106,11 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this.marketCap = marketCap;
 	}
 
-	public double getSharesOutstanding() {
+	public long getSharesOutstanding() {
 		return sharesOutstanding;
 	}
 
-	public void setSharesOutstanding(double sharesOutstanding) {
+	public void setSharesOutstanding(long sharesOutstanding) {
 		this.sharesOutstanding = sharesOutstanding;
 	}
 
@@ -242,14 +220,6 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 
 	public void setNextEarningsReportTime(EarningsReportTime nextEarningsReportTime) {
 		this.nextEarningsReportTime = nextEarningsReportTime;
-	}
-
-	public EarningsReportTime getPreviousEarningsReportTime() {
-		return previousEarningsReportTime;
-	}
-
-	public void setPreviousEarningsReportTime(EarningsReportTime previousEarningsReportTime) {
-		this.previousEarningsReportTime = previousEarningsReportTime;
 	}
 
 }

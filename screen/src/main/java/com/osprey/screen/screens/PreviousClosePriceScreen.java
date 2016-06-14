@@ -7,7 +7,7 @@ import java.util.List;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
-import com.osprey.securitymaster.constants.ISMConstants;
+import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class PreviousClosePriceScreen implements IStockScreen {
 
@@ -26,19 +26,19 @@ public class PreviousClosePriceScreen implements IStockScreen {
 
 		switch (criteria.getOperator()) {
 		case _EQ:
-			passed = new BigDecimal(closingPrice).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(price).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;
+			passed = new BigDecimal(closingPrice).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(price).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;
 			break;
 		case _GE:
-			passed = new BigDecimal(closingPrice).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(price).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) >= 0;
+			passed = new BigDecimal(closingPrice).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(price).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) >= 0;
 			break;
 		case _GT:
 			passed = closingPrice > price;
 			break;
 		case _LE:
-			passed = new BigDecimal(closingPrice).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(price).setScale(ISMConstants.PRICE_SCALE, RoundingMode.HALF_UP)) <= 0;
+			passed = new BigDecimal(closingPrice).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+					.compareTo(new BigDecimal(price).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) <= 0;
 			break;
 		case _LT:
 			passed = closingPrice < price;

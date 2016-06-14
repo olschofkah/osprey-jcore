@@ -8,7 +8,7 @@ import com.osprey.securitymaster.Security;
 
 public interface IFundamentalSecurityQuoteService {
 
-	public FundamentalPricedSecurity quoteFundamental(Set<Security> s);
+	public FundamentalPricedSecurity quoteFundamental(Security s);
 
 	public Map<Security, FundamentalPricedSecurity> quoteFundamentalBatch(Set<Security> s);
 }
