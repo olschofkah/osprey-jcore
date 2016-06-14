@@ -117,6 +117,12 @@ public final class OspreyQuantMath {
 		return sma1;
 	}
 
+	/**
+	 * 
+	 * @param period
+	 * @param prices
+	 * @return
+	 */
 	public static double volatility(int period, List<HistoricalSecurity> prices) {
 
 		double dailyReturn;
@@ -137,7 +143,7 @@ public final class OspreyQuantMath {
 			previousPrice = price;
 		}
 
-		averageDailyReturn = averageDailyReturn / period;
+		averageDailyReturn /= period;
 
 		double volatility = 0;
 		for (double dr : dailyReturns) {
