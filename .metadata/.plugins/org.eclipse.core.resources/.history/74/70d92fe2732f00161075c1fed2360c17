@@ -1,7 +1,0 @@
-package com.osprey.screen;
-
-public class StockScreenArgument {
-
-	private String name;
-	private double value;
-}

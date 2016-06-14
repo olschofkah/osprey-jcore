@@ -1,9 +1,0 @@
-package com.osprey.securitymaster;
-
-public class HistoricalSecurity {
-
-	private int securityId;
-	private double closingPrice;
-	private double volume;
-	private double DateTime;
-}

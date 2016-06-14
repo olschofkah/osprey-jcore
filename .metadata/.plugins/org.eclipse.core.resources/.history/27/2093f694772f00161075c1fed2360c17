@@ -1,8 +1,0 @@
-package com.osprey.screen;
-
-import java.util.Map;
-
-public interface StockScreen {
-
-	public StockScreen screen(Map<String,Double> args);
-}

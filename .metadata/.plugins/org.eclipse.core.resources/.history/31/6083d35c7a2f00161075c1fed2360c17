@@ -1,7 +1,0 @@
-package com.osprey.screen;
-
-import com.osprey.screen.StockScreenType;
-
-public interface IStockScreenCriteria {
-	public StockScreenType getType();
-}

@@ -1,5 +1,0 @@
-package com.osprey.screen.criteria;
-
-public enum CriteriaEquality {
-	_GT, _EQ, _LT, _LE, _GE
-}

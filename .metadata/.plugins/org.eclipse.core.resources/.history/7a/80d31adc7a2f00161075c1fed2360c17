@@ -1,6 +1,0 @@
-package com.osprey.screen.criteria;
-
-public class SimpleMovingAverageCriteria implements IStockScreenCriteria {
-
-	public 
-}
