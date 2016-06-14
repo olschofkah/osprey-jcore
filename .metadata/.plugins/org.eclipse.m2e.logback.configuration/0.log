@@ -5358,3 +5358,8 @@
 2016-06-13 23:07:01,525 [Worker-228] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
 2016-06-13 23:07:01,526 [Worker-228] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
 2016-06-13 23:07:01,526 [Worker-228] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\dev\java\git\osprey-jcore\marketdata\src\test\resources
+2016-06-13 23:28:26,191 [Worker-226] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2016-06-13 23:28:26,191 [Worker-226] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2016-06-13 23:28:26,191 [Worker-226] INFO  o.e.m.c.i.embedder.EclipseLogger - Copying 0 resource
+2016-06-13 23:28:26,192 [Worker-226] INFO  o.e.m.c.i.embedder.EclipseLogger - Using 'UTF-8' encoding to copy filtered resources.
+2016-06-13 23:28:26,192 [Worker-226] INFO  o.e.m.c.i.embedder.EclipseLogger - skip non existing resourceDirectory D:\dev\java\git\osprey-jcore\marketdata\src\test\resources
