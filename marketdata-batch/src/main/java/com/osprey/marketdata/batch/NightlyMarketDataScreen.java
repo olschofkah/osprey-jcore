@@ -28,6 +28,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.feed.ISecurityMasterService;
+import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.Security;
 
 @Configuration
@@ -87,7 +88,9 @@ public class NightlyMarketDataScreen {
 		return jobBuilderFactory.get("importUserJob")
 				.incrementer(new RunIdIncrementer())
 				.listener(listener())
-				.flow(initialScreen())
+				.flow(initialScreen()) // #1
+				.next(quoteAndCalcAndPersist()) // #2
+				.next(hotListFilterAndPersist()) // #3
 				.end()
 				.build();
 	}
@@ -96,10 +99,37 @@ public class NightlyMarketDataScreen {
 	public Step initialScreen() {
 		return stepBuilderFactory
 				.get("preScreen")
-				.<Security, Security>chunk(10)
+				.<Security, Security>chunk(250)
 				.reader(initialScreenReader())
 				.processor(initialScreenProcessor())
 				.writer(initialScreenWriter())
+				.build();
+	}
+	
+	@Bean
+	public Step quoteAndCalcAndPersist() {
+		return stepBuilderFactory
+				.get("quoteAndCalc")
+				.<Security, ExtendedFundamentalPricedSecurityWithHistory>chunk(5)
+			//	.reader(initialScreenReader()) // Read From the postInitialScreenQueue
+			//	.processor(initialScreenProcessor()) // Pull fundamentals, history, and calculate desired points (oVol, ema, sma, etc ... )
+			//	.writer(initialScreenWriter()) // Cache the into a post quote queue
+			//	.writer(initialScreenWriter()) // Write the results to postgresql
+				.build();
+	}
+	
+	// TODO This needs to be heavily profiled for memory usage and time. This
+	// many need to use JMS to split out the work depending on time.
+
+	@Bean
+	public Step hotListFilterAndPersist() {
+		return stepBuilderFactory
+				.get("hotListFilter")
+				.<ExtendedFundamentalPricedSecurityWithHistory, ExtendedFundamentalPricedSecurityWithHistory>chunk(100)
+			//	.reader(initialScreenReader()) // read the post quote queue
+			//	.processor(initialScreenProcessor()) // Run the additional screens for the hot list
+			//	.writer(initialScreenWriter()) // persist the hot list to postgresql
+			//	.writer(initialScreenWriter()) // persist the hot list to mongodb
 				.build();
 	}
 
