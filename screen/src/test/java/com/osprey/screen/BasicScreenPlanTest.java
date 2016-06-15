@@ -14,6 +14,7 @@ import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.RelationalOperator;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 
@@ -299,6 +300,36 @@ public class BasicScreenPlanTest {
 		Set<String> resultSet = executor.getResultSet();
 
 		Assert.assertFalse(resultSet.contains(TEST_TICKER_1));
+	}
+	
+	@Test
+	public void testSingleVolatilityScreen1() throws Exception {
+
+		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+
+		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
+		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
+
+		VolatilityCriteria c1 = new VolatilityCriteria(10, 0.12, RelationalOperator._GT);
+
+		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+
+		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		securities.put(s, closingPrices);
+
+		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<StockScreenPlan> plans = factory.build(criteria);
+
+		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<String> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
 
 	private List<HistoricalSecurity> createBasicHistoricalList() {
