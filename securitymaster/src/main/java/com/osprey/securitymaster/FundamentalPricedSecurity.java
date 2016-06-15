@@ -1,6 +1,6 @@
 package com.osprey.securitymaster;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -9,47 +9,37 @@ import com.osprey.securitymaster.constants.EarningsReportTime;
 
 public class FundamentalPricedSecurity extends PricedSecurity {
 
-	private double dayHigh;
-	private double dayLow;
-	private double _52High;
-	private double _52Low;
-	private double marketCap;
-	private long sharesOutstanding;
-	private double eps;
-	private double peRatio;
-	private double annualDividend;
-	private double annualYield;
-	private double pctHeldByInst;
-	private double shortInt;
+	protected double dayHigh;
+	protected double dayLow;
+	protected double _52High;
+	protected double _52Low;
+	protected double marketCap;
+	protected long sharesOutstanding;
+	protected double eps;
+	protected double peRatio;
+	protected double annualDividend;
+	protected double annualYield;
+	protected double pctHeldByInst;
+	protected double shortInt;
 
-	private double beta;
-	private double historicalVolatility;
+	protected double beta;
+	protected double historicalVolatility;
 
-	private ZonedDateTime nextEarningsDate;
-	private EarningsReportTime nextEarningsReportTime;
+	protected LocalDate nextEarningsDate;
+	protected EarningsReportTime nextEarningsReportTime;
 
-	private ZonedDateTime nextDivDate;
+	protected LocalDate nextDivDate;
 
 	public FundamentalPricedSecurity(String ticker) {
 		super(ticker);
 	}
 
 	public FundamentalPricedSecurity(Security s) {
-		this(s.ticker);
-		this.instrumentType = s.instrumentType;
-		this.timestamp = s.timestamp;
+		super(s);
 	}
 
 	public FundamentalPricedSecurity(PricedSecurity s) {
-		this((Security) s);
-
-		// Set Priced Security vars
-		this.close = s.close;
-		this.open = s.open;
-		this.ask = s.ask;
-		this.bid = s.bid;
-		this.volume = s.volume;
-		this.lastPrice = s.lastPrice;
+		super(s);
 	}
 
 	/**
@@ -59,7 +49,7 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 	 *            FundamentalPricedSecurity to copy
 	 */
 	public FundamentalPricedSecurity(FundamentalPricedSecurity s) {
-		this((PricedSecurity) s);
+		super((PricedSecurity) s);
 
 		this.dayHigh = s.dayHigh;
 		this.dayLow = s.dayLow;
@@ -82,19 +72,19 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this.nextDivDate = s.nextDivDate;
 	}
 
-	public ZonedDateTime getNextEarningsDate() {
+	public LocalDate getNextEarningsDate() {
 		return nextEarningsDate;
 	}
 
-	public void setNextEarningsDate(ZonedDateTime nextEarningsDate) {
+	public void setNextEarningsDate(LocalDate nextEarningsDate) {
 		this.nextEarningsDate = nextEarningsDate;
 	}
 
-	public ZonedDateTime getNextDivDate() {
+	public LocalDate getNextDivDate() {
 		return nextDivDate;
 	}
 
-	public void setNextDivDate(ZonedDateTime nextDivDate) {
+	public void setNextDivDate(LocalDate nextDivDate) {
 		this.nextDivDate = nextDivDate;
 	}
 

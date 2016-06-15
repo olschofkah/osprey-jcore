@@ -8,10 +8,12 @@ import java.util.Map.Entry;
 
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.IStockScreenCriteria;
+import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.screens.ExponentialMovingAverageScreen;
 import com.osprey.screen.screens.IStockScreen;
+import com.osprey.screen.screens.InstrumentTypeScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
@@ -76,7 +78,9 @@ public class StockScreenPlanFactory {
 		case GAP_UP_DOWN:
 		case INDEX:
 		case INSTITUTIONAL_HOLDINGS:
+			return null;
 		case INSTRUMENT_TYPE:
+			return new InstrumentTypeScreen((InstrumentTypeCriteria) criteria);
 		case MACD_HISTOGRAM:
 		case MARKET_CAP:
 		case MOMENTUM_X:

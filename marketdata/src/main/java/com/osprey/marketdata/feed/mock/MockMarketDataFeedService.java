@@ -1,5 +1,6 @@
 package com.osprey.marketdata.feed.mock;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,8 +102,8 @@ public class MockMarketDataFeedService
 		fundamentalQuote.setEps(RandomUtils.nextDouble(0, 50));
 		fundamentalQuote.setHistoricalVolatility(RandomUtils.nextDouble(0.1, 0.9));
 		fundamentalQuote.setMarketCap(RandomUtils.nextDouble(1000000, 10000000000l));
-		fundamentalQuote.setNextDivDate(ZonedDateTime.now().plusDays(RandomUtils.nextInt(0, 75)));
-		fundamentalQuote.setNextEarningsDate(ZonedDateTime.now().plusDays(RandomUtils.nextInt(0, 75)));
+		fundamentalQuote.setNextDivDate(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
+		fundamentalQuote.setNextEarningsDate(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
 		fundamentalQuote.setNextEarningsReportTime(EarningsReportTime.PRE_MARKET);
 		fundamentalQuote.setPctHeldByInst(RandomUtils.nextDouble(0.01, 1.2));
 		fundamentalQuote.setPeRatio(RandomUtils.nextDouble(1, 200));

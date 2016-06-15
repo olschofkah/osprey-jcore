@@ -17,6 +17,12 @@ public class Security {
 		this.ticker = ticker;
 	}
 
+	public Security(Security s) {
+		this(s.ticker);
+		this.instrumentType = s.instrumentType;
+		this.timestamp = s.timestamp;
+	}
+
 	public String getTicker() {
 		return ticker;
 	}
@@ -61,8 +67,8 @@ public class Security {
 			return false;
 		return true;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 

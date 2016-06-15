@@ -256,7 +256,6 @@ public class BasicScreenPlanTest {
 		securities.put(s, closingPrices);
 
 		StockScreenPlanFactory factory = new StockScreenPlanFactory();
-
 		factory.setSecurityUniverse(securities);
 
 		List<StockScreenPlan> plans = factory.build(criteria);

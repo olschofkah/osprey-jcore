@@ -24,7 +24,7 @@ public class PreviousClosePriceScreen implements IStockScreen {
 		double closingPrice = s.getClose();
 		double price = criteria.getPrice();
 
-		switch (criteria.getOperator()) {
+		switch (criteria.getRelationalOperator()) {
 		case _EQ:
 			passed = new BigDecimal(closingPrice).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
 					.compareTo(new BigDecimal(price).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;

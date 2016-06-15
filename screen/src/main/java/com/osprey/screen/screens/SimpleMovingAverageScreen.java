@@ -24,11 +24,11 @@ public class SimpleMovingAverageScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalSecurity> h) {
 
-		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getP1(), criteria.getP2(), h);
+		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), h);
 		double sma1 = smaPair.getSma1();
 		double sma2 = smaPair.getSma2();
 
-		switch (criteria.getOperator()) {
+		switch (criteria.getRelationalOperator()) {
 		case _EQ:
 			passed = new BigDecimal(sma1).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
 					.compareTo(new BigDecimal(sma2).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;

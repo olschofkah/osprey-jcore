@@ -1,0 +1,66 @@
+2016-06-14 23:29:50,040 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:29:50,041 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:34:26,716 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:34:26,718 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:36:20,835 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:36:20,836 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:37:05,015 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:37:05,017 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:37:27,082 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:37:27,085 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:37:27,961 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-14T23:37:27.086-04:00[America/New_York]}  
+2016-06-14 23:39:17,066 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:39:17,068 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:39:18,341 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-14T23:39:17.069-04:00[America/New_York]}  
+2016-06-14 23:42:57,128 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:42:57,130 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:42:57,937 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-14T23:42:57.131-04:00[America/New_York]}  
+2016-06-14 23:43:59,960 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-14 ...  
+2016-06-14 23:43:59,962 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-14 23:44:00,767 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-14T23:43:59.963-04:00[America/New_York]}  
+2016-06-15 00:10:17,100 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:10:17,102 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:10:17,937 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:10:17.102-04:00[America/New_York]}  
+2016-06-15 00:12:25,360 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:12:25,361 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:12:26,195 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:12:25.362-04:00[America/New_York]}  
+2016-06-15 00:14:47,849 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:14:47,850 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:14:48,684 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:14:47.851-04:00[America/New_York]}  
+2016-06-15 00:19:40,420 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:19:40,422 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:19:41,261 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:19:40.422-04:00[America/New_York]}  
+2016-06-15 00:20:14,666 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:20:14,668 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:20:15,504 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:20:14.669-04:00[America/New_York]}  
+2016-06-15 00:21:18,754 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:21:18,756 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:21:19,815 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:21:18.757-04:00[America/New_York]}  
+2016-06-15 00:22:42,120 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:22:42,121 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:22:43,306 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:22:42.122-04:00[America/New_York]}  
+2016-06-15 00:23:44,999 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:23:45,002 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:23:46,115 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:23:45.003-04:00[America/New_York]}  
+2016-06-15 00:25:14,222 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:25:14,223 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:25:15,299 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:25:14.225-04:00[America/New_York]}  
+2016-06-15 00:31:41,812 INFO c.o.m.b.NightlyMarketDataScreen [main] Featching the security master for 2016-06-15 ...  
+2016-06-15 00:31:41,813 WARN c.o.m.f.m.MockMarketDataFeedService [main] Mock Security Master Fetch was called.  
+2016-06-15 00:31:42,640 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,857 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"AAPL","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,862 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"GM","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,865 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"GOOGL","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,871 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"NFLX","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,876 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"XSD","instrumentType":ETF,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,880 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"GS","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,884 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"KBH","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,888 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"QQQ","instrumentType":ETF,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,892 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"XIB","instrumentType":ETF,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,896 INFO c.o.m.b.NightlyMarketDataScreen [main] Queuing securities for further quoting [{"ticker":"AMZN","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"AAPL","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"GM","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"GOOGL","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"NFLX","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"XSD","instrumentType":ETF,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"GS","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"KBH","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"QQQ","instrumentType":ETF,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"XIB","instrumentType":ETF,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}] 
+2016-06-15 00:31:42,899 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"JOY","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,905 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"TSLA","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,909 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"MSFT","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,912 INFO c.o.m.b.p.InitialScreenProcessor [main] Performing initial screen on {"ticker":"FB","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}  
+2016-06-15 00:31:42,917 INFO c.o.m.b.NightlyMarketDataScreen [main] Queuing securities for further quoting [{"ticker":"JOY","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"TSLA","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"MSFT","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}, {"ticker":"FB","instrumentType":STOCK,"timestamp":2016-06-15T00:31:41.814-04:00[America/New_York]}] 
+2016-06-15 00:31:42,924 INFO c.o.m.b.l.JobCompletionNotificationListener [main] Work Complete 

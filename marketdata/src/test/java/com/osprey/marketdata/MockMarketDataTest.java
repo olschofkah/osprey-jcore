@@ -1,5 +1,6 @@
 package com.osprey.marketdata;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class MockMarketDataTest {
 
 		Assert.assertFalse(securityMaster.isEmpty());
 
-		ZonedDateTime now = ZonedDateTime.now();
+		LocalDate now = LocalDate.now();
 
 		for (Security s : securityMaster) {
 			FundamentalPricedSecurity quote = mockMarketData.quoteFundamental(s);
@@ -135,7 +136,7 @@ public class MockMarketDataTest {
 
 		Assert.assertFalse(securityMaster.isEmpty());
 
-		ZonedDateTime now = ZonedDateTime.now();
+		LocalDate now = LocalDate.now();
 
 		Map<Security, FundamentalPricedSecurity> quoteBatch = mockMarketData.quoteFundamentalBatch(securityMaster);
 

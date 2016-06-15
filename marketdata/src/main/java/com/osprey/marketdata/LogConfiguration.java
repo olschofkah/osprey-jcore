@@ -5,21 +5,26 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 
+import com.osprey.marketdata.feed.mock.MockMarketDataFeedService;
+
 @Configuration
 public class LogConfiguration {
+	final static Logger logger = LogManager.getLogger(LogConfiguration.class);
 
 	@Autowired
 	private ConfigurableEnvironment env;
 
 	@PostConstruct
 	public void init() {
-		System.out.println("Setting env up for async logging ... ");
+		logger.info("Setting env up for async logging ... ");
 
 		MutablePropertySources propertySources = env.getPropertySources();
 		Map<String, Object> systemPropertiesMap = new HashMap<>();

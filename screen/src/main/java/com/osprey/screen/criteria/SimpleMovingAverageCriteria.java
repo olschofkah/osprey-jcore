@@ -2,32 +2,36 @@ package com.osprey.screen.criteria;
 
 public class SimpleMovingAverageCriteria implements IStockScreenCriteria {
 
-	private final StockScreenType type;
-	private final int p1;
-	private final int p2;
-	private final RelationalOperator operator;
+	private StockScreenType type;
+	private int period1;
+	private int period2;
+	private RelationalOperator relationalOperator;
 
-	public SimpleMovingAverageCriteria(int d1, int d2, RelationalOperator operator) {
+	public SimpleMovingAverageCriteria() {
+
+	}
+
+	public SimpleMovingAverageCriteria(int period1, int period2, RelationalOperator operator) {
 		type = StockScreenType.SMA;
-		this.p1 = d1;
-		this.p2 = d2;
-		this.operator = operator;
+		this.period1 = period1;
+		this.period2 = period2;
+		this.relationalOperator = operator;
 	}
 
 	public StockScreenType getType() {
 		return type;
 	}
 
-	public int getP1() {
-		return p1;
+	public int getPeriod1() {
+		return period1;
 	}
 
-	public int getP2() {
-		return p2;
+	public int getPeriod2() {
+		return period2;
 	}
 
-	public RelationalOperator getOperator() {
-		return operator;
+	public RelationalOperator getRelationalOperator() {
+		return relationalOperator;
 	}
 
 }

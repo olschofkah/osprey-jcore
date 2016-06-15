@@ -14,8 +14,19 @@ public class PricedSecurity extends Security {
 	}
 
 	public PricedSecurity(Security s) {
-		this(s.ticker);
-		this.instrumentType = s.instrumentType;
+		super(s);
+	}
+
+	public PricedSecurity(PricedSecurity s) {
+		this((Security) s);
+
+		// Set Priced Security vars
+		this.close = s.close;
+		this.open = s.open;
+		this.ask = s.ask;
+		this.bid = s.bid;
+		this.volume = s.volume;
+		this.lastPrice = s.lastPrice;
 	}
 
 	public double getLastPrice() {
