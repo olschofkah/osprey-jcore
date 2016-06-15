@@ -1,5 +1,6 @@
 package com.osprey.math;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.osprey.math.exception.InsufficientHistoryException;
@@ -114,6 +115,44 @@ public final class OspreyQuantMath {
 
 		sma1 /= p;
 		return sma1;
+	}
+
+	/**
+	 * Annual Volatility
+	 * Annual Volatility is defined as standard deviation times sqrt(252)
+	 * standard deviation = sqrt(sum(daily return (i) - average daily return)^2/n)
+	 * @param period
+	 * @param prices
+	 * @return volatility = sqrt(sum(daily return (i) - average daily return)^2/n)
+	 */
+	public static double volatility(int period, List<HistoricalSecurity> prices) {
+
+		double dailyReturn;
+		double price;
+		double previousPrice = prices.get(0).getClose();
+		double averageDailyReturn = 0;
+
+		List<Double> dailyReturns = new ArrayList<>(period);
+
+		for (int i = 1; i < period; ++i) {
+			price = prices.get(i).getClose();
+
+			dailyReturn = price / previousPrice - 1;
+			dailyReturns.add(dailyReturn);
+
+			averageDailyReturn += dailyReturn;
+
+			previousPrice = price;
+		}
+
+		averageDailyReturn /= (period - 1);
+
+		double volatility = 0;
+		for (double dr : dailyReturns) {
+			volatility += Math.pow(dr - averageDailyReturn, 2);
+		}
+
+		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(252, 0.5);
 	}
 
 }

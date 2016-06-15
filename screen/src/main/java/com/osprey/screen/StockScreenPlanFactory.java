@@ -10,10 +10,12 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.screens.ExponentialMovingAverageScreen;
 import com.osprey.screen.screens.IStockScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
+import com.osprey.screen.screens.VolatilityScreen;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 
@@ -99,7 +101,9 @@ public class StockScreenPlanFactory {
 			return new SimpleMovingAverageScreen((SimpleMovingAverageCriteria) criteria);
 		case STOCHASTICS_X:
 		case TODAY_VOL_VS_AVG:
+			return null;
 		case VOLATILITY:
+			return new VolatilityScreen((VolatilityCriteria) criteria);
 		case VOLUME_RANGE:
 		default:
 			break;
