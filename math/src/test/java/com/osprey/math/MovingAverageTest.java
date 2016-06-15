@@ -31,7 +31,7 @@ public class MovingAverageTest {
 
 		double vol = OspreyQuantMath.volatility(10, closingPrices);
 
-		Assert.assertEquals(0.1627489, vol, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(0.05648862, vol, DOUBLE_TEST_DELTA);
 	}
 
 	@Test

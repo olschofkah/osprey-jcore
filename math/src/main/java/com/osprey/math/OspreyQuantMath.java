@@ -118,10 +118,12 @@ public final class OspreyQuantMath {
 	}
 
 	/**
-	 * 
+	 * Annual Volatility
+	 * Annual Volatility is defined as standard deviation times sqrt(252)
+	 * standard deviation = sqrt(sum(daily return (i) - average daily return)^2/n)
 	 * @param period
 	 * @param prices
-	 * @return
+	 * @return volatility = sqrt(sum(daily return (i) - average daily return)^2/n)
 	 */
 	public static double volatility(int period, List<HistoricalSecurity> prices) {
 
@@ -143,15 +145,14 @@ public final class OspreyQuantMath {
 			previousPrice = price;
 		}
 
-		averageDailyReturn /= period;
+		averageDailyReturn /= (period - 1);
 
 		double volatility = 0;
 		for (double dr : dailyReturns) {
-			volatility += dr - averageDailyReturn;
+			volatility += Math.pow(dr - averageDailyReturn, 2);
 		}
 
-		volatility = Math.pow(Math.pow(volatility, 2) / period, 0.5) * Math.pow(252, 0.5);
-		return volatility;
+		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(252, 0.5);
 	}
 
 }
