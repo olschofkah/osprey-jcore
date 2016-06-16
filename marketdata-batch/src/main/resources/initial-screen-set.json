@@ -1,7 +1,7 @@
 {
     "screenName":"initialSecurityMasterScreenSet",
 	"screenCriteria": [
-        {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_LT"}},
+        {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["STOCK","ETF"], "contains":true}}
     ]
 }

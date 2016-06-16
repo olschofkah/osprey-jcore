@@ -1,0 +1,8 @@
+{
+    "screenName":"5-25-price-squeeze",
+    "strategies":[{"name":"long-bull-plus-3"},{"name":"put-credit-spread"}],
+	"screenCriteria": [
+        {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"PRICE","price":55,"relationalOperator":"_LT"}}
+    ]
+}
