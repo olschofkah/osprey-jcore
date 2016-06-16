@@ -22,6 +22,7 @@
 		<log4j.version>2.6</log4j.version>
 		<junit.version>4.12</junit.version>
 		<apache.commons.version>3.4</apache.commons.version>
+		<apache.math.version>3.6.1</apache.math.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
 		<jackson.version>2.6.6</jackson.version>
 	</properties>
@@ -32,11 +33,19 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${apache.commons.version}</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-math3</artifactId>
+		    <version>${apache.math.version}</version>
+		</dependency>
+		
 		 <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
