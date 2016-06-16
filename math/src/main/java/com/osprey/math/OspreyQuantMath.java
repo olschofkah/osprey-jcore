@@ -7,7 +7,6 @@ import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.result.SMAPair;
 import com.osprey.securitymaster.HistoricalSecurity;
-import com.sun.org.glassfish.external.statistics.Stats;
 
 public final class OspreyQuantMath {
 
