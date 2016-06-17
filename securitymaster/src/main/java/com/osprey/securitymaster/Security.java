@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import com.osprey.securitymaster.constants.Exchange;
 import com.osprey.securitymaster.constants.InstrumentType;
 
 public class Security {
@@ -12,6 +13,9 @@ public class Security {
 	protected final String ticker;
 	protected InstrumentType instrumentType;
 	protected ZonedDateTime timestamp;
+	protected int lotSize;
+	protected String companyName;
+	protected Exchange exchange;
 
 	public Security(String ticker) {
 		this.ticker = ticker;
@@ -70,6 +74,30 @@ public class Security {
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public int getLotSize() {
+		return lotSize;
+	}
+
+	public void setLotSize(int lotSize) {
+		this.lotSize = lotSize;
+	}
+
+	public Exchange getExchange() {
+		return exchange;
+	}
+
+	public void setExchange(Exchange exchange) {
+		this.exchange = exchange;
 	}
 
 }

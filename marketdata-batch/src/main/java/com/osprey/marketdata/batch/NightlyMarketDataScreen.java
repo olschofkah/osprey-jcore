@@ -81,8 +81,8 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public ListItemReader<Security> initialScreenReader() {
 		logger.info("Featching the security master for {} ... ", () -> LocalDate.now());
-		Set<Security> fetchSecurityMaster = securityMasterService.fetchSecurityMaster();
-		return new ListItemReader<>(new ArrayList<>(fetchSecurityMaster));
+		Set<Security> master = securityMasterService.fetchSecurityMaster();
+		return new ListItemReader<>(new ArrayList<>(master));
 	}
 	
 	@Bean
