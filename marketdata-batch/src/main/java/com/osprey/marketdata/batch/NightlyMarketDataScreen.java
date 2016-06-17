@@ -1,9 +1,6 @@
 package com.osprey.marketdata.batch;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.sql.DataSource;
@@ -23,7 +20,6 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.data.MongoItemWriter;
-import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +33,7 @@ import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
-import com.osprey.marketdata.feed.ISecurityMasterService;
+import com.osprey.marketdata.batch.reader.SecurityMasterItemReader;
 import com.osprey.screen.ScreenSuccessSecurity;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.Security;
@@ -57,17 +53,13 @@ public class NightlyMarketDataScreen {
 
 	@Autowired
 	private DataSource dataSource;
-	
-	@Autowired
-	private MongoTemplate mongoTemplate;
 
 	@Autowired
-	private ISecurityMasterService securityMasterService;
+	private MongoTemplate mongoTemplate;
 
 	// A queue to temporarily hold securities to quote and pull history for.
 	private final ConcurrentLinkedQueue<Security> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>(); // #1
 	private final ConcurrentLinkedQueue<ExtendedFundamentalPricedSecurityWithHistory> postQuoteQueue = new ConcurrentLinkedQueue<>(); // #2
-
 
 	@Bean
 	public TaskExecutor taskExecutor() {
@@ -77,14 +69,12 @@ public class NightlyMarketDataScreen {
 		executor.afterPropertiesSet();
 		return executor;
 	}
-	
+
 	@Bean
-	public ListItemReader<Security> initialScreenReader() {
-		logger.info("Featching the security master for {} ... ", () -> LocalDate.now());
-		Set<Security> master = securityMasterService.fetchSecurityMaster();
-		return new ListItemReader<>(new ArrayList<>(master));
+	public SecurityMasterItemReader initialScreenReader() {
+		return new SecurityMasterItemReader();
 	}
-	
+
 	@Bean
 	public ItemReader<Security> postInitialScreenQueueReader() {
 		return new ItemReader<Security>() {
@@ -121,12 +111,12 @@ public class NightlyMarketDataScreen {
 	public InitialScreenProcessor initialScreenProcessor() {
 		return new InitialScreenProcessor();
 	}
-	
+
 	@Bean
 	public QuoteProcessor quoteProcessor() {
 		return new QuoteProcessor();
 	}
-	
+
 	@Bean
 	public HotShitScreenProcessor hotShitScreenProcessor() {
 		return new HotShitScreenProcessor();
@@ -143,8 +133,8 @@ public class NightlyMarketDataScreen {
 			}
 
 		};
-	}	
-	
+	}
+
 	@Bean
 	public ItemWriter<ExtendedFundamentalPricedSecurityWithHistory> postQuoteQueueWriter() {
 		return new ItemWriter<ExtendedFundamentalPricedSecurityWithHistory>() {
@@ -173,10 +163,8 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public Job processNightlySecurityMaster() {
-		return jobBuilderFactory.get("nightlySecurityMasterProcess")
-				.incrementer(new RunIdIncrementer())
-				.listener(listener())
-				.flow(initialScreen()) // #1
+		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
+				.listener(listener()).flow(initialScreen()) // #1
 				.next(quoteAndCalcAndPersist()) // #2
 				.next(hotListFilterAndPersist()) // #3
 				.end().build();
@@ -184,26 +172,26 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public Step initialScreen() {
-		return stepBuilderFactory
-				.get("preScreen")
-				.<Security, Security>chunk(250)
-				.reader(initialScreenReader())
-				.processor(initialScreenProcessor())
-				.writer(initialScreenQueueWriter())
-			//	.taskExecutor(taskExecutor())
+		return stepBuilderFactory.get("preScreen").<Security, Security>chunk(250).reader(initialScreenReader())
+				.processor(initialScreenProcessor()).writer(initialScreenQueueWriter())
+				// .taskExecutor(taskExecutor())
 				.build();
 	}
 
 	@Bean
 	public Step quoteAndCalcAndPersist() {
-		return stepBuilderFactory.get("quoteAndCalc")
-				 .<Security, ExtendedFundamentalPricedSecurityWithHistory>chunk(5)
-				 .reader(postInitialScreenQueueReader()) // Read From the postInitialScreenQueue
-				 .processor(quoteProcessor()) // Pull fundamentals, history, and calculate desired points (oVol, ema, sma, etc... )
-				 .writer(postQuoteQueueWriter()) // Cache the into a post quote queue
-				// .writer(initialScreenWriter()) // Write the results to postgresql
+		return stepBuilderFactory.get("quoteAndCalc").<Security, ExtendedFundamentalPricedSecurityWithHistory>chunk(5)
+				.reader(postInitialScreenQueueReader()) // Read From the
+														// postInitialScreenQueue
+				.processor(quoteProcessor()) // Pull fundamentals, history, and
+												// calculate desired points
+												// (oVol, ema, sma, etc... )
+				.writer(postQuoteQueueWriter()) // Cache the into a post quote
+												// queue
+				// .writer(initialScreenWriter()) // Write the results to
+				// postgresql
 				// .taskExecutor(taskExecutor())
-				 .build();
+				.build();
 	}
 
 	// TODO This needs to be heavily profiled for memory usage and time. This
@@ -214,10 +202,14 @@ public class NightlyMarketDataScreen {
 		return stepBuilderFactory.get("hotListFilter")
 				.<ExtendedFundamentalPricedSecurityWithHistory, ScreenSuccessSecurity>chunk(100)
 				.reader(postQuoteQueueReader()) // read the post quote queue
-				.processor(hotShitScreenProcessor()) // Run the additional screens for the hot list
-				// .writer(initialScreenWriter()) // persist the hot list to postgresql
-				.writer(hotListMongoItemWriter()) // persist the hot list to mongodb
-				//.taskExecutor(taskExecutor())
+				.processor(hotShitScreenProcessor()) // Run the additional
+														// screens for the hot
+														// list
+				// .writer(initialScreenWriter()) // persist the hot list to
+				// postgresql
+				.writer(hotListMongoItemWriter()) // persist the hot list to
+													// mongodb
+				// .taskExecutor(taskExecutor())
 				.build();
 	}
 
