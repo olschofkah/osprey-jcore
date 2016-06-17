@@ -22,13 +22,13 @@ public class HistoricalSecurity {
 
 	// TODO Add in estimated vs actual for earnings somewhere?
 
-	private ZonedDateTime nextEarningsDate;
-	private ZonedDateTime previousEarningsDate;
+	private LocalDate nextEarningsDate;
+	private LocalDate previousEarningsDate;
 	private EarningsReportTime nextEarningsReportTime;
 	private EarningsReportTime previousEarningsReportTime;
 
-	private ZonedDateTime nextDivDate;
-	private ZonedDateTime previousDivDate;
+	private LocalDate nextDivDate;
+	private LocalDate previousDivDate;
 
 	private ZonedDateTime timestamp;
 
@@ -37,35 +37,35 @@ public class HistoricalSecurity {
 		this.historicalDate = historicalDate;
 	}
 
-	public ZonedDateTime getNextEarningsDate() {
+	public LocalDate getNextEarningsDate() {
 		return nextEarningsDate;
 	}
 
-	public void setNextEarningsDate(ZonedDateTime nextEarningsDate) {
+	public void setNextEarningsDate(LocalDate nextEarningsDate) {
 		this.nextEarningsDate = nextEarningsDate;
 	}
 
-	public ZonedDateTime getPreviousEarningsDate() {
+	public LocalDate getPreviousEarningsDate() {
 		return previousEarningsDate;
 	}
 
-	public void setPreviousEarningsDate(ZonedDateTime previousEarningsDate) {
+	public void setPreviousEarningsDate(LocalDate previousEarningsDate) {
 		this.previousEarningsDate = previousEarningsDate;
 	}
 
-	public ZonedDateTime getNextDivDate() {
+	public LocalDate getNextDivDate() {
 		return nextDivDate;
 	}
 
-	public void setNextDivDate(ZonedDateTime nextDivDate) {
+	public void setNextDivDate(LocalDate nextDivDate) {
 		this.nextDivDate = nextDivDate;
 	}
 
-	public ZonedDateTime getPreviousDivDate() {
+	public LocalDate getPreviousDivDate() {
 		return previousDivDate;
 	}
 
-	public void setPreviousDivDate(ZonedDateTime previousDivDate) {
+	public void setPreviousDivDate(LocalDate previousDivDate) {
 		this.previousDivDate = previousDivDate;
 	}
 
