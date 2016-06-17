@@ -48,7 +48,7 @@ public class MockMarketDataFeedService
 	}
 
 	@Override
-	public List<HistoricalSecurity> fetchHistorical(Security s, ZonedDateTime start, ZonedDateTime end) {
+	public List<HistoricalSecurity> fetchHistorical(Security s, LocalDate start, LocalDate end) {
 		logger.warn("Mock Historical Quote for ticker {}", () -> s);
 
 		List<HistoricalSecurity> result = generateHistoricalQuotes(s, start, end);
@@ -56,8 +56,8 @@ public class MockMarketDataFeedService
 	}
 
 	@Override
-	public Map<Security, List<HistoricalSecurity>> fetchHistoricalBatch(Set<Security> s, ZonedDateTime start,
-			ZonedDateTime end) {
+	public Map<Security, List<HistoricalSecurity>> fetchHistoricalBatch(Set<Security> s, LocalDate start,
+			LocalDate end) {
 		logger.warn("Mock Batch Historical Quote for ticker {}", () -> s);
 
 		Map<Security, List<HistoricalSecurity>> resultMap = new HashMap<>(OspreyJavaMath.calcMapInitialSize(s.size()));
@@ -130,9 +130,9 @@ public class MockMarketDataFeedService
 		return ps;
 	}
 
-	private List<HistoricalSecurity> generateHistoricalQuotes(Security s, ZonedDateTime start, ZonedDateTime end) {
+	private List<HistoricalSecurity> generateHistoricalQuotes(Security s, LocalDate start, LocalDate end) {
 
-		ZonedDateTime day = start;
+		LocalDate day = start;
 
 		List<HistoricalSecurity> hist = new ArrayList<>();
 

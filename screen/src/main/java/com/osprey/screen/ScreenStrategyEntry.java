@@ -3,10 +3,12 @@ package com.osprey.screen;
 import java.util.List;
 
 import com.osprey.screen.criteria.StockScreenCriteriaGenerator;
+import com.osprey.trade.option.OptionStrategy;
 
-public class StockScreenContainer {
+public class ScreenStrategyEntry {
 	private String screenName;
 	private List<StockScreenCriteriaGenerator> screenCriteria;
+	private List<OptionStrategy> strategies;
 
 	public String getScreenName() {
 		return screenName;
@@ -22,6 +24,14 @@ public class StockScreenContainer {
 
 	public void setScreenCriteria(List<StockScreenCriteriaGenerator> screens) {
 		this.screenCriteria = screens;
+	}
+
+	public List<OptionStrategy> getStrategies() {
+		return strategies;
+	}
+
+	public void setStrategies(List<OptionStrategy> strategies) {
+		this.strategies = strategies;
 	}
 
 	@Override
@@ -40,7 +50,7 @@ public class StockScreenContainer {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StockScreenContainer other = (StockScreenContainer) obj;
+		ScreenStrategyEntry other = (ScreenStrategyEntry) obj;
 		if (screenName == null) {
 			if (other.screenName != null)
 				return false;

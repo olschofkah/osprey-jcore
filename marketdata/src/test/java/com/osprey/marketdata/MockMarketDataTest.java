@@ -1,7 +1,6 @@
 package com.osprey.marketdata;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +19,6 @@ import com.osprey.securitymaster.HistoricalSecurity;
 import com.osprey.securitymaster.PricedSecurity;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.constants.EarningsReportTime;
-import com.osprey.securitymaster.utils.OspreyUtils;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MarketDataDevConfiguration.class)
@@ -177,15 +175,15 @@ public class MockMarketDataTest {
 
 		Assert.assertFalse(securityMaster.isEmpty());
 
-		ZonedDateTime start = OspreyUtils.getZonedDateTimeAtStartOfDay();
-		ZonedDateTime end = start.minusDays(252);
+		LocalDate start = LocalDate.now();
+		LocalDate end = start.minusDays(252);
 
 		for (Security s : securityMaster) {
 			List<HistoricalSecurity> hist = mockMarketData.fetchHistorical(s, start, end);
 
 			Assert.assertEquals(252, hist.size());
 
-			ZonedDateTime dayCounter = start;
+			LocalDate dayCounter = start;
 
 			for (HistoricalSecurity hs : hist) {
 				Assert.assertEquals(s.getTicker(), hs.getTicker());
@@ -213,8 +211,8 @@ public class MockMarketDataTest {
 
 		Assert.assertFalse(securityMaster.isEmpty());
 
-		ZonedDateTime start = OspreyUtils.getZonedDateTimeAtStartOfDay();
-		ZonedDateTime end = start.minusDays(252);
+		LocalDate start = LocalDate.now();
+		LocalDate end = start.minusDays(252);
 
 		Map<Security, List<HistoricalSecurity>> histBatch = mockMarketData.fetchHistoricalBatch(securityMaster, start,
 				end);
@@ -222,7 +220,7 @@ public class MockMarketDataTest {
 		Assert.assertEquals(securityMaster.size(), histBatch.keySet().size());
 
 		for (List<HistoricalSecurity> hist : histBatch.values()) {
-			ZonedDateTime dayCounter = start;
+			LocalDate dayCounter = start;
 			for (HistoricalSecurity hs : hist) {
 
 				Assert.assertEquals(dayCounter, hs.getHistoricalDate());

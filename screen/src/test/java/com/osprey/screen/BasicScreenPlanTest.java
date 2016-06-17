@@ -1,6 +1,6 @@
 package com.osprey.screen;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,13 +38,13 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -69,12 +69,12 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -99,13 +99,13 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -130,13 +130,13 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -161,13 +161,13 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -192,13 +192,13 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -223,13 +223,13 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -256,12 +256,12 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -288,12 +288,12 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -318,12 +318,12 @@ public class BasicScreenPlanTest {
 		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
-		StockScreenPlanFactory factory = new StockScreenPlanFactory();
+		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
 
-		List<StockScreenPlan> plans = factory.build(criteria);
+		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicStockScreenExecutor executor = new BasicStockScreenExecutor();
+		BasicScreenExecutor executor = new BasicScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -333,7 +333,7 @@ public class BasicScreenPlanTest {
 	}
 
 	private List<HistoricalSecurity> createBasicHistoricalList() {
-		ZonedDateTime now = ZonedDateTime.now();
+		LocalDate now = LocalDate.now();
 
 		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
 		hs0.setClose(24);

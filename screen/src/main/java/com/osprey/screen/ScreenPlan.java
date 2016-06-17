@@ -7,7 +7,7 @@ import com.osprey.screen.screens.IStockScreen;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 
-public class StockScreenPlan {
+public class ScreenPlan {
 
 	private Stack<IStockScreen> screens;
 	private final FundamentalPricedSecurity security;
@@ -15,14 +15,14 @@ public class StockScreenPlan {
 
 	private boolean passed = true;
 
-	public StockScreenPlan(FundamentalPricedSecurity security, List<HistoricalSecurity> history) {
+	public ScreenPlan(FundamentalPricedSecurity security, List<HistoricalSecurity> history) {
 		this.security = security;
 		this.history = history;
 
 		screens = new Stack<>();
 	}
 
-	public StockScreenPlan add(IStockScreen screen) {
+	public ScreenPlan add(IStockScreen screen) {
 		screens.push(screen);
 		return this;
 	}
@@ -31,7 +31,7 @@ public class StockScreenPlan {
 		return screens.pop();
 	}
 
-	public StockScreenPlan execute() {
+	public ScreenPlan execute() {
 
 		IStockScreen lastScreen;
 		while (passed && !screens.isEmpty()) {

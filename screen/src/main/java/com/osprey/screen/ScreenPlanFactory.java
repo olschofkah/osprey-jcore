@@ -21,15 +21,15 @@ import com.osprey.screen.screens.VolatilityScreen;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 
-public class StockScreenPlanFactory {
+public class ScreenPlanFactory {
 
 	private Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities;
 
-	public StockScreenPlanFactory() {
+	public ScreenPlanFactory() {
 
 	}
 
-	public StockScreenPlanFactory(Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities) {
+	public ScreenPlanFactory(Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities) {
 		this.securities = securities;
 	}
 
@@ -42,14 +42,14 @@ public class StockScreenPlanFactory {
 	 * 
 	 * @return Map of Security to it's screening plan.
 	 */
-	public List<StockScreenPlan> build(List<IStockScreenCriteria> criterias) {
-		List<StockScreenPlan> plans = new ArrayList<>(securities.size());
+	public List<ScreenPlan> build(List<IStockScreenCriteria> criterias) {
+		List<ScreenPlan> plans = new ArrayList<>(securities.size());
 
 		// flip the order since they're dropped onto a stack;
 		Collections.reverse(criterias);
 
 		for (Entry<FundamentalPricedSecurity, List<HistoricalSecurity>> entry : securities.entrySet()) {
-			StockScreenPlan plan = new StockScreenPlan(entry.getKey(), entry.getValue());
+			ScreenPlan plan = new ScreenPlan(entry.getKey(), entry.getValue());
 			plans.add(plan);
 
 			for (IStockScreenCriteria criteria : criterias) {

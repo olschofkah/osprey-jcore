@@ -1,6 +1,6 @@
 package com.osprey.math;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class MovingAverageTest {
 	}
 
 	private List<HistoricalSecurity> generateHistoricalPrices() {
-		ZonedDateTime now = ZonedDateTime.now();
+		LocalDate now = LocalDate.now();
 
 		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
 		hs0.setClose(24);

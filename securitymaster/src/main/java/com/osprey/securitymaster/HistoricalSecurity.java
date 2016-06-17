@@ -1,5 +1,6 @@
 package com.osprey.securitymaster;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -10,7 +11,7 @@ import com.osprey.securitymaster.constants.EarningsReportTime;
 public class HistoricalSecurity {
 
 	private final String ticker;
-	private final ZonedDateTime historicalDate;
+	private final LocalDate historicalDate;
 
 	private double close;
 	private double adjClose;
@@ -31,7 +32,7 @@ public class HistoricalSecurity {
 
 	private ZonedDateTime timestamp;
 
-	public HistoricalSecurity(String ticker, ZonedDateTime historicalDate) {
+	public HistoricalSecurity(String ticker, LocalDate historicalDate) {
 		this.ticker = ticker;
 		this.historicalDate = historicalDate;
 	}
@@ -120,7 +121,7 @@ public class HistoricalSecurity {
 		this.volume = volume;
 	}
 
-	public ZonedDateTime getHistoricalDate() {
+	public LocalDate getHistoricalDate() {
 		return historicalDate;
 	}
 

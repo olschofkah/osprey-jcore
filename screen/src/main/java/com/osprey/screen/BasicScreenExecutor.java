@@ -6,19 +6,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BasicStockScreenExecutor implements IStockScreenPlanExecutor {
+public class BasicScreenExecutor implements IStockScreenPlanExecutor {
 
 	private Set<String> resultSet = new HashSet<>();
-	private List<StockScreenPlan> plans;
+	private List<ScreenPlan> plans;
 
 	@Override
-	public void setPlans(Collection<StockScreenPlan> plans) {
+	public void setPlans(Collection<ScreenPlan> plans) {
 		this.plans = new ArrayList<>(plans);
 	}
 
 	@Override
 	public void execute() {
-		for (StockScreenPlan plan : plans) {
+		for (ScreenPlan plan : plans) {
 
 			if (plan.execute().passed()) {
 				resultSet.add(plan.getSecurity().getTicker());

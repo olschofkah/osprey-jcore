@@ -13,8 +13,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 
-import com.osprey.marketdata.feed.mock.MockMarketDataFeedService;
-
 @Configuration
 public class LogConfiguration {
 	final static Logger logger = LogManager.getLogger(LogConfiguration.class);

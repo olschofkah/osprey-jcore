@@ -5,8 +5,6 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.osprey.math.OspreyQuantMath;
-import com.osprey.math.result.SMAPair;
-import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
