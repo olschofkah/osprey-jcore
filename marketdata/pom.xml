@@ -25,6 +25,7 @@
 		<log4j.version>2.6</log4j.version>
 		<junit.version>4.12</junit.version>
 		<apache.commons.version>3.4</apache.commons.version>
+		<apache.net.version>3.5</apache.net.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
 	</properties>
 
@@ -55,6 +56,13 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${apache.commons.version}</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>commons-net</groupId>
+		    <artifactId>commons-net</artifactId>
+		    <version>${apache.net.version}</version>
+		</dependency>
+		
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>

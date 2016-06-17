@@ -105,7 +105,7 @@ public class MovingAverageTest {
 	
 	
 	private List<HistoricalSecurity> generateHistoricalPrices_bmk() {
-		ZonedDateTime now = ZonedDateTime.now();
+		LocalDate now = LocalDate.now();
 
 		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
 		hs0.setClose(25);
