@@ -4,7 +4,7 @@
 -DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
      to make all loggers asynchronous. -->
  
-<Configuration status="INFO">
+<Configuration status="DEBUG">
 
 	<!-- TODO Remove this for prod
 	<appender name="console" class="org.apache.log4j.ConsoleAppender">

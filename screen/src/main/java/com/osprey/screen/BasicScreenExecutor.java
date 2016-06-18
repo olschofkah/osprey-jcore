@@ -21,7 +21,7 @@ public class BasicScreenExecutor implements IStockScreenPlanExecutor {
 		for (ScreenPlan plan : plans) {
 
 			if (plan.execute().passed()) {
-				resultSet.add(plan.getSecurity().getTicker());
+				resultSet.add(plan.getSecurity().getSymbol());
 			}
 
 		}

@@ -29,7 +29,7 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 	@Override
 	public ExtendedFundamentalPricedSecurityWithHistory process(Security item) throws Exception {
 
-		logger.debug("Quoting initial screen on {} ", () -> item.getTicker());
+		logger.debug("Quoting initial screen on {} ", () -> item.getSymbol());
 
 		FundamentalPricedSecurity quote = fundamentalQuoteService.quoteFundamental(item);
 

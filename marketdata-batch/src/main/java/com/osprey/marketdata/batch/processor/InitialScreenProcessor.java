@@ -39,7 +39,7 @@ public class InitialScreenProcessor implements ItemProcessor<Security, Security>
 	@Override
 	public Security process(Security item) throws Exception {
 
-		logger.info("Performing initial screen on {} ", () -> item.getTicker());
+		logger.info("Performing initial screen on {} ", () -> item.getSymbol());
 
 		InputStream in = getClass().getClassLoader().getResourceAsStream(screenJsonFile);
 		ScreenStrategyEntry entry = new ObjectMapper().readValue(in, ScreenStrategyEntry.class);
@@ -47,7 +47,7 @@ public class InitialScreenProcessor implements ItemProcessor<Security, Security>
 		// looking for a recent previous close for filtering
 		double closingPrice = 0;
 		for (int i = 1; i < 5 && closingPrice == 0; ++i) {
-			closingPrice = securityMasterRepository.fetchClosingPrice(item.getTicker(), LocalDate.now().minusDays(1));
+			closingPrice = securityMasterRepository.fetchClosingPrice(item.getSymbol(), LocalDate.now().minusDays(1));
 		}
 
 		FundamentalPricedSecurity emptyFundamental = new FundamentalPricedSecurity(item);
@@ -69,7 +69,7 @@ public class InitialScreenProcessor implements ItemProcessor<Security, Security>
 		executor.setPlans(screenPlan);
 		executor.execute();
 
-		if (executor.getResultSet().contains(item.getTicker())) {
+		if (executor.getResultSet().contains(item.getSymbol())) {
 			return item;
 		} else {
 			return null;

@@ -12,14 +12,14 @@ import com.osprey.marketdata.feed.nasdaq.NasdaqSecurityMasterFtpService;
 import com.osprey.securitymaster.Security;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MarketDataDevConfiguration.class)
+@SpringApplicationConfiguration(classes = MarketdataApplication.class)
 public class NasdaqSecurityMasterServiceTest {
 
 	@Autowired
 	private NasdaqSecurityMasterFtpService nasdaqSecurityMasterService;
 
 	@Test
-	private void nasdaqSecurityMasterTest() {
+	public void nasdaqSecurityMasterTest() {
 
 		Set<Security> securities = nasdaqSecurityMasterService.fetchSecurityMaster();
 		

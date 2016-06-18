@@ -36,7 +36,7 @@ public class HotShitScreenProcessor
 	@Override
 	public ScreenSuccessSecurity process(ExtendedFundamentalPricedSecurityWithHistory item) throws Exception {
 
-		logger.info("Performing tha hot shit on {} ", () -> item.getTicker());
+		logger.info("Performing tha hot shit on {} ", () -> item.getSymbol());
 
 		InputStream in = getClass().getClassLoader().getResourceAsStream(screenJsonFile);
 		List<ScreenStrategyEntry> entries = new ObjectMapper()
@@ -62,9 +62,9 @@ public class HotShitScreenProcessor
 			executor.setPlans(screenPlanFactory.build(criteria));
 			executor.execute();
 
-			if (executor.getResultSet().contains(item.getTicker())) {
+			if (executor.getResultSet().contains(item.getSymbol())) {
 
-				logger.info("Adding {} to the hot shit for {} ", () -> item.getTicker(), () -> LocalDate.now());
+				logger.info("Adding {} to the hot shit for {} ", () -> item.getSymbol(), () -> LocalDate.now());
 
 				if (result == null) {
 					result = new ScreenSuccessSecurity(item);

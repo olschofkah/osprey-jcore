@@ -49,7 +49,7 @@ public class MockMarketDataTest {
 
 		for (Security s : securityMaster) {
 			PricedSecurity quote = mockMarketData.quote(s);
-			Assert.assertEquals(s.getTicker(), quote.getTicker());
+			Assert.assertEquals(s.getSymbol(), quote.getSymbol());
 			Assert.assertEquals(s.getInstrumentType(), quote.getInstrumentType());
 
 			Assert.assertTrue(quote.getAsk() > 0);
@@ -58,7 +58,7 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getOpen() > 0);
 			Assert.assertTrue(quote.getLastPrice() > 0);
 			Assert.assertTrue(quote.getVolume() > 0);
-			System.out.println("Quote of " + s.getTicker() + " is " + quote);
+			System.out.println("Quote of " + s.getSymbol() + " is " + quote);
 		}
 	}
 
@@ -80,7 +80,7 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getOpen() > 0);
 			Assert.assertTrue(quote.getLastPrice() > 0);
 			Assert.assertTrue(quote.getVolume() > 0);
-			System.out.println("Quote of " + quote.getTicker() + " is " + quote);
+			System.out.println("Quote of " + quote.getSymbol() + " is " + quote);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class MockMarketDataTest {
 
 		for (Security s : securityMaster) {
 			FundamentalPricedSecurity quote = mockMarketData.quoteFundamental(s);
-			Assert.assertEquals(s.getTicker(), quote.getTicker());
+			Assert.assertEquals(s.getSymbol(), quote.getSymbol());
 			Assert.assertEquals(s.getInstrumentType(), quote.getInstrumentType());
 
 			Assert.assertTrue(quote.getAsk() > 0);
@@ -122,7 +122,7 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getSharesOutstanding() > 0);
 			Assert.assertTrue(quote.getShortInt() > 0);
 
-			System.out.println("Quote of " + s.getTicker() + " is " + quote);
+			System.out.println("Quote of " + s.getSymbol() + " is " + quote);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getPeRatio() > 0);
 			Assert.assertTrue(quote.getSharesOutstanding() > 0);
 			Assert.assertTrue(quote.getShortInt() > 0);
-			System.out.println("Quote of " + quote.getTicker() + " is " + quote);
+			System.out.println("Quote of " + quote.getSymbol() + " is " + quote);
 		}
 	}
 
@@ -186,7 +186,7 @@ public class MockMarketDataTest {
 			LocalDate dayCounter = start;
 
 			for (HistoricalSecurity hs : hist) {
-				Assert.assertEquals(s.getTicker(), hs.getTicker());
+				Assert.assertEquals(s.getSymbol(), hs.getTicker());
 
 				Assert.assertEquals(dayCounter, hs.getHistoricalDate());
 
@@ -196,7 +196,7 @@ public class MockMarketDataTest {
 				Assert.assertTrue(hs.getOpen() > 0);
 				Assert.assertTrue(hs.getAdjClose() > 0);
 				Assert.assertTrue(hs.getVolume() > 0);
-				System.out.println("Quote of " + s.getTicker() + " is " + hs);
+				System.out.println("Quote of " + s.getSymbol() + " is " + hs);
 
 				dayCounter = dayCounter.minusDays(1);
 			}

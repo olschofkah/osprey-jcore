@@ -27,6 +27,9 @@
 		<apache.commons.version>3.4</apache.commons.version>
 		<apache.net.version>3.5</apache.net.version>
 		<apache.io.version>2.5</apache.io.version>
+		<apache.httpclient.version>4.5.2</apache.httpclient.version>
+		<apache.httpcore.version>4.4.4</apache.httpcore.version>
+		<apache.codec.version>1.10</apache.codec.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
 	</properties>
 
@@ -36,10 +39,8 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -47,9 +48,19 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
+			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
@@ -57,30 +68,36 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>${apache.commons.version}</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>commons-net</groupId>
-		    <artifactId>commons-net</artifactId>
-		    <version>${apache.net.version}</version>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>${apache.net.version}</version>
 		</dependency>
 
 		<dependency>
-		    <groupId>commons-io</groupId>
-		    <artifactId>commons-io</artifactId>
-		    <version>${apache.io.version}</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${apache.io.version}</version>
 		</dependency>
-		
-		
+
+		<!-- Enable to use Apache HTTP Client <dependency> <groupId>org.apache.httpcomponents</groupId> 
+			<artifactId>httpcore</artifactId> <version>${apache.httpcore.version}</version> 
+			</dependency> <dependency> <groupId>org.apache.httpcomponents</groupId> <artifactId>httpclient</artifactId> 
+			<version>${apache.httpclient.version}</version> </dependency> <dependency> 
+			<groupId>commons-codec</groupId> <artifactId>commons-codec</artifactId> <version>${apache.codec.version}</version> 
+			</dependency> -->
+
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$-->
+			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$-->
+			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
@@ -95,6 +112,14 @@
 			<version>${lmax.disruptor.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jersey</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

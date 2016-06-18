@@ -10,25 +10,25 @@ import com.osprey.securitymaster.constants.InstrumentType;
 
 public class Security {
 
-	protected final String ticker;
+	protected final String symbol;
 	protected InstrumentType instrumentType;
 	protected ZonedDateTime timestamp;
 	protected int lotSize;
 	protected String companyName;
 	protected Exchange exchange;
 
-	public Security(String ticker) {
-		this.ticker = ticker;
+	public Security(String symbol) {
+		this.symbol = symbol;
 	}
 
 	public Security(Security s) {
-		this(s.ticker);
+		this.symbol = s.symbol;
 		this.instrumentType = s.instrumentType;
 		this.timestamp = s.timestamp;
 	}
 
-	public String getTicker() {
-		return ticker;
+	public String getSymbol() {
+		return symbol;
 	}
 
 	public InstrumentType getInstrumentType() {
@@ -51,7 +51,7 @@ public class Security {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ticker == null) ? 0 : ticker.hashCode());
+		result = prime * result + ((symbol == null) ? 0 : symbol.hashCode());
 		return result;
 	}
 
@@ -64,10 +64,10 @@ public class Security {
 		if (getClass() != obj.getClass())
 			return false;
 		Security other = (Security) obj;
-		if (ticker == null) {
-			if (other.ticker != null)
+		if (symbol == null) {
+			if (other.symbol != null)
 				return false;
-		} else if (!ticker.equals(other.ticker))
+		} else if (!symbol.equals(other.symbol))
 			return false;
 		return true;
 	}

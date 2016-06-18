@@ -146,7 +146,7 @@ public class MockMarketDataFeedService
 				seed = previousDay.getClose();
 			}
 
-			HistoricalSecurity sec = new HistoricalSecurity(s.getTicker(), day);
+			HistoricalSecurity sec = new HistoricalSecurity(s.getSymbol(), day);
 			sec.setAdjClose(seed + RandomUtils.nextDouble(0.01, 5.50));
 			sec.setClose(seed + RandomUtils.nextDouble(0.01, 5.50));
 			sec.setHigh(seed + RandomUtils.nextDouble(0.01, 5.50));
