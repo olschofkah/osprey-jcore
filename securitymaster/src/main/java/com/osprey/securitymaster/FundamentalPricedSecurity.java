@@ -21,7 +21,7 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 	protected double annualYield;
 	protected double pctHeldByInst;
 	protected double shortInt;
-
+/**add ROA, ROE, earnings growth (yoy), revenue growth (yoy) and debt to equity ratio*/
 	protected double beta;
 	protected double historicalVolatility;
 
