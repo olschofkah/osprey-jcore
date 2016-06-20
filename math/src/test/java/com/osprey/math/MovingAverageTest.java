@@ -49,47 +49,115 @@ public class MovingAverageTest {
 
 		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
 
-		int p = 10;
+		int p = 26;
 		double sma = OspreyQuantMath.sma(p, closingPrices);
 		double ema = OspreyQuantMath.ema(sma, p, closingPrices);
 
-		Assert.assertEquals(29.97873696, ema, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(36.194239, ema, DOUBLE_TEST_DELTA);
+	}
+	
+	// 12 day ema (31.012363486) - 26 day ema (36.194239) = 5.181875 
+	public void testMACD() throws Exception {
+
+		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+
+		int long_len = 26;
+		int short_len = 12;
+		
+
+		double MACD = OspreyQuantMath.MACD(long_len, short_len, closingPrices);
+		
+		Assert.assertEquals(5.1818755, MACD, DOUBLE_TEST_DELTA);
 	}
 
 	private List<HistoricalSecurity> generateHistoricalPrices() {
 		ZonedDateTime now = ZonedDateTime.now();
 
-		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
+		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(26));
 		hs0.setClose(24);
 
-		HistoricalSecurity hs1 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(9));
+		HistoricalSecurity hs1 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(25));
 		hs1.setClose(25);
 
-		HistoricalSecurity hs2 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
+		HistoricalSecurity hs2 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(24));
 		hs2.setClose(26);
 
-		HistoricalSecurity hs3 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(7));
+		HistoricalSecurity hs3 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(23));
 		hs3.setClose(27);
 
-		HistoricalSecurity hs4 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(6));
+		HistoricalSecurity hs4 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(22));
 		hs4.setClose(28);
 
-		HistoricalSecurity hs5 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(5));
+		HistoricalSecurity hs5 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(21));
 		hs5.setClose(29);
 
-		HistoricalSecurity hs6 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(4));
+		HistoricalSecurity hs6 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(20));
 		hs6.setClose(30);
 
-		HistoricalSecurity hs7 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(3));
+		HistoricalSecurity hs7 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(19));
 		hs7.setClose(31);
 
-		HistoricalSecurity hs8 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(2));
+		HistoricalSecurity hs8 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(18));
 		hs8.setClose(32);
 
-		HistoricalSecurity hs9 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(1));
+		HistoricalSecurity hs9 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(17));
 		hs9.setClose(33);
+		
+		HistoricalSecurity hs10 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(16));
+		hs10.setClose(33.5);
+		
+		HistoricalSecurity hs11 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(15));
+		hs11.setClose(34);
 
-		List<HistoricalSecurity> closingPrices = new ArrayList<HistoricalSecurity>(10);
+		HistoricalSecurity hs12 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(14));
+		hs12.setClose(34.5);
+		
+		HistoricalSecurity hs13 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(13));
+		hs13.setClose(35);
+		
+		HistoricalSecurity hs14 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(12));
+		hs14.setClose(35.5);
+		
+		HistoricalSecurity hs15 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(11));
+		hs15.setClose(36);
+		
+		HistoricalSecurity hs16 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
+		hs16.setClose(36.5);
+		
+		HistoricalSecurity hs17 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(9));
+		hs17.setClose(37);
+		
+		HistoricalSecurity hs18 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
+		hs18.setClose(37.5);
+		
+		HistoricalSecurity hs19 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
+		hs19.setClose(38);
+		
+		HistoricalSecurity hs20 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(7));
+		hs20.setClose(38.5);
+		
+		HistoricalSecurity hs21 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(6));
+		hs21.setClose(39);
+		
+		HistoricalSecurity hs22 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(5));
+		hs22.setClose(39.5);
+		
+		HistoricalSecurity hs23 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(4));
+		hs23.setClose(40);
+		
+		HistoricalSecurity hs24 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(3));
+		hs24.setClose(40.5);
+		
+		HistoricalSecurity hs25 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(2));
+		hs25.setClose(41);
+		
+		HistoricalSecurity hs26 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(1));
+		hs26.setClose(41.5);
+		
+	
+		
+
+		List<HistoricalSecurity> closingPrices = new ArrayList<HistoricalSecurity>(26);
 		closingPrices.add(hs0);
 		closingPrices.add(hs1);
 		closingPrices.add(hs2);
@@ -100,6 +168,25 @@ public class MovingAverageTest {
 		closingPrices.add(hs7);
 		closingPrices.add(hs8);
 		closingPrices.add(hs9);
+		closingPrices.add(hs10);
+		closingPrices.add(hs11);
+		closingPrices.add(hs12);
+		closingPrices.add(hs13);
+		closingPrices.add(hs14);
+		closingPrices.add(hs15);
+		closingPrices.add(hs16);
+		closingPrices.add(hs17);
+		closingPrices.add(hs18);
+		closingPrices.add(hs19);
+		closingPrices.add(hs20);
+		closingPrices.add(hs21);
+		closingPrices.add(hs22);
+		closingPrices.add(hs23);
+		closingPrices.add(hs24);
+		closingPrices.add(hs25);
+		closingPrices.add(hs26);
+
+
 		return closingPrices;
 	}
 	
