@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
 import com.osprey.marketdata.feed.IHistoricalSecurityQuoteSerice;
+import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
@@ -30,9 +31,14 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 	public ExtendedFundamentalPricedSecurityWithHistory process(Security item) throws Exception {
 
 		logger.debug("Quoting initial screen on {} ", () -> item.getSymbol());
-
-		FundamentalPricedSecurity quote = fundamentalQuoteService.quoteFundamental(item);
-
+		
+		FundamentalPricedSecurity quote = null;
+		try {
+			quote = fundamentalQuoteService.quoteFundamental(item);
+		} catch (MarketDataNotAvailableException e) {
+			logger.warn("Failed to quote {} | Message {}", new Object[]{item.getSymbol(), e.getMessage()});
+		}
+		
 		LocalDate today = LocalDate.now();
 		LocalDate overOneYearAgo = today.minusYears(1).minusWeeks(1);
 
@@ -50,12 +56,12 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 	private void decorateQuoteWithCustomCalculations(ExtendedFundamentalPricedSecurityWithHistory extendedQuote) {
 
 		double volatility = OspreyQuantMath.volatility(OspreyConstants.MARKET_DAYS_IN_YEAR, extendedQuote.getHistory());
-		
+
 		double sma12 = OspreyQuantMath.sma(12, extendedQuote.getHistory());
 		double ema12 = OspreyQuantMath.ema(sma12, 12, extendedQuote.getHistory());
-		
+
 		// TODO Determine & Add more calculations.
-		
+
 		extendedQuote.set_oVolatility(volatility);
 		extendedQuote.set_12ema(ema12);
 		extendedQuote.set_12sma(sma12);

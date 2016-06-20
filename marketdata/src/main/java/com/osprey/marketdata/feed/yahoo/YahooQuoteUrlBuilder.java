@@ -26,6 +26,8 @@ public class YahooQuoteUrlBuilder {
 	private String defaultKeyStatistics;
 	@Value("${yahoo.quote.stock.module.calendarEvents}")
 	private String calendarEvents;
+	@Value("${yahoo.quote.stock.module.price}")
+	private String price;
 
 	@Value("${yahoo.quote.stock.module.seperator}")
 	private String seperator;
@@ -50,6 +52,12 @@ public class YahooQuoteUrlBuilder {
 		return yahooQuoteUrl + symbol + "?" + fieldName + "=" + urlBuilder.toString();
 	}
 
+	public YahooQuoteUrlBuilder price() {
+		prepend();
+		urlBuilder.append(price);
+		return this;
+	}
+	
 	public YahooQuoteUrlBuilder summaryProfile() {
 		prepend();
 		urlBuilder.append(summaryProfile);

@@ -47,16 +47,27 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 
 	@Override
 	public Set<Security> fetchSecurityMaster() {
+		Set<Security> securities = new HashSet<>();
 
-		Set<Security> securities = ftpPull(listedFileName);
-		securities.addAll(ftpPull(externalListedFileName));
+		List<String> lines = ftpPull(listedFileName);
+		securities.addAll(parseNasdaqListedSecurity(lines));
+
+		lines = ftpPull(externalListedFileName);
+		securities.addAll(parseExternalListedSecurity(lines));
+		
+		filter(securities);
 
 		return securities;
 	}
 
-	public Set<Security> ftpPull(String file) {
+	private void filter(Set<Security> securities) {
+		// TODO filter out everything other than common stock & ETFs. 
+		
+	}
+
+	public List<String> ftpPull(String file) {
 		FTPClient ftp = null;
-		Set<Security> securities = new HashSet<>();
+		List<String> lines = null;
 
 		try {
 
@@ -80,12 +91,10 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 			logger.info("Current directory NASDAQ FTP directory {}", ftp.printWorkingDirectory());
 
 			InputStream is = null;
-			List<String> lines = null;
 
 			try {
 				is = ftp.retrieveFileStream(file);
 				lines = IOUtils.readLines(is, Charset.forName("UTF-8"));
-				securities.addAll(parseNasdaqListedSecurity(lines));
 			} finally {
 				is.close();
 			}
@@ -103,7 +112,7 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 			}
 		}
 
-		return securities;
+		return lines;
 	}
 
 	private Set<Security> parseExternalListedSecurity(List<String> list) {
@@ -127,8 +136,8 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 				continue;
 			}
 
-			// Using NASDAQ symbology
-			sec = process(split[7], split[1], split[6], split[5], split[4], "N", Exchange.fromCode(split[2]), now);
+			// Using CQS symbology
+			sec = process(split[3], split[1], split[6], split[5], split[4], "N", Exchange.fromCode(split[2]), now);
 
 			if (sec != null) {
 				parsedSecurities.add(sec);
@@ -162,6 +171,7 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 				continue;
 			}
 
+			// TODO Convert symbol to CQS
 			sec = process(split[0], split[1], split[3], split[5], split[6], split[7], Exchange.NASDAQ, now);
 
 			if (sec != null) {

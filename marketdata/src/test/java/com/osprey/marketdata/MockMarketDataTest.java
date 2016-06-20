@@ -116,7 +116,6 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getMarketCap() > 0);
 			Assert.assertTrue(quote.getNextDivDate().isAfter(now) || quote.getNextDivDate().isEqual(now));
 			Assert.assertTrue(quote.getNextEarningsDate().isAfter(now) || quote.getNextEarningsDate().isEqual(now));
-			Assert.assertTrue(quote.getNextEarningsReportTime() == EarningsReportTime.PRE_MARKET);
 			Assert.assertTrue(quote.getPctHeldByInst() > 0);
 			Assert.assertTrue(quote.getPeRatio() > 0);
 			Assert.assertTrue(quote.getSharesOutstanding() > 0);
@@ -158,7 +157,6 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getMarketCap() > 0);
 			Assert.assertTrue(quote.getNextDivDate().isAfter(now) || quote.getNextDivDate().isEqual(now));
 			Assert.assertTrue(quote.getNextEarningsDate().isAfter(now) || quote.getNextEarningsDate().isEqual(now));
-			Assert.assertTrue(quote.getNextEarningsReportTime() == EarningsReportTime.PRE_MARKET);
 			Assert.assertTrue(quote.getPctHeldByInst() > 0);
 			Assert.assertTrue(quote.getPeRatio() > 0);
 			Assert.assertTrue(quote.getSharesOutstanding() > 0);

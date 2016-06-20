@@ -11,7 +11,6 @@ import java.util.Set;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
 
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
 import com.osprey.marketdata.feed.IHistoricalSecurityQuoteSerice;
@@ -21,9 +20,7 @@ import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalSecurity;
 import com.osprey.securitymaster.PricedSecurity;
 import com.osprey.securitymaster.Security;
-import com.osprey.securitymaster.constants.EarningsReportTime;
 
-@Service
 public class MockMarketDataFeedService
 		implements ILiveSecurityQuoteService, IHistoricalSecurityQuoteSerice, IFundamentalSecurityQuoteService {
 
@@ -103,8 +100,7 @@ public class MockMarketDataFeedService
 		fundamentalQuote.setHistoricalVolatility(RandomUtils.nextDouble(0.1, 0.9));
 		fundamentalQuote.setMarketCap(RandomUtils.nextDouble(1000000, 10000000000l));
 		fundamentalQuote.setNextDivDate(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
-		fundamentalQuote.setNextEarningsDate(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
-		fundamentalQuote.setNextEarningsReportTime(EarningsReportTime.PRE_MARKET);
+		fundamentalQuote.setNextEarningsDateLower(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
 		fundamentalQuote.setPctHeldByInst(RandomUtils.nextDouble(0.01, 1.2));
 		fundamentalQuote.setPeRatio(RandomUtils.nextDouble(1, 200));
 		fundamentalQuote.setSharesOutstanding((long) (fundamentalQuote.getMarketCap() / fundamentalQuote.getClose()));
@@ -171,9 +167,9 @@ public class MockMarketDataFeedService
 			 */
 
 			sec.setTimestamp(ZonedDateTime.now());
-			
+
 			hist.add(sec);
-			
+
 			day = day.minusDays(1);
 		}
 

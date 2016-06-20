@@ -33,10 +33,10 @@ public class MarketDataDevConfiguration {
 		return new NasdaqSecurityMasterFtpService();
 	}
 
-	@Bean
-	public MockSecurityMasterService mockSecurityMasterService() {
-		return new MockSecurityMasterService();
-	}
+//	@Bean
+//	public MockSecurityMasterService mockSecurityMasterService() {
+//		return new MockSecurityMasterService();
+//	}
 
 	@Bean
 	public YahooQuoteClient yahooQuoteClient() {

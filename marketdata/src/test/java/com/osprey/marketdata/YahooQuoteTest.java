@@ -25,7 +25,9 @@ public class YahooQuoteTest {
 	// TODO Add Test Suites
 
 	@Test
-	public void quoteFundamentalTest1() {
+	public void quoteFundamentalTest1() throws Exception{
+		
+		// TODO see why first request takes oddly long
 
 		long n0 = System.currentTimeMillis();
 		FundamentalPricedSecurity quote = yahooQuoteClient.quoteFundamental(new Security("AAPL"));

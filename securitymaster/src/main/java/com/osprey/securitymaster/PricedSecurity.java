@@ -6,8 +6,12 @@ public class PricedSecurity extends Security {
 	protected double close;
 	protected double open;
 	protected double bid;
+	protected long bidSize;
 	protected double ask;
+	protected long askSize;
+	
 	protected long volume;
+	protected long averageVolume;
 
 	public PricedSecurity(String ticker) {
 		super(ticker);
@@ -27,6 +31,9 @@ public class PricedSecurity extends Security {
 		this.bid = s.bid;
 		this.volume = s.volume;
 		this.lastPrice = s.lastPrice;
+		this.bidSize = s.bidSize;
+		this.askSize = s.askSize;
+		this.averageVolume = s.averageVolume;
 	}
 
 	public double getLastPrice() {
@@ -75,6 +82,30 @@ public class PricedSecurity extends Security {
 
 	public void setOpen(double open) {
 		this.open = open;
+	}
+
+	public long getBidSize() {
+		return bidSize;
+	}
+
+	public void setBidSize(long bidSize) {
+		this.bidSize = bidSize;
+	}
+
+	public long getAskSize() {
+		return askSize;
+	}
+
+	public void setAskSize(long askSize) {
+		this.askSize = askSize;
+	}
+
+	public long getAverageVolume() {
+		return averageVolume;
+	}
+
+	public void setAverageVolume(long averageVolume) {
+		this.averageVolume = averageVolume;
 	}
 
 }
