@@ -44,6 +44,27 @@ public final class OspreyQuantMath {
 		return ema;
 	}
 
+	
+	/**
+	 * MACD = ema (short len) - ema (long len)
+	 * @param long_len
+	 * @param short_len
+	 * @param prices
+	 * @return
+	 */
+	public static double MACD(int long_len, int short_len, List<HistoricalSecurity> prices) {
+
+ 		
+		
+		double sma_long = OspreyQuantMath.sma(long_len, prices);
+		double sma_short = OspreyQuantMath.sma(short_len, prices);
+		
+		double ema_long = OspreyQuantMath.ema(sma_long, long_len, prices);
+		double ema_short = OspreyQuantMath.ema(sma_short, short_len, prices);
+				
+		 return ema_short - ema_long; 
+
+	}
 	/**
 	 * Calculate two Simple Moving Averages simultaneously over a single series
 	 * of closing prices.
@@ -118,12 +139,14 @@ public final class OspreyQuantMath {
 	}
 
 	/**
-	 * Annual Volatility
-	 * Annual Volatility is defined as standard deviation times sqrt(252)
-	 * standard deviation = sqrt(sum(daily return (i) - average daily return)^2/n)
+	 * Annual Volatility Annual Volatility is defined as standard deviation
+	 * times sqrt(252) standard deviation = sqrt(sum(daily return (i) - average
+	 * daily return)^2/n)
+	 * 
 	 * @param period
 	 * @param prices
-	 * @return volatility = sqrt(sum(daily return (i) - average daily return)^2/n)
+	 * @return volatility = sqrt(sum(daily return (i) - average daily
+	 *         return)^2/n)
 	 */
 	public static double volatility(int period, List<HistoricalSecurity> prices) {
 
@@ -151,76 +174,64 @@ public final class OspreyQuantMath {
 		for (double dr : dailyReturns) {
 			volatility += Math.pow(dr - averageDailyReturn, 2);
 		}
-		
+
 		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(252, 0.5);
 	}
-	
+
 	public static double Beta(int period, List<HistoricalSecurity> prices, List<HistoricalSecurity> prices_bmk) {
 
 		double dailyReturn;
 		double dailyReturn_bmk;
-		
+
 		double price;
 		double price_bmk;
 		double previousPrice = prices.get(0).getClose();
 		double previousPrice_bmk = prices_bmk.get(0).getClose();
 		double averageDailyReturn = 0;
 		double averageDailyReturn_bmk = 0;
-		
 
 		List<Double> dailyReturns = new ArrayList<>(period);
 		List<Double> dailyReturns_bmk = new ArrayList<>(period);
-		
 
 		for (int i = 1; i < period; ++i) {
 			price = prices.get(i).getClose();
 
 			price_bmk = prices_bmk.get(i).getClose();
-			
+
 			dailyReturn = price / previousPrice - 1;
 			dailyReturn_bmk = price_bmk / previousPrice_bmk - 1;
-			
+
 			dailyReturns.add(dailyReturn);
 			dailyReturns_bmk.add(dailyReturn_bmk);
 
 			averageDailyReturn += dailyReturn;
 			averageDailyReturn_bmk += dailyReturn_bmk;
 
-			
 			previousPrice = price;
 			previousPrice_bmk = price_bmk;
-			
+
 		}
 
 		averageDailyReturn /= (period - 1);
 		averageDailyReturn_bmk /= (period - 1);
 
-		
-		
 		double volatility_bmk = 0;
 		for (double dr_bmk : dailyReturns_bmk) {
 			volatility_bmk += Math.pow(dr_bmk - averageDailyReturn_bmk, 2);
 		}
-		
+
 		volatility_bmk = volatility_bmk / (period - 1);
-		
+
 		double covariance = 0;
-		for (int i = 0; i<period - 1; i++ ) {
-			
-			covariance = Math.pow((dailyReturns.get(i).doubleValue()-averageDailyReturn)*(dailyReturns_bmk.get(i).doubleValue()-averageDailyReturn_bmk),2);
+		for (int i = 0; i < period - 1; i++) {
+
+			covariance = Math.pow((dailyReturns.get(i).doubleValue() - averageDailyReturn)
+					* (dailyReturns_bmk.get(i).doubleValue() - averageDailyReturn_bmk), 2);
 		}
-		
+
 		covariance = covariance / (period - 1);
-		
-		
-		
-		
+
 		return covariance / volatility_bmk;
 	}
-	
-	
-	
-	
-	
 
 }
