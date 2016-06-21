@@ -20,13 +20,13 @@ public class YahooQuoteTest {
 
 	@Autowired
 	private YahooQuoteClient yahooQuoteClient;
-	
+
 	// TODO Add more test cases
 	// TODO Add Test Suites
 
 	@Test
-	public void quoteFundamentalTest1() throws Exception{
-		
+	public void quoteFundamentalTest1() throws Exception {
+
 		// TODO see why first request takes oddly long
 
 		long n0 = System.currentTimeMillis();
@@ -74,9 +74,20 @@ public class YahooQuoteTest {
 			Assert.assertTrue("Iteration " + i + " is longer than acceptable", results.get(i) < 1000);
 		}
 		double averageDuration = ((double) (n12 - n0)) / 12.0;
-		
+
 		System.out.println("Average time in mills: " + averageDuration);
 		Assert.assertTrue("Average duration failure", averageDuration < 250);
+
+	}
+
+	@Test
+	public void problemTickersTest() throws Exception {
+
+		yahooQuoteClient.quoteFundamental(new Security("SKX"));
+
+		// only ensuring the quotes do not throw an exception ... and we must
+		// have ASSERTS!
+		Assert.assertTrue(true);
 
 	}
 

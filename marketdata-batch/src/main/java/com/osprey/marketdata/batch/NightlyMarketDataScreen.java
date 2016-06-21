@@ -2,6 +2,9 @@ package com.osprey.marketdata.batch;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.sql.DataSource;
 
@@ -33,7 +36,9 @@ import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
+import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
 import com.osprey.marketdata.batch.reader.SecurityMasterItemReader;
+import com.osprey.marketdata.batch.tasklet.DisruptorShutdownTasklet;
 import com.osprey.screen.ScreenSuccessSecurity;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.Security;
@@ -66,8 +71,24 @@ public class NightlyMarketDataScreen {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(4);// TODO extract
 		executor.setMaxPoolSize(8); // TODO extract
-		executor.afterPropertiesSet();
+		executor.setThreadFactory(threadFactory());
+		executor.setWaitForTasksToCompleteOnShutdown(true);
 		return executor;
+	}
+
+	@Bean
+	public ThreadFactory threadFactory() {
+		return Executors.defaultThreadFactory();
+	}
+
+	@Bean
+	public ThrottleDisruptor throttleDisruptor() {
+		return new ThrottleDisruptor(throttleCapacity(), threadFactory());
+	}
+
+	@Bean
+	public AtomicLong throttleCapacity() {
+		return new AtomicLong();
 	}
 
 	@Bean
@@ -84,7 +105,8 @@ public class NightlyMarketDataScreen {
 					throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 
 				Security security = postInitialScreenResultQueue.poll();
-				logger.debug("Fetching {} from the postInitialScreenResultQueue for processing", () -> security);
+				logger.debug("Fetching {} from the postInitialScreenResultQueue for processing",
+						() -> security.getSymbol());
 				return security;
 			}
 
@@ -121,6 +143,11 @@ public class NightlyMarketDataScreen {
 	public HotShitScreenProcessor hotShitScreenProcessor() {
 		return new HotShitScreenProcessor();
 	}
+	
+	@Bean
+	public DisruptorShutdownTasklet disruptorShutdownTasklet() {
+		return new DisruptorShutdownTasklet();
+	}
 
 	@Bean
 	public ItemWriter<Security> initialScreenQueueWriter() {
@@ -128,7 +155,7 @@ public class NightlyMarketDataScreen {
 
 			@Override
 			public void write(List<? extends Security> items) throws Exception {
-				logger.debug("Queuing securities for further quoting {}", () -> items);
+				logger.debug("Queuing securities for further quoting ...");
 				postInitialScreenResultQueue.addAll(items);
 			}
 
@@ -141,7 +168,7 @@ public class NightlyMarketDataScreen {
 
 			@Override
 			public void write(List<? extends ExtendedFundamentalPricedSecurityWithHistory> items) throws Exception {
-				logger.debug("Queuing securities for further screening {}", () -> items);
+				logger.debug("Queuing securities for further screening ...");
 				postQuoteQueue.addAll(items);
 			}
 
@@ -166,50 +193,50 @@ public class NightlyMarketDataScreen {
 		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
 				.listener(listener()).flow(initialScreen()) // #1
 				.next(quoteAndCalcAndPersist()) // #2
-				.next(hotListFilterAndPersist()) // #3
+				.next(disruptorShutdown()) // #3
+				.next(hotListFilterAndPersist()) // #4
 				.end().build();
 	}
 
 	@Bean
 	public Step initialScreen() {
-		return stepBuilderFactory.get("preScreen").<Security, Security>chunk(250).reader(initialScreenReader())
-				.processor(initialScreenProcessor()).writer(initialScreenQueueWriter())
-				// .taskExecutor(taskExecutor())
+		return stepBuilderFactory.get("preScreen")
+				.<Security, Security>chunk(250)
+				.reader(initialScreenReader())
+				.processor(initialScreenProcessor())
+				.writer(initialScreenQueueWriter())
+				.taskExecutor(taskExecutor())
 				.build();
 	}
 
 	@Bean
 	public Step quoteAndCalcAndPersist() {
-		return stepBuilderFactory.get("quoteAndCalc").<Security, ExtendedFundamentalPricedSecurityWithHistory>chunk(5)
-				.reader(postInitialScreenQueueReader()) // Read From the
-														// postInitialScreenQueue
-				.processor(quoteProcessor()) // Pull fundamentals, history, and
-												// calculate desired points
-												// (oVol, ema, sma, etc... )
-				.writer(postQuoteQueueWriter()) // Cache the into a post quote
-												// queue
-				// .writer(initialScreenWriter()) // Write the results to
-				// postgresql
-				// .taskExecutor(taskExecutor())
+		return stepBuilderFactory.get("quoteAndCalc")
+				.<Security, ExtendedFundamentalPricedSecurityWithHistory>chunk(5)
+				.reader(postInitialScreenQueueReader())
+				.processor(quoteProcessor())
+				.writer(postQuoteQueueWriter())
+				// .writer(persistStats)
+				//.taskExecutor(taskExecutor())
 				.build();
 	}
-
-	// TODO This needs to be heavily profiled for memory usage and time. This
-	// many need to use JMS to split out the work depending on time.
+	
+	@Bean
+	public Step disruptorShutdown() {
+		return stepBuilderFactory.get("disruptorShutdown")
+				.tasklet(disruptorShutdownTasklet())
+				.build();
+	}
 
 	@Bean
 	public Step hotListFilterAndPersist() {
 		return stepBuilderFactory.get("hotListFilter")
 				.<ExtendedFundamentalPricedSecurityWithHistory, ScreenSuccessSecurity>chunk(100)
-				.reader(postQuoteQueueReader()) // read the post quote queue
-				.processor(hotShitScreenProcessor()) // Run the additional
-														// screens for the hot
-														// list
-				// .writer(initialScreenWriter()) // persist the hot list to
-				// postgresql
-				.writer(hotListMongoItemWriter()) // persist the hot list to
-													// mongodb
-				// .taskExecutor(taskExecutor())
+				.reader(postQuoteQueueReader())
+				.processor(hotShitScreenProcessor())
+				// .writer(peristHotList)
+				// .writer(hotListMongoItemWriter())
+				.taskExecutor(taskExecutor())
 				.build();
 	}
 

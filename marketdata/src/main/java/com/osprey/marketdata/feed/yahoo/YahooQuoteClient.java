@@ -56,6 +56,10 @@ public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 				throw new RuntimeException(e1);
 			}
 		}
+		
+		if(yahooQuote.getQuoteSummary().getError() != null){
+			logger.warn(yahooQuote.getQuoteSummary().getError());
+		}
 
 		Result result = yahooQuote.getQuoteSummary().getResult().get(0);
 

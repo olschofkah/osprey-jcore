@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import com.osprey.marketdata.feed.mock.MockSecurityMasterService;
 import com.osprey.marketdata.feed.nasdaq.NasdaqSecurityMasterFtpService;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteUrlBuilder;
@@ -21,6 +20,7 @@ import com.osprey.securitymaster.repository.mock.MockSecurityMasterRepository;
 @ComponentScan("com.osprey")
 @PropertySource("classpath:nasdaq.properties")
 @PropertySource("classpath:yahoo.properties")
+@PropertySource("classpath:zacks.properties")
 public class MarketDataDevConfiguration {
 
 	@Bean

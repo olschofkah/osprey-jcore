@@ -2,11 +2,13 @@ package com.osprey.marketdata.batch.processor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
 import com.osprey.marketdata.feed.IHistoricalSecurityQuoteSerice;
@@ -21,6 +23,11 @@ import com.osprey.securitymaster.constants.OspreyConstants;
 public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundamentalPricedSecurityWithHistory> {
 
 	final static Logger logger = LogManager.getLogger(QuoteProcessor.class);
+	
+
+	@Autowired
+	@Qualifier("throttleCapacity")
+	private AtomicLong throttleCapacity;
 
 	@Autowired
 	private IFundamentalSecurityQuoteService fundamentalQuoteService;
@@ -31,12 +38,19 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 	public ExtendedFundamentalPricedSecurityWithHistory process(Security item) throws Exception {
 
 		logger.debug("Quoting initial screen on {} ", () -> item.getSymbol());
+
+		while (throttleCapacity.get() <= 0) {
+			logger.debug("Waiting for capacity ...");
+			Thread.sleep(5); // TODO make config
+		}
+		throttleCapacity.getAndDecrement();
 		
 		FundamentalPricedSecurity quote = null;
 		try {
 			quote = fundamentalQuoteService.quoteFundamental(item);
 		} catch (MarketDataNotAvailableException e) {
 			logger.warn("Failed to quote {} | Message {}", new Object[]{item.getSymbol(), e.getMessage()});
+			return null;
 		}
 		
 		LocalDate today = LocalDate.now();

@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +46,9 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 	@Value("${nasdaq.security.master.ftp.external.listed.file}")
 	private String externalListedFileName;
 
+	@Value("${zacks.optionable.symbols}")
+	private String optionableList;
+
 	@Override
 	public Set<Security> fetchSecurityMaster() {
 		Set<Security> securities = new HashSet<>();
@@ -54,15 +58,26 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 
 		lines = ftpPull(externalListedFileName);
 		securities.addAll(parseExternalListedSecurity(lines));
-		
-		filter(securities);
+
+		filterNonOptionables(securities);
 
 		return securities;
 	}
 
-	private void filter(Set<Security> securities) {
-		// TODO filter out everything other than common stock & ETFs. 
-		
+	private void filterNonOptionables(Set<Security> securities) {
+		Set<String> optionableSymbolSet = new HashSet<>(Arrays.asList(optionableList.split(",")));
+
+		Iterator<Security> iterator = securities.iterator();
+
+		Security s;
+		while (iterator.hasNext()) {
+			s = iterator.next();
+			if (!optionableSymbolSet.contains(s.getSymbol())) {
+				logger.info("Removing {} due to not being optionable.", s.getSymbol());
+				iterator.remove();
+			}
+		}
+
 	}
 
 	public List<String> ftpPull(String file) {
@@ -194,14 +209,6 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 
 		if (exchange == null) {
 			logger.info("Missing Exchange for security for symbol {}.", ticker);
-		}
-
-		// Scan names for security types to ignore ... fragile
-		if (StringUtils.containsAny(companyName, "Warrant", "Depositary", "Notes", "Preferred", "Closed End Fund",
-				"Right", "Units", "Beneficial") || "Y".equals(nextShare)) {
-			logger.info("Skipping security {} due to instrument type found scanning the name ( {} ).",
-					new Object[] { ticker, companyName });
-			return null;
 		}
 
 		Security sec = new Security(ticker);
