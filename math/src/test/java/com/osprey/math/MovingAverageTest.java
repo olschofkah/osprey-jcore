@@ -44,6 +44,35 @@ public class MovingAverageTest {
 
 		Assert.assertEquals(1.07, beta, DOUBLE_TEST_DELTA);
 	}
+	
+	// test case can be verified in http://www.wolframalpha.com/input/?i=black+scholes&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22OptionName%22%7D+-%3E+%22VanillaEuropean%22&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22opttype%22%7D+-%3E+%22Call%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22strike%22%7D+-%3E%22$55%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22exptime%22%7D+-%3E%224+mo%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22underlying%22%7D+-%3E%22$56.25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22vol%22%7D+-%3E%2228+%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22div%22%7D+-%3E%220%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22rf%22%7D+-%3E%222.85%25%22&rawformassumption=%7B%22MC%22,+%22%22%7D+-%3E+%7B%22Formula%22%7D&rawformassumption=%7B%22MC%22,%22%22%7D-%3E%7B%22Formula%22%7D 
+	public void testBSmodel() throws Exception {
+
+		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+		List<HistoricalSecurity> closingPrices_bmk = generateHistoricalPrices_bmk();
+		
+		double s = 56.25;
+		double k = 55;
+		double r = 0.0285;
+		double t = 0.34;
+		double v = 0.28;
+		char flag = 'c';
+		
+		double option_price = BlackScholes(flag, s , k, t, r, v);
+		double IV = ImpliedVolatility(k,s,t,option_price, r);
+		Assert.assertEquals(0.28, option_price, DOUBLE_TEST_DELTA);
+	}
+	
+	private double ImpliedVolatility(double k, double s, double t, double option_price, double r) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private double BlackScholes(char flag, double s, double k, double t, double r, double v) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	@Test
 	public void testBasicEMA() throws Exception {
 

@@ -43,12 +43,14 @@ public final class OspreyQuantMath {
 
 		return ema;
 	}
-	
-	
-	/**EMA(t) = EMA(t-1) + smoothing factor * (Price(t) - EMA(t-1)
+
+	/**
+	 * EMA(t) = EMA(t-1) + smoothing factor * (Price(t) - EMA(t-1)
+	 * 
 	 * @param sma
 	 * @param p
-	 * @param alpha - scale from 1 to 10
+	 * @param alpha
+	 *            - scale from 1 to 10
 	 * @param prices
 	 * @return
 	 */
@@ -65,15 +67,15 @@ public final class OspreyQuantMath {
 		double ema = sma;
 
 		for (int i = 1; i < p; ++i) {
-			ema = prices.get(i).getClose() * alpha/10 + ema * (1 - alpha/10);
+			ema = prices.get(i).getClose() * alpha / 10 + ema * (1 - alpha / 10);
 		}
 
 		return ema;
 	}
 
-	
 	/**
 	 * MACD = ema (short len) - ema (long len)
+	 * 
 	 * @param long_len
 	 * @param short_len
 	 * @param prices
@@ -81,17 +83,16 @@ public final class OspreyQuantMath {
 	 */
 	public static double MACD(int long_len, int short_len, List<HistoricalSecurity> prices) {
 
- 		
-		
 		double sma_long = OspreyQuantMath.sma(long_len, prices);
 		double sma_short = OspreyQuantMath.sma(short_len, prices);
-		
+
 		double ema_long = OspreyQuantMath.ema(sma_long, long_len, prices);
 		double ema_short = OspreyQuantMath.ema(sma_short, short_len, prices);
-				
-		 return ema_short - ema_long; 
+
+		return ema_short - ema_long;
 
 	}
+
 	/**
 	 * Calculate two Simple Moving Averages simultaneously over a single series
 	 * of closing prices.
@@ -203,6 +204,95 @@ public final class OspreyQuantMath {
 		}
 
 		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(252, 0.5);
+	}
+
+	public static double standardNormalDistribution(double x) {
+		double top = Math.exp(-0.5 * Math.pow(x, 2));
+		double bottom = Math.sqrt(2 * Math.PI);
+		return top / bottom;
+	}
+
+	// The Black and Scholes (1973) Stock option formula
+
+	/**
+	 * @param CallPutFlag
+	 *            - char c for call, otherwise put
+	 * @param S
+	 *            - double stock price
+	 * @param X
+	 *            - double strike price
+	 * @param T
+	 *            - double time to maturity in years (1/3 for 4 months)
+	 * @param r
+	 *            - risk free interest rate
+	 * @param v
+	 *            - volatility
+	 * @return option price for call or put
+	 */
+	public double BlackScholes(char CallPutFlag, double S, double X, double T, double r, double v) {
+		double d1, d2;
+
+		d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));
+		d2 = d1 - v * Math.sqrt(T);
+
+		if (CallPutFlag == 'c') {
+			return S * CND(d1) - X * Math.exp(-r * T) * CND(d2);
+		} else {
+			return X * Math.exp(-r * T) * CND(-d2) - S * CND(-d1);
+		}
+	}
+
+	// The cumulative normal distribution function
+	public double CND(double X) {
+		double L, K, w;
+		double a1 = 0.31938153, a2 = -0.356563782, a3 = 1.781477937, a4 = -1.821255978, a5 = 1.330274429;
+
+		L = Math.abs(X);
+		K = 1.0 / (1.0 + 0.2316419 * L);
+		w = 1.0 - 1.0 / Math.sqrt(2.0 * Math.PI) * Math.exp(-L * L / 2)
+				* (a1 * K + a2 * K * K + a3 * Math.pow(K, 3) + a4 * Math.pow(K, 4) + a5 * Math.pow(K, 5));
+
+		if (X < 0.0) {
+			w = 1.0 - w;
+		}
+		return w;
+	}
+
+	/** this is using iterative approach (eg.bisection method) to find the IV, t
+	 * @param X - strike
+	 * @param S - spot
+	 * @param T - time to maturity
+	 * @param callOptionPrice - call option price (current at the money)
+	 * @param r - interest rate
+	 * @return IV
+	 */
+	public double ImpliedVolatility(double X, double S, double T, double callOptionPrice, double r) {
+		double cpTest = 0;
+		double v = 500;
+
+		double upper = 500;
+		double lower = 0;
+		double range = Math.abs(lower - upper);
+
+		boolean while1 = true;
+		while (while1 == true) {
+
+			cpTest = BlackScholes('c', S, X, T, r, v);
+
+			if (cpTest > callOptionPrice) { // Implied Volatility - IV has to go
+											// down
+				upper = v;
+				v = (lower + upper) / 2;
+			} else {
+				// Implied Volatility - IV has to go up
+				lower = v;
+				v = (lower + upper) / 2;
+			}
+			range = Math.abs(lower - upper);
+			if (range < 0.001)
+				break;
+		}
+		return v;
 	}
 
 	public static double Beta(int period, List<HistoricalSecurity> prices, List<HistoricalSecurity> prices_bmk) {
