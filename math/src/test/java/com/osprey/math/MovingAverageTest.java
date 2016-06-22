@@ -50,10 +50,13 @@ public class MovingAverageTest {
 		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
 
 		int p = 26;
+		double alpha =  3.0;
 		double sma = OspreyQuantMath.sma(p, closingPrices);
 		double ema = OspreyQuantMath.ema(sma, p, closingPrices);
+		double ema_smooth = OspreyQuantMath.ema_smooth(sma, p, alpha, closingPrices);
 
-		Assert.assertEquals(36.194239, ema, DOUBLE_TEST_DELTA);
+
+		Assert.assertEquals(39.8310946, ema_smooth, DOUBLE_TEST_DELTA);
 	}
 	
 	// 12 day ema (31.012363486) - 26 day ema (36.194239) = 5.181875 

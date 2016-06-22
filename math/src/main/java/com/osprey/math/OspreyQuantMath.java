@@ -43,6 +43,33 @@ public final class OspreyQuantMath {
 
 		return ema;
 	}
+	
+	
+	/**EMA(t) = EMA(t-1) + smoothing factor * (Price(t) - EMA(t-1)
+	 * @param sma
+	 * @param p
+	 * @param alpha - scale from 1 to 10
+	 * @param prices
+	 * @return
+	 */
+	public static double ema_smooth(double sma, int p, double alpha, List<HistoricalSecurity> prices) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double ema = sma;
+
+		for (int i = 1; i < p; ++i) {
+			ema = prices.get(i).getClose() * alpha/10 + ema * (1 - alpha/10);
+		}
+
+		return ema;
+	}
 
 	
 	/**
