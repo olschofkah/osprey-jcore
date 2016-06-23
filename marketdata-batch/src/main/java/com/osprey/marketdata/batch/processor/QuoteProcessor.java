@@ -15,6 +15,7 @@ import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.OspreyQuantMath;
+import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalQuote;
@@ -76,19 +77,24 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 
 	private void decorateQuoteWithCustomCalculations(ExtendedFundamentalPricedSecurityWithHistory extendedQuote) {
 
-		double volatility = OspreyQuantMath.volatility(
-				Math.min(extendedQuote.getHistory().size(), OspreyConstants.MARKET_DAYS_IN_YEAR),
-				extendedQuote.getHistory());
+		try {
+			double volatility = OspreyQuantMath.volatility(
+					Math.min(extendedQuote.getHistory().size(), OspreyConstants.MARKET_DAYS_IN_YEAR),
+					extendedQuote.getHistory());
 
-		double sma12 = OspreyQuantMath.sma(12, extendedQuote.getHistory());
-		double ema12 = OspreyQuantMath.ema(sma12, 12, extendedQuote.getHistory());
+			double sma12 = OspreyQuantMath.sma(12, extendedQuote.getHistory());
+			double ema12 = OspreyQuantMath.ema(sma12, 12, extendedQuote.getHistory());
 
-		// TODO Determine & Add more calculations.
+			// TODO Determine & Add more calculations.
 
-		extendedQuote.set_oVolatility(volatility);
-		extendedQuote.set_12ema(ema12);
-		extendedQuote.set_12sma(sma12);
+			extendedQuote.set_oVolatility(volatility);
+			extendedQuote.set_12ema(ema12);
+			extendedQuote.set_12sma(sma12);
 
+		} catch (InsufficientHistoryException e) {
+			logger.error("Insufficient historical prices to calculate stats on {}, size avaialble {} ",
+					new Object[] { extendedQuote.getSymbol(), extendedQuote.getHistory().size() });
+		}
 	}
 
 }
