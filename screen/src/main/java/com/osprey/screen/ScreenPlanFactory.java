@@ -19,21 +19,21 @@ import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.screen.screens.VolatilityScreen;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 
 public class ScreenPlanFactory {
 
-	private Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities;
+	private Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities;
 
 	public ScreenPlanFactory() {
 
 	}
 
-	public ScreenPlanFactory(Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities) {
+	public ScreenPlanFactory(Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities) {
 		this.securities = securities;
 	}
 
-	public void setSecurityUniverse(Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities) {
+	public void setSecurityUniverse(Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities) {
 		this.securities = securities;
 	}
 
@@ -48,7 +48,7 @@ public class ScreenPlanFactory {
 		// flip the order since they're dropped onto a stack;
 		Collections.reverse(criterias);
 
-		for (Entry<FundamentalPricedSecurity, List<HistoricalSecurity>> entry : securities.entrySet()) {
+		for (Entry<FundamentalPricedSecurity, List<HistoricalQuote>> entry : securities.entrySet()) {
 			ScreenPlan plan = new ScreenPlan(entry.getKey(), entry.getValue());
 			plans.add(plan);
 

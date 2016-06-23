@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
 
-public class DisruptorShutdownTasklet implements Tasklet{
+public class QuoteThrottleDisruptorShutdownTasklet implements Tasklet{
 	
 	@Autowired
 	private ThrottleDisruptor throttleDisruptor;

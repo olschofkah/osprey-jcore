@@ -5,17 +5,17 @@ import java.util.Stack;
 
 import com.osprey.screen.screens.IStockScreen;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 
 public class ScreenPlan {
 
 	private Stack<IStockScreen> screens;
 	private final FundamentalPricedSecurity security;
-	private final List<HistoricalSecurity> history;
+	private final List<HistoricalQuote> history;
 
 	private boolean passed = true;
 
-	public ScreenPlan(FundamentalPricedSecurity security, List<HistoricalSecurity> history) {
+	public ScreenPlan(FundamentalPricedSecurity security, List<HistoricalQuote> history) {
 		this.security = security;
 		this.history = history;
 

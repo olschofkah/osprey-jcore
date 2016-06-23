@@ -23,7 +23,7 @@ import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.StockScreenCriteriaGenerator;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 
 public class HotShitScreenProcessor
 		implements ItemProcessor<ExtendedFundamentalPricedSecurityWithHistory, ScreenSuccessSecurity> {
@@ -44,7 +44,7 @@ public class HotShitScreenProcessor
 				.readValue(in, new TypeReference<List<ScreenStrategyEntry>>() {
 				});
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>(2);
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>(2);
 		securities.put(item, item.getHistory());
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);

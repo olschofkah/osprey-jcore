@@ -6,7 +6,7 @@ import java.util.List;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.result.SMAPair;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 
 public final class OspreyQuantMath {
 
@@ -24,7 +24,7 @@ public final class OspreyQuantMath {
 	 *            the current day.
 	 * @return the ema-p
 	 */
-	public static double ema(double sma, int p, List<HistoricalSecurity> prices) {
+	public static double ema(double sma, int p, List<HistoricalQuote> prices) {
 
 		if (p < 0) {
 			throw new InvalidPeriodException();
@@ -52,7 +52,7 @@ public final class OspreyQuantMath {
 	 * @param prices
 	 * @return
 	 */
-	public static double MACD(int long_len, int short_len, List<HistoricalSecurity> prices) {
+	public static double MACD(int long_len, int short_len, List<HistoricalQuote> prices) {
 
  		
 		
@@ -77,7 +77,7 @@ public final class OspreyQuantMath {
 	 *            - Prices to use for calculation
 	 * @return ( c0 + c1 + c2 + ... + cp) / p for every p
 	 */
-	public static SMAPair smaPair(int p1, int p2, List<HistoricalSecurity> prices) {
+	public static SMAPair smaPair(int p1, int p2, List<HistoricalQuote> prices) {
 
 		if (p1 < 0 || p2 < 0) {
 			throw new InvalidPeriodException();
@@ -118,7 +118,7 @@ public final class OspreyQuantMath {
 	 *            - Prices to use for calculation
 	 * @return ( c0 + c1 + c2 + ... + cp) / p
 	 */
-	public static double sma(int p, List<HistoricalSecurity> prices) {
+	public static double sma(int p, List<HistoricalQuote> prices) {
 
 		if (p < 0) {
 			throw new InvalidPeriodException();
@@ -148,7 +148,7 @@ public final class OspreyQuantMath {
 	 * @return volatility = sqrt(sum(daily return (i) - average daily
 	 *         return)^2/n)
 	 */
-	public static double volatility(int period, List<HistoricalSecurity> prices) {
+	public static double volatility(int period, List<HistoricalQuote> prices) {
 
 		double dailyReturn;
 		double price;
@@ -178,7 +178,7 @@ public final class OspreyQuantMath {
 		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(252, 0.5);
 	}
 
-	public static double Beta(int period, List<HistoricalSecurity> prices, List<HistoricalSecurity> prices_bmk) {
+	public static double Beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {
 
 		double dailyReturn;
 		double dailyReturn_bmk;

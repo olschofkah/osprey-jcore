@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 
 public class MovingAverageTest {
 
@@ -17,7 +17,7 @@ public class MovingAverageTest {
 	@Test
 	public void testBasicSMA() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 
 		double sma = OspreyQuantMath.sma(10, closingPrices);
 
@@ -27,7 +27,7 @@ public class MovingAverageTest {
 	@Test
 	public void testVolatility1() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 
 		double vol = OspreyQuantMath.volatility(10, closingPrices);
 
@@ -36,8 +36,8 @@ public class MovingAverageTest {
 
 	public void testBeta() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
-		List<HistoricalSecurity> closingPrices_bmk = generateHistoricalPrices_bmk();
+		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
+		List<HistoricalQuote> closingPrices_bmk = generateHistoricalPrices_bmk();
 		
 
 		double beta = OspreyQuantMath.Beta(10, closingPrices, closingPrices_bmk);
@@ -47,7 +47,7 @@ public class MovingAverageTest {
 	@Test
 	public void testBasicEMA() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 
 		int p = 26;
 		double sma = OspreyQuantMath.sma(p, closingPrices);
@@ -59,7 +59,7 @@ public class MovingAverageTest {
 	// 12 day ema (31.012363486) - 26 day ema (36.194239) = 5.181875 
 	public void testMACD() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = generateHistoricalPrices();
+		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 
 		int long_len = 26;
 		int short_len = 12;
@@ -70,94 +70,94 @@ public class MovingAverageTest {
 		Assert.assertEquals(5.1818755, MACD, DOUBLE_TEST_DELTA);
 	}
 
-	private List<HistoricalSecurity> generateHistoricalPrices() {
+	private List<HistoricalQuote> generateHistoricalPrices() {
 		LocalDate now = LocalDate.now();
 
-		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(26));
+		HistoricalQuote hs0 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(26));
 		hs0.setClose(24);
 
-		HistoricalSecurity hs1 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(25));
+		HistoricalQuote hs1 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(25));
 		hs1.setClose(25);
 
-		HistoricalSecurity hs2 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(24));
+		HistoricalQuote hs2 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(24));
 		hs2.setClose(26);
 
-		HistoricalSecurity hs3 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(23));
+		HistoricalQuote hs3 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(23));
 		hs3.setClose(27);
 
-		HistoricalSecurity hs4 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(22));
+		HistoricalQuote hs4 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(22));
 		hs4.setClose(28);
 
-		HistoricalSecurity hs5 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(21));
+		HistoricalQuote hs5 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(21));
 		hs5.setClose(29);
 
-		HistoricalSecurity hs6 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(20));
+		HistoricalQuote hs6 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(20));
 		hs6.setClose(30);
 
-		HistoricalSecurity hs7 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(19));
+		HistoricalQuote hs7 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(19));
 		hs7.setClose(31);
 
-		HistoricalSecurity hs8 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(18));
+		HistoricalQuote hs8 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(18));
 		hs8.setClose(32);
 
-		HistoricalSecurity hs9 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(17));
+		HistoricalQuote hs9 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(17));
 		hs9.setClose(33);
 		
-		HistoricalSecurity hs10 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(16));
+		HistoricalQuote hs10 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(16));
 		hs10.setClose(33.5);
 		
-		HistoricalSecurity hs11 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(15));
+		HistoricalQuote hs11 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(15));
 		hs11.setClose(34);
 
-		HistoricalSecurity hs12 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(14));
+		HistoricalQuote hs12 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(14));
 		hs12.setClose(34.5);
 		
-		HistoricalSecurity hs13 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(13));
+		HistoricalQuote hs13 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(13));
 		hs13.setClose(35);
 		
-		HistoricalSecurity hs14 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(12));
+		HistoricalQuote hs14 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(12));
 		hs14.setClose(35.5);
 		
-		HistoricalSecurity hs15 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(11));
+		HistoricalQuote hs15 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(11));
 		hs15.setClose(36);
 		
-		HistoricalSecurity hs16 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
+		HistoricalQuote hs16 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(10));
 		hs16.setClose(36.5);
 		
-		HistoricalSecurity hs17 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(9));
+		HistoricalQuote hs17 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(9));
 		hs17.setClose(37);
 		
-		HistoricalSecurity hs18 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
+		HistoricalQuote hs18 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(8));
 		hs18.setClose(37.5);
 		
-		HistoricalSecurity hs19 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
+		HistoricalQuote hs19 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(8));
 		hs19.setClose(38);
 		
-		HistoricalSecurity hs20 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(7));
+		HistoricalQuote hs20 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(7));
 		hs20.setClose(38.5);
 		
-		HistoricalSecurity hs21 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(6));
+		HistoricalQuote hs21 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(6));
 		hs21.setClose(39);
 		
-		HistoricalSecurity hs22 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(5));
+		HistoricalQuote hs22 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(5));
 		hs22.setClose(39.5);
 		
-		HistoricalSecurity hs23 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(4));
+		HistoricalQuote hs23 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(4));
 		hs23.setClose(40);
 		
-		HistoricalSecurity hs24 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(3));
+		HistoricalQuote hs24 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(3));
 		hs24.setClose(40.5);
 		
-		HistoricalSecurity hs25 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(2));
+		HistoricalQuote hs25 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(2));
 		hs25.setClose(41);
 		
-		HistoricalSecurity hs26 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(1));
+		HistoricalQuote hs26 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(1));
 		hs26.setClose(41.5);
 		
 	
 		
 
-		List<HistoricalSecurity> closingPrices = new ArrayList<HistoricalSecurity>(26);
+		List<HistoricalQuote> closingPrices = new ArrayList<HistoricalQuote>(26);
 		closingPrices.add(hs0);
 		closingPrices.add(hs1);
 		closingPrices.add(hs2);
@@ -191,40 +191,40 @@ public class MovingAverageTest {
 	}
 	
 	
-	private List<HistoricalSecurity> generateHistoricalPrices_bmk() {
+	private List<HistoricalQuote> generateHistoricalPrices_bmk() {
 		LocalDate now = LocalDate.now();
 
-		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
+		HistoricalQuote hs0 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(10));
 		hs0.setClose(25);
 
-		HistoricalSecurity hs1 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(9));
+		HistoricalQuote hs1 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(9));
 		hs1.setClose(26);
 
-		HistoricalSecurity hs2 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
+		HistoricalQuote hs2 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(8));
 		hs2.setClose(27);
 
-		HistoricalSecurity hs3 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(7));
+		HistoricalQuote hs3 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(7));
 		hs3.setClose(28);
 
-		HistoricalSecurity hs4 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(6));
+		HistoricalQuote hs4 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(6));
 		hs4.setClose(29);
 
-		HistoricalSecurity hs5 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(5));
+		HistoricalQuote hs5 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(5));
 		hs5.setClose(30);
 
-		HistoricalSecurity hs6 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(4));
+		HistoricalQuote hs6 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(4));
 		hs6.setClose(31);
 
-		HistoricalSecurity hs7 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(3));
+		HistoricalQuote hs7 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(3));
 		hs7.setClose(32);
 
-		HistoricalSecurity hs8 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(2));
+		HistoricalQuote hs8 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(2));
 		hs8.setClose(33);
 
-		HistoricalSecurity hs9 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(1));
+		HistoricalQuote hs9 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(1));
 		hs9.setClose(34);
 
-		List<HistoricalSecurity> closingPrices_bmk = new ArrayList<HistoricalSecurity>(10);
+		List<HistoricalQuote> closingPrices_bmk = new ArrayList<HistoricalQuote>(10);
 		closingPrices_bmk.add(hs0);
 		closingPrices_bmk.add(hs1);
 		closingPrices_bmk.add(hs2);

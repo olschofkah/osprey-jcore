@@ -1,5 +1,7 @@
 package com.osprey.marketdata;
 
+import java.time.LocalDate;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +11,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.nasdaq.NasdaqSecurityMasterFtpService;
+import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
+import com.osprey.marketdata.feed.yahoo.YahooHistoricalUrlBuilder;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteUrlBuilder;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
@@ -33,20 +38,32 @@ public class MarketDataDevConfiguration {
 		return new NasdaqSecurityMasterFtpService();
 	}
 
-//	@Bean
-//	public MockSecurityMasterService mockSecurityMasterService() {
-//		return new MockSecurityMasterService();
-//	}
+	@Bean
+	public YahooHistoricalQuoteClient yahooHistoricalQuoteClient() {
+		return new YahooHistoricalQuoteClient();
+	}
+
+	// @Bean
+	// public MockSecurityMasterService mockSecurityMasterService() {
+	// return new MockSecurityMasterService();
+	// }
 
 	@Bean
 	public YahooQuoteClient yahooQuoteClient() {
 		return new YahooQuoteClient();
 	}
-	
+
 	@Bean
 	@Scope("prototype")
-	public YahooQuoteUrlBuilder yahooQuoteUrlBuilder(String symbol){
+	public YahooQuoteUrlBuilder yahooQuoteUrlBuilder(String symbol) {
 		return new YahooQuoteUrlBuilder(symbol);
+	}
+
+	@Bean
+	@Scope("prototype")
+	public YahooHistoricalUrlBuilder yahooHistoricalUrlBuilder(String symbol, LocalDate start, LocalDate end,
+			QuoteDataFrequency freq) {
+		return new YahooHistoricalUrlBuilder(symbol, start, end, freq);
 	}
 
 	@Bean

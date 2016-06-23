@@ -56,8 +56,6 @@ public class ThrottleDisruptor {
 		RingBuffer<ThrottleEvent> ringBuffer = disruptor.getRingBuffer();
 
 		producer = new ThrottleEventProducer(ringBuffer);
-
-		start();
 	}
 
 	public void stop() {

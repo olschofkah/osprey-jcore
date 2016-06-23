@@ -8,10 +8,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
+import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.marketdata.feed.yahoo.pojo.Result;
 import com.osprey.marketdata.feed.yahoo.pojo.YahooQuote;
@@ -20,23 +24,22 @@ import com.osprey.securitymaster.Security;
 
 public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 
+	final static Logger logger = LogManager.getLogger(YahooQuoteClient.class);
+	
 	@Autowired
 	private ApplicationContext appCtx;
-
-	final static Logger logger = LogManager.getLogger(YahooQuoteClient.class);
 
 	@Autowired
 	private RestTemplate http;
 
 	@Override
-	public FundamentalPricedSecurity quoteFundamental(Security s) throws MarketDataNotAvailableException {
+	public FundamentalPricedSecurity quoteFundamental(Security s) throws MarketDataNotAvailableException, MarketDataIOException {
 
 		logger.info("Quoting for {} ... ", () -> s.getSymbol());
 
 		YahooQuoteUrlBuilder yahooQuoteUrlBuilder = appCtx.getBean(YahooQuoteUrlBuilder.class, s.getSymbol());
 
-		String url = yahooQuoteUrlBuilder
-				.summaryDetail()
+		String url = yahooQuoteUrlBuilder.summaryDetail()
 				// .summaryProfile() // TODO move to pulling once a week
 				.calendarEvents()
 				// .defaultKeyStatistics() // TODO move to pulling once a week
@@ -53,17 +56,18 @@ public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 				throw new MarketDataNotAvailableException(
 						"404 when quoting " + s.getSymbol() + " Message: " + e1.getMessage());
 			} else {
-				throw new RuntimeException(e1);
+				throw new MarketDataIOException(e1);
 			}
+		} catch (HttpMessageNotReadableException e2){
+			throw new MarketDataIOException(e2);
 		}
-		
-		if(yahooQuote.getQuoteSummary().getError() != null){
+
+		if (yahooQuote.getQuoteSummary().getError() != null) {
 			logger.warn(yahooQuote.getQuoteSummary().getError());
 		}
 
 		Result result = yahooQuote.getQuoteSummary().getResult().get(0);
 
-		// TODO Add Error Handling
 		// TODO Strip out fmt and longFmt from generated objects
 		// TODO Strip out additionalProperties map from generated objects
 		// TODO Add Quote Sanity Checks

@@ -11,19 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
-import com.osprey.marketdata.feed.IHistoricalSecurityQuoteSerice;
+import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
+import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundamentalPricedSecurityWithHistory> {
 
 	final static Logger logger = LogManager.getLogger(QuoteProcessor.class);
-	
 
 	@Autowired
 	@Qualifier("throttleCapacity")
@@ -32,31 +32,30 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 	@Autowired
 	private IFundamentalSecurityQuoteService fundamentalQuoteService;
 	@Autowired
-	private IHistoricalSecurityQuoteSerice historicalQuoteService;
+	private IHistoricalQuoteSerice historicalQuoteService;
 
 	@Override
 	public ExtendedFundamentalPricedSecurityWithHistory process(Security item) throws Exception {
 
 		logger.debug("Quoting initial screen on {} ", () -> item.getSymbol());
 
-		while (throttleCapacity.get() <= 0) {
-			logger.debug("Waiting for capacity ...");
-			Thread.sleep(5); // TODO make config
-		}
-		throttleCapacity.getAndDecrement();
-		
+		checkThrottle();
+
 		FundamentalPricedSecurity quote = null;
 		try {
 			quote = fundamentalQuoteService.quoteFundamental(item);
 		} catch (MarketDataNotAvailableException e) {
-			logger.warn("Failed to quote {} | Message {}", new Object[]{item.getSymbol(), e.getMessage()});
+			logger.warn("Failed to quote {} | Message {}", new Object[] { item.getSymbol(), e.getMessage() });
 			return null;
 		}
-		
+
 		LocalDate today = LocalDate.now();
 		LocalDate overOneYearAgo = today.minusYears(1).minusWeeks(1);
 
-		List<HistoricalSecurity> historicals = historicalQuoteService.fetchHistorical(item, today, overOneYearAgo);
+		checkThrottle();
+
+		List<HistoricalQuote> historicals = historicalQuoteService.quoteHistorical(item, overOneYearAgo, today,
+				QuoteDataFrequency.DAY);
 
 		ExtendedFundamentalPricedSecurityWithHistory extendedQuote = new ExtendedFundamentalPricedSecurityWithHistory(
 				quote);
@@ -67,9 +66,19 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 		return extendedQuote;
 	}
 
+	private void checkThrottle() throws InterruptedException {
+		while (throttleCapacity.get() <= 0) {
+			logger.trace("Waiting for capacity ...");
+			Thread.sleep(5); // TODO make config
+		}
+		throttleCapacity.getAndDecrement();
+	}
+
 	private void decorateQuoteWithCustomCalculations(ExtendedFundamentalPricedSecurityWithHistory extendedQuote) {
 
-		double volatility = OspreyQuantMath.volatility(OspreyConstants.MARKET_DAYS_IN_YEAR, extendedQuote.getHistory());
+		double volatility = OspreyQuantMath.volatility(
+				Math.min(extendedQuote.getHistory().size(), OspreyConstants.MARKET_DAYS_IN_YEAR),
+				extendedQuote.getHistory());
 
 		double sma12 = OspreyQuantMath.sma(12, extendedQuote.getHistory());
 		double ema12 = OspreyQuantMath.ema(sma12, 12, extendedQuote.getHistory());

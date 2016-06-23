@@ -38,7 +38,10 @@ import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
 import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
 import com.osprey.marketdata.batch.reader.SecurityMasterItemReader;
-import com.osprey.marketdata.batch.tasklet.DisruptorShutdownTasklet;
+import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorShutdownTasklet;
+import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
+import com.osprey.marketdata.feed.exception.MarketDataIOException;
+import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.screen.ScreenSuccessSecurity;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.Security;
@@ -145,10 +148,16 @@ public class NightlyMarketDataScreen {
 	}
 	
 	@Bean
-	public DisruptorShutdownTasklet disruptorShutdownTasklet() {
-		return new DisruptorShutdownTasklet();
+	public QuoteThrottleDisruptorShutdownTasklet quoteThrottleDisruptorShutdownTasklet() {
+		return new QuoteThrottleDisruptorShutdownTasklet();
 	}
 
+	@Bean
+	public QuoteThrottleDisruptorStartupTasklet quoteThrottleDisruptorStartupTasklet(){
+		return new QuoteThrottleDisruptorStartupTasklet();
+	}
+	
+	
 	@Bean
 	public ItemWriter<Security> initialScreenQueueWriter() {
 		return new ItemWriter<Security>() {
@@ -192,16 +201,21 @@ public class NightlyMarketDataScreen {
 	public Job processNightlySecurityMaster() {
 		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
 				.listener(listener()).flow(initialScreen()) // #1
-				.next(quoteAndCalcAndPersist()) // #2
-				.next(disruptorShutdown()) // #3
-				.next(hotListFilterAndPersist()) // #4
-				.end().build();
+				.next(disruptorStartup()) // #3
+				.next(quoteAndCalcAndPersist()) // #3
+				.next(disruptorShutdown()) // #4
+				.next(hotListFilterAndPersist()) // #5
+				.end()
+				.build();
 	}
 
 	@Bean
 	public Step initialScreen() {
 		return stepBuilderFactory.get("preScreen")
 				.<Security, Security>chunk(250)
+				.faultTolerant()
+				.retryLimit(5)
+				.retry(MarketDataIOException.class)
 				.reader(initialScreenReader())
 				.processor(initialScreenProcessor())
 				.writer(initialScreenQueueWriter())
@@ -214,6 +228,12 @@ public class NightlyMarketDataScreen {
 		return stepBuilderFactory.get("quoteAndCalc")
 				.<Security, ExtendedFundamentalPricedSecurityWithHistory>chunk(5)
 				.reader(postInitialScreenQueueReader())
+				.faultTolerant()
+				.retryLimit(5)
+				.retry(MarketDataIOException.class)
+				.skipLimit(25)
+				.skip(MarketDataNotAvailableException.class)
+				// .skipLimit(25) // needs to specify what can be skipped. 
 				.processor(quoteProcessor())
 				.writer(postQuoteQueueWriter())
 				// .writer(persistStats)
@@ -224,7 +244,14 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step disruptorShutdown() {
 		return stepBuilderFactory.get("disruptorShutdown")
-				.tasklet(disruptorShutdownTasklet())
+				.tasklet(quoteThrottleDisruptorShutdownTasklet())
+				.build();
+	}
+	
+	@Bean
+	public Step disruptorStartup() {
+		return stepBuilderFactory.get("disruptorStartup")
+				.tasklet(quoteThrottleDisruptorStartupTasklet())
 				.build();
 	}
 

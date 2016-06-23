@@ -50,7 +50,7 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 	private String optionableList;
 
 	@Override
-	public Set<Security> fetchSecurityMaster() {
+	public Set<Security> fetchSecurityMaster() throws MarketDataIOException {
 		Set<Security> securities = new HashSet<>();
 
 		List<String> lines = ftpPull(listedFileName);
@@ -80,7 +80,7 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 
 	}
 
-	public List<String> ftpPull(String file) {
+	public List<String> ftpPull(String file) throws MarketDataIOException {
 		FTPClient ftp = null;
 		List<String> lines = null;
 
@@ -151,8 +151,8 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 				continue;
 			}
 
-			// Using CQS symbology
-			sec = process(split[3], split[1], split[6], split[5], split[4], "N", Exchange.fromCode(split[2]), now);
+			// Using NASDAQ symbology
+			sec = process(split[7], split[1], split[6], split[5], split[4], "N", Exchange.fromCode(split[2]), now);
 
 			if (sec != null) {
 				parsedSecurities.add(sec);

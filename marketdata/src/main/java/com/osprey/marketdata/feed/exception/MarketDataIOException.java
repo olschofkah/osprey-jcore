@@ -1,6 +1,6 @@
 package com.osprey.marketdata.feed.exception;
 
-public class MarketDataIOException extends RuntimeException {
+public class MarketDataIOException extends Exception {
 
 	/**
 	 * 
