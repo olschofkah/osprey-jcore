@@ -7,6 +7,7 @@ import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.result.SMAPair;
 import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.constants.OptionType;
 
 public final class OspreyQuantMath {
 
@@ -50,7 +51,7 @@ public final class OspreyQuantMath {
 	 * @param sma
 	 * @param p
 	 * @param alpha
-	 *            - scale from 1 to 10
+	 *            - scale from 0 to 1
 	 * @param prices
 	 * @return
 	 */
@@ -67,7 +68,7 @@ public final class OspreyQuantMath {
 		double ema = sma;
 
 		for (int i = 1; i < p; ++i) {
-			ema = prices.get(i).getClose() * alpha / 10 + ema * (1 - alpha / 10);
+			ema = prices.get(i).getClose() * alpha + ema * (1 - alpha);
 		}
 
 		return ema;
@@ -229,28 +230,33 @@ public final class OspreyQuantMath {
 	 *            - volatility
 	 * @return option price for call or put
 	 */
-	public double BlackScholes(char CallPutFlag, double S, double X, double T, double r, double v) {
+	public static double blackScholes(OptionType optionType, double S, double X, double T, double r, double v) {
 		double d1, d2;
 
 		d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));
 		d2 = d1 - v * Math.sqrt(T);
 
-		if (CallPutFlag == 'c') {
-			return S * CND(d1) - X * Math.exp(-r * T) * CND(d2);
+		if (optionType == OptionType.CALL) {
+			return S * cnd(d1) - X * Math.exp(-r * T) * cnd(d2);
 		} else {
-			return X * Math.exp(-r * T) * CND(-d2) - S * CND(-d1);
+			return X * Math.exp(-r * T) * cnd(-d2) - S * cnd(-d1);
 		}
 	}
 
+	private static double CND_A_1 = 0.31938153;
+	private static double CND_A_2 = -0.356563782;
+	private static double CND_A_3 = 1.781477937;
+	private static double CND_A_4 = -1.821255978;
+	private static double CND_A_5 = 1.330274429;
+
 	// The cumulative normal distribution function
-	public double CND(double X) {
+	public static double cnd(double X) {
 		double L, K, w;
-		double a1 = 0.31938153, a2 = -0.356563782, a3 = 1.781477937, a4 = -1.821255978, a5 = 1.330274429;
 
 		L = Math.abs(X);
 		K = 1.0 / (1.0 + 0.2316419 * L);
-		w = 1.0 - 1.0 / Math.sqrt(2.0 * Math.PI) * Math.exp(-L * L / 2)
-				* (a1 * K + a2 * K * K + a3 * Math.pow(K, 3) + a4 * Math.pow(K, 4) + a5 * Math.pow(K, 5));
+		w = 1.0 - 1.0 / Math.sqrt(2.0 * Math.PI) * Math.exp(-L * L / 2) * (CND_A_1 * K + CND_A_2 * K * K
+				+ CND_A_3 * Math.pow(K, 3) + CND_A_4 * Math.pow(K, 4) + CND_A_5 * Math.pow(K, 5));
 
 		if (X < 0.0) {
 			w = 1.0 - w;
@@ -258,29 +264,36 @@ public final class OspreyQuantMath {
 		return w;
 	}
 
-	/** this is using iterative approach (eg.bisection method) to find the IV, t
-	 * @param X - strike
-	 * @param S - spot
-	 * @param T - time to maturity
-	 * @param callOptionPrice - call option price (current at the money)
-	 * @param r - interest rate
+	/**
+	 * this is using iterative approach (eg.bisection method) to find the IV, t
+	 * 
+	 * @param X
+	 *            - strike
+	 * @param S
+	 *            - spot
+	 * @param T
+	 *            - time to maturity
+	 * @param callOptionPrice
+	 *            - call option price (current at the money)
+	 * @param r
+	 *            - interest rate
 	 * @return IV
 	 */
-	public double ImpliedVolatility(double X, double S, double T, double callOptionPrice, double r) {
+	public static double impliedVolatility(OptionType option, double X, double S, double T, double callOptionPrice,
+			double r) {
 		double cpTest = 0;
-		double v = 500;
+		double v = 500.0;
 
-		double upper = 500;
+		double upper = v;
 		double lower = 0;
 		double range = Math.abs(lower - upper);
 
-		boolean while1 = true;
-		while (while1 == true) {
+		while (true) {
 
-			cpTest = BlackScholes('c', S, X, T, r, v);
+			cpTest = blackScholes(option, S, X, T, r, v);
 
-			if (cpTest > callOptionPrice) { // Implied Volatility - IV has to go
-											// down
+			if (cpTest > callOptionPrice) {
+				// Implied Volatility - IV has to go down
 				upper = v;
 				v = (lower + upper) / 2;
 			} else {
@@ -295,7 +308,7 @@ public final class OspreyQuantMath {
 		return v;
 	}
 
-	public static double Beta(int period, List<HistoricalSecurity> prices, List<HistoricalSecurity> prices_bmk) {
+	public static double beta(int period, List<HistoricalSecurity> prices, List<HistoricalSecurity> prices_bmk) {
 
 		double dailyReturn;
 		double dailyReturn_bmk;
