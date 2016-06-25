@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import com.osprey.securitymaster.constants.OptionType;
 import com.osprey.securitymaster.HistoricalQuote;
 
 public class MovingAverageTest {
@@ -34,26 +36,53 @@ public class MovingAverageTest {
 		Assert.assertEquals(0.05648862, vol, DOUBLE_TEST_DELTA);
 	}
 
+	@Test
 	public void testBeta() throws Exception {
 
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 		List<HistoricalQuote> closingPrices_bmk = generateHistoricalPrices_bmk();
 		
 
-		double beta = OspreyQuantMath.Beta(10, closingPrices, closingPrices_bmk);
+		double beta = OspreyQuantMath.beta(10, closingPrices, closingPrices_bmk);
 
-		Assert.assertEquals(1.07, beta, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(5.1528390584183E-6, beta, DOUBLE_TEST_DELTA);
 	}
+	
+	/**
+	 * test case can be verified in http://www.wolframalpha.com/input/?i=black+scholes&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22OptionName%22%7D+-%3E+%22VanillaEuropean%22&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22opttype%22%7D+-%3E+%22Call%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22strike%22%7D+-%3E%22$55%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22exptime%22%7D+-%3E%224+mo%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22underlying%22%7D+-%3E%22$56.25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22vol%22%7D+-%3E%2228+%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22div%22%7D+-%3E%220%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22rf%22%7D+-%3E%222.85%25%22&rawformassumption=%7B%22MC%22,+%22%22%7D+-%3E+%7B%22Formula%22%7D&rawformassumption=%7B%22MC%22,%22%22%7D-%3E%7B%22Formula%22%7D 
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testBSmodel() throws Exception {
+
+		
+		double s = 56.25;
+		double k = 55;
+		double r = 0.0285;
+		double t = 0.34;
+		double v = 0.28;
+		OptionType type = OptionType.CALL;
+		
+		double option_price = OspreyQuantMath.blackScholes(type, s , k, t, r, v);
+		double iv = OspreyQuantMath.impliedVolatility(type, k,s,t,option_price, r);
+		Assert.assertEquals(0.279903411, iv, DOUBLE_TEST_DELTA);
+	}
+
+
 	@Test
 	public void testBasicEMA() throws Exception {
 
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 
 		int p = 26;
+		double alpha =  0.3;
 		double sma = OspreyQuantMath.sma(p, closingPrices);
 		double ema = OspreyQuantMath.ema(sma, p, closingPrices);
+		double ema_smooth = OspreyQuantMath.ema_smooth(sma, p, alpha, closingPrices);
 
-		Assert.assertEquals(36.194239, ema, DOUBLE_TEST_DELTA);
+
+		Assert.assertEquals(39.8310946, ema_smooth, DOUBLE_TEST_DELTA);
 	}
 	
 	// 12 day ema (31.012363486) - 26 day ema (36.194239) = 5.181875 

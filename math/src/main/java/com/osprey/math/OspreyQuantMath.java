@@ -6,6 +6,7 @@ import java.util.List;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.result.SMAPair;
+import com.osprey.securitymaster.constants.OptionType;
 import com.osprey.securitymaster.HistoricalQuote;
 
 public final class OspreyQuantMath {
@@ -44,9 +45,38 @@ public final class OspreyQuantMath {
 		return ema;
 	}
 
-	
+	/**
+	 * EMA(t) = EMA(t-1) + smoothing factor * (Price(t) - EMA(t-1)
+	 * 
+	 * @param sma
+	 * @param p
+	 * @param alpha
+	 *            - scale from 0 to 1
+	 * @param prices
+	 * @return
+	 */
+	public static double emaSmooth(double sma, int p, double alpha, List<HistoricalQuote> prices) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double ema = sma;
+
+		for (int i = 1; i < p; ++i) {
+			ema = prices.get(i).getClose() * alpha + ema * (1 - alpha);
+		}
+
+		return ema;
+	}
+
 	/**
 	 * MACD = ema (short len) - ema (long len)
+	 * 
 	 * @param long_len
 	 * @param short_len
 	 * @param prices
@@ -54,17 +84,16 @@ public final class OspreyQuantMath {
 	 */
 	public static double MACD(int long_len, int short_len, List<HistoricalQuote> prices) {
 
- 		
-		
 		double sma_long = OspreyQuantMath.sma(long_len, prices);
 		double sma_short = OspreyQuantMath.sma(short_len, prices);
-		
+
 		double ema_long = OspreyQuantMath.ema(sma_long, long_len, prices);
 		double ema_short = OspreyQuantMath.ema(sma_short, short_len, prices);
-				
-		 return ema_short - ema_long; 
+
+		return ema_short - ema_long;
 
 	}
+
 	/**
 	 * Calculate two Simple Moving Averages simultaneously over a single series
 	 * of closing prices.
@@ -178,7 +207,109 @@ public final class OspreyQuantMath {
 		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(252, 0.5);
 	}
 
-	public static double Beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {
+	public static double standardNormalDistribution(double x) {
+		double top = Math.exp(-0.5 * Math.pow(x, 2));
+		double bottom = Math.sqrt(2 * Math.PI);
+		return top / bottom;
+	}
+
+	// The Black and Scholes (1973) Stock option formula
+
+	/**
+	 * @param CallPutFlag
+	 *            - char c for call, otherwise put
+	 * @param S
+	 *            - double stock price
+	 * @param X
+	 *            - double strike price
+	 * @param T
+	 *            - double time to maturity in years (1/3 for 4 months)
+	 * @param r
+	 *            - risk free interest rate
+	 * @param v
+	 *            - volatility
+	 * @return option price for call or put
+	 */
+	public static double blackScholes(OptionType optionType, double S, double X, double T, double r, double v) {
+		double d1, d2;
+
+		d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));
+		d2 = d1 - v * Math.sqrt(T);
+
+		if (optionType == OptionType.CALL) {
+			return S * cnd(d1) - X * Math.exp(-r * T) * cnd(d2);
+		} else {
+			return X * Math.exp(-r * T) * cnd(-d2) - S * cnd(-d1);
+		}
+	}
+
+	private static double CND_A_1 = 0.31938153;
+	private static double CND_A_2 = -0.356563782;
+	private static double CND_A_3 = 1.781477937;
+	private static double CND_A_4 = -1.821255978;
+	private static double CND_A_5 = 1.330274429;
+
+	// The cumulative normal distribution function
+	public static double cnd(double X) {
+		double L, K, w;
+
+		L = Math.abs(X);
+		K = 1.0 / (1.0 + 0.2316419 * L);
+		w = 1.0 - 1.0 / Math.sqrt(2.0 * Math.PI) * Math.exp(-L * L / 2) * (CND_A_1 * K + CND_A_2 * K * K
+				+ CND_A_3 * Math.pow(K, 3) + CND_A_4 * Math.pow(K, 4) + CND_A_5 * Math.pow(K, 5));
+
+		if (X < 0.0) {
+			w = 1.0 - w;
+		}
+		return w;
+	}
+
+	/**
+	 * this is using iterative approach (eg.bisection method) to find the IV, t
+	 * 
+	 * @param X
+	 *            - strike
+	 * @param S
+	 *            - spot
+	 * @param T
+	 *            - time to maturity
+	 * @param callOptionPrice
+	 *            - call option price (current at the money)
+	 * @param r
+	 *            - interest rate
+	 * @return IV
+	 */
+	public static double impliedVolatility(OptionType option, double X, double S, double T, double callOptionPrice,
+			double r) {
+		double cpTest = 0;
+		double v = 500.0;
+
+		double upper = v;
+		double lower = 0;
+		double range = Math.abs(lower - upper);
+
+		while (true) {
+
+			cpTest = blackScholes(option, S, X, T, r, v);
+
+			if (cpTest > callOptionPrice) {
+				// Implied Volatility - IV has to go down
+				upper = v;
+				v = (lower + upper) / 2;
+			} else {
+				// Implied Volatility - IV has to go up
+				lower = v;
+				v = (lower + upper) / 2;
+			}
+			range = Math.abs(lower - upper);
+			if (range < 0.001)
+				break;
+		}
+		return v;
+	}
+
+	public static double beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {
+
 
 		double dailyReturn;
 		double dailyReturn_bmk;
