@@ -49,9 +49,6 @@ public class ThrottleDisruptor {
 		// Connect the handler
 		disruptor.handleEventsWith(new ThrottleEventHandler(throttleCapacity));
 
-		// Start the Disruptor, starts all threads running
-		disruptor.start();
-
 		// Get the ring buffer from the Disruptor to be used for publishing.
 		RingBuffer<ThrottleEvent> ringBuffer = disruptor.getRingBuffer();
 
@@ -64,6 +61,7 @@ public class ThrottleDisruptor {
 
 	public void start() {
 		if (running.compareAndSet(false, true)) {
+			disruptor.start();
 			threadFactory.newThread(new Runnable() {
 
 				@Override

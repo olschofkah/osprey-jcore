@@ -200,8 +200,9 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Job processNightlySecurityMaster() {
 		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
-				.listener(listener()).flow(initialScreen()) // #1
-				.next(disruptorStartup()) // #3
+				.listener(listener())
+				.flow(initialScreen()) // #1
+				.next(disruptorStartup()) // #2
 				.next(quoteAndCalcAndPersist()) // #3
 				.next(disruptorShutdown()) // #4
 				.next(hotListFilterAndPersist()) // #5

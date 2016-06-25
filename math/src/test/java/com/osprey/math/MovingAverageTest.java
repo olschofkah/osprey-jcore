@@ -6,10 +6,9 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.osprey.securitymaster.constants.OptionType;
 import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.constants.OptionType;
 
 public class MovingAverageTest {
 
@@ -78,8 +77,11 @@ public class MovingAverageTest {
 		int p = 26;
 		double alpha =  0.3;
 		double sma = OspreyQuantMath.sma(p, closingPrices);
-		double ema = OspreyQuantMath.ema(sma, p, closingPrices);
-		double ema_smooth = OspreyQuantMath.ema_smooth(sma, p, alpha, closingPrices);
+		
+		// TODO why are you calculating this here without testing the result/ 
+		double ema = OspreyQuantMath.ema(sma, p, closingPrices); 
+		
+		double ema_smooth = OspreyQuantMath.emaSmooth(sma, p, alpha, closingPrices);
 
 
 		Assert.assertEquals(39.8310946, ema_smooth, DOUBLE_TEST_DELTA);
