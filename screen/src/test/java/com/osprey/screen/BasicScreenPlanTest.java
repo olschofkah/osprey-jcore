@@ -16,7 +16,7 @@ import com.osprey.screen.criteria.RelationalOperator;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 
 public class BasicScreenPlanTest {
 
@@ -25,7 +25,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSinglePriceScreen1() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(25);
@@ -35,7 +35,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -56,7 +56,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSinglePriceScreen2() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(25);
@@ -66,7 +66,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -86,7 +86,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSinglePriceScreen3() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(25);
@@ -96,7 +96,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -117,7 +117,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSinglePriceScreen4() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(25);
@@ -127,7 +127,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -148,7 +148,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSinglePriceScreen5() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(25);
@@ -158,7 +158,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -179,7 +179,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSinglePriceScreen6() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(25);
@@ -189,7 +189,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -210,7 +210,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSingleSMAScreen1() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
@@ -220,7 +220,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -241,7 +241,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSingleSMAAndPriceScreen1() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
@@ -253,7 +253,7 @@ public class BasicScreenPlanTest {
 		criteria.add(c1);
 		criteria.add(c2);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -273,7 +273,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSingleSMAAndPriceScreen2() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
@@ -285,7 +285,7 @@ public class BasicScreenPlanTest {
 		criteria.add(c1);
 		criteria.add(c2);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -305,7 +305,7 @@ public class BasicScreenPlanTest {
 	@Test
 	public void testSingleVolatilityScreen1() throws Exception {
 
-		List<HistoricalSecurity> closingPrices = createBasicHistoricalList();
+		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
 		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
 		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
@@ -315,7 +315,7 @@ public class BasicScreenPlanTest {
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>();
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
 		securities.put(s, closingPrices);
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
@@ -332,40 +332,40 @@ public class BasicScreenPlanTest {
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
 
-	private List<HistoricalSecurity> createBasicHistoricalList() {
+	private List<HistoricalQuote> createBasicHistoricalList() {
 		LocalDate now = LocalDate.now();
 
-		HistoricalSecurity hs0 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(10));
+		HistoricalQuote hs0 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(10));
 		hs0.setClose(24);
 
-		HistoricalSecurity hs1 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(9));
+		HistoricalQuote hs1 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(9));
 		hs1.setClose(25);
 
-		HistoricalSecurity hs2 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(8));
+		HistoricalQuote hs2 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(8));
 		hs2.setClose(26);
 
-		HistoricalSecurity hs3 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(7));
+		HistoricalQuote hs3 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(7));
 		hs3.setClose(27);
 
-		HistoricalSecurity hs4 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(6));
+		HistoricalQuote hs4 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(6));
 		hs4.setClose(28);
 
-		HistoricalSecurity hs5 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(5));
+		HistoricalQuote hs5 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(5));
 		hs5.setClose(29);
 
-		HistoricalSecurity hs6 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(4));
+		HistoricalQuote hs6 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(4));
 		hs6.setClose(30);
 
-		HistoricalSecurity hs7 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(3));
+		HistoricalQuote hs7 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(3));
 		hs7.setClose(31);
 
-		HistoricalSecurity hs8 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(2));
+		HistoricalQuote hs8 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(2));
 		hs8.setClose(32);
 
-		HistoricalSecurity hs9 = new HistoricalSecurity(TEST_TICKER_1, now.minusDays(1));
+		HistoricalQuote hs9 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(1));
 		hs9.setClose(33);
 
-		List<HistoricalSecurity> closingPrices = new ArrayList<HistoricalSecurity>(10);
+		List<HistoricalQuote> closingPrices = new ArrayList<HistoricalQuote>(10);
 		closingPrices.add(hs0);
 		closingPrices.add(hs1);
 		closingPrices.add(hs2);

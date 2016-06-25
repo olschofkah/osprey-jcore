@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.logging.log4j.LogManager;
@@ -45,18 +46,43 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 	@Value("${nasdaq.security.master.ftp.external.listed.file}")
 	private String externalListedFileName;
 
-	@Override
-	public Set<Security> fetchSecurityMaster() {
+	@Value("${zacks.optionable.symbols}")
+	private String optionableList;
 
-		Set<Security> securities = ftpPull(listedFileName);
-		securities.addAll(ftpPull(externalListedFileName));
+	@Override
+	public Set<Security> fetchSecurityMaster() throws MarketDataIOException {
+		Set<Security> securities = new HashSet<>();
+
+		List<String> lines = ftpPull(listedFileName);
+		securities.addAll(parseNasdaqListedSecurity(lines));
+
+		lines = ftpPull(externalListedFileName);
+		securities.addAll(parseExternalListedSecurity(lines));
+
+		filterNonOptionables(securities);
 
 		return securities;
 	}
 
-	public Set<Security> ftpPull(String file) {
+	private void filterNonOptionables(Set<Security> securities) {
+		Set<String> optionableSymbolSet = new HashSet<>(Arrays.asList(optionableList.split(",")));
+
+		Iterator<Security> iterator = securities.iterator();
+
+		Security s;
+		while (iterator.hasNext()) {
+			s = iterator.next();
+			if (!optionableSymbolSet.contains(s.getSymbol())) {
+				logger.info("Removing {} due to not being optionable.", s.getSymbol());
+				iterator.remove();
+			}
+		}
+
+	}
+
+	public List<String> ftpPull(String file) throws MarketDataIOException {
 		FTPClient ftp = null;
-		Set<Security> securities = new HashSet<>();
+		List<String> lines = null;
 
 		try {
 
@@ -80,12 +106,10 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 			logger.info("Current directory NASDAQ FTP directory {}", ftp.printWorkingDirectory());
 
 			InputStream is = null;
-			List<String> lines = null;
 
 			try {
 				is = ftp.retrieveFileStream(file);
 				lines = IOUtils.readLines(is, Charset.forName("UTF-8"));
-				securities.addAll(parseNasdaqListedSecurity(lines));
 			} finally {
 				is.close();
 			}
@@ -103,7 +127,7 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 			}
 		}
 
-		return securities;
+		return lines;
 	}
 
 	private Set<Security> parseExternalListedSecurity(List<String> list) {
@@ -162,6 +186,7 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 				continue;
 			}
 
+			// TODO Convert symbol to CQS
 			sec = process(split[0], split[1], split[3], split[5], split[6], split[7], Exchange.NASDAQ, now);
 
 			if (sec != null) {
@@ -184,14 +209,6 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 
 		if (exchange == null) {
 			logger.info("Missing Exchange for security for symbol {}.", ticker);
-		}
-
-		// Scan names for security types to ignore ... fragile
-		if (StringUtils.containsAny(companyName, "Warrant", "Depositary", "Notes", "Preferred", "Closed End Fund",
-				"Right", "Units", "Beneficial") || "Y".equals(nextShare)) {
-			logger.info("Skipping security {} due to instrument type found scanning the name ( {} ).",
-					new Object[] { ticker, companyName });
-			return null;
 		}
 
 		Security sec = new Security(ticker);

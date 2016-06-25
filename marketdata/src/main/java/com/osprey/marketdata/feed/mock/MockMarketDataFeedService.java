@@ -11,21 +11,19 @@ import java.util.Set;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
 
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
-import com.osprey.marketdata.feed.IHistoricalSecurityQuoteSerice;
+import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
 import com.osprey.marketdata.feed.ILiveSecurityQuoteService;
+import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.math.OspreyJavaMath;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.PricedSecurity;
 import com.osprey.securitymaster.Security;
-import com.osprey.securitymaster.constants.EarningsReportTime;
 
-@Service
 public class MockMarketDataFeedService
-		implements ILiveSecurityQuoteService, IHistoricalSecurityQuoteSerice, IFundamentalSecurityQuoteService {
+		implements ILiveSecurityQuoteService, IHistoricalQuoteSerice, IFundamentalSecurityQuoteService {
 
 	final static Logger logger = LogManager.getLogger(MockMarketDataFeedService.class);
 
@@ -48,19 +46,19 @@ public class MockMarketDataFeedService
 	}
 
 	@Override
-	public List<HistoricalSecurity> fetchHistorical(Security s, LocalDate start, LocalDate end) {
+	public List<HistoricalQuote> quoteHistorical(Security s, LocalDate start, LocalDate end, QuoteDataFrequency frequency) {
 		logger.warn("Mock Historical Quote for ticker {}", () -> s);
 
-		List<HistoricalSecurity> result = generateHistoricalQuotes(s, start, end);
+		List<HistoricalQuote> result = generateHistoricalQuotes(s, start, end);
 		return result;
 	}
 
 	@Override
-	public Map<Security, List<HistoricalSecurity>> fetchHistoricalBatch(Set<Security> s, LocalDate start,
+	public Map<Security, List<HistoricalQuote>> quoteHistoricalBatch(Set<Security> s, LocalDate start,
 			LocalDate end) {
 		logger.warn("Mock Batch Historical Quote for ticker {}", () -> s);
 
-		Map<Security, List<HistoricalSecurity>> resultMap = new HashMap<>(OspreyJavaMath.calcMapInitialSize(s.size()));
+		Map<Security, List<HistoricalQuote>> resultMap = new HashMap<>(OspreyJavaMath.calcMapInitialSize(s.size()));
 		for (Security security : s) {
 			resultMap.put(security, generateHistoricalQuotes(security, start, end));
 		}
@@ -103,8 +101,7 @@ public class MockMarketDataFeedService
 		fundamentalQuote.setHistoricalVolatility(RandomUtils.nextDouble(0.1, 0.9));
 		fundamentalQuote.setMarketCap(RandomUtils.nextDouble(1000000, 10000000000l));
 		fundamentalQuote.setNextDivDate(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
-		fundamentalQuote.setNextEarningsDate(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
-		fundamentalQuote.setNextEarningsReportTime(EarningsReportTime.PRE_MARKET);
+		fundamentalQuote.setNextEarningsDateLower(LocalDate.now().plusDays(RandomUtils.nextInt(0, 75)));
 		fundamentalQuote.setPctHeldByInst(RandomUtils.nextDouble(0.01, 1.2));
 		fundamentalQuote.setPeRatio(RandomUtils.nextDouble(1, 200));
 		fundamentalQuote.setSharesOutstanding((long) (fundamentalQuote.getMarketCap() / fundamentalQuote.getClose()));
@@ -130,13 +127,13 @@ public class MockMarketDataFeedService
 		return ps;
 	}
 
-	private List<HistoricalSecurity> generateHistoricalQuotes(Security s, LocalDate start, LocalDate end) {
+	private List<HistoricalQuote> generateHistoricalQuotes(Security s, LocalDate start, LocalDate end) {
 
 		LocalDate day = start;
 
-		List<HistoricalSecurity> hist = new ArrayList<>();
+		List<HistoricalQuote> hist = new ArrayList<>();
 
-		HistoricalSecurity previousDay = null;
+		HistoricalQuote previousDay = null;
 		while (day.isAfter(end)) {
 
 			double seed;
@@ -146,7 +143,7 @@ public class MockMarketDataFeedService
 				seed = previousDay.getClose();
 			}
 
-			HistoricalSecurity sec = new HistoricalSecurity(s.getSymbol(), day);
+			HistoricalQuote sec = new HistoricalQuote(s.getSymbol(), day);
 			sec.setAdjClose(seed + RandomUtils.nextDouble(0.01, 5.50));
 			sec.setClose(seed + RandomUtils.nextDouble(0.01, 5.50));
 			sec.setHigh(seed + RandomUtils.nextDouble(0.01, 5.50));
@@ -171,9 +168,9 @@ public class MockMarketDataFeedService
 			 */
 
 			sec.setTimestamp(ZonedDateTime.now());
-			
+
 			hist.add(sec);
-			
+
 			day = day.minusDays(1);
 		}
 

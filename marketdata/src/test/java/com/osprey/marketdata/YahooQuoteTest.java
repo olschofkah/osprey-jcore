@@ -1,5 +1,6 @@
 package com.osprey.marketdata;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
+import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -20,12 +24,16 @@ public class YahooQuoteTest {
 
 	@Autowired
 	private YahooQuoteClient yahooQuoteClient;
-	
+	@Autowired
+	private YahooHistoricalQuoteClient yahooHistoricalQuoteClient;
+
 	// TODO Add more test cases
 	// TODO Add Test Suites
 
 	@Test
-	public void quoteFundamentalTest1() {
+	public void quoteFundamentalTest1() throws Exception {
+
+		// TODO see why first request takes oddly long
 
 		long n0 = System.currentTimeMillis();
 		FundamentalPricedSecurity quote = yahooQuoteClient.quoteFundamental(new Security("AAPL"));
@@ -36,7 +44,7 @@ public class YahooQuoteTest {
 		long n3 = System.currentTimeMillis();
 		quote = yahooQuoteClient.quoteFundamental(new Security("FB"));
 		long n4 = System.currentTimeMillis();
-		quote = yahooQuoteClient.quoteFundamental(new Security("BRKA"));
+		quote = yahooQuoteClient.quoteFundamental(new Security("BRK-A"));
 		long n5 = System.currentTimeMillis();
 		quote = yahooQuoteClient.quoteFundamental(new Security("WMT"));
 		long n6 = System.currentTimeMillis();
@@ -72,10 +80,83 @@ public class YahooQuoteTest {
 			Assert.assertTrue("Iteration " + i + " is longer than acceptable", results.get(i) < 1000);
 		}
 		double averageDuration = ((double) (n12 - n0)) / 12.0;
-		
+
 		System.out.println("Average time in mills: " + averageDuration);
 		Assert.assertTrue("Average duration failure", averageDuration < 250);
 
 	}
 
+	@Test
+	public void problemTickersTest() throws Exception {
+
+		yahooQuoteClient.quoteFundamental(new Security("SKX"));
+		yahooQuoteClient.quoteFundamental(new Security("BBBY"));
+
+		// only ensuring the quotes do not throw an exception ... and we must
+		// have ASSERTS!
+		Assert.assertTrue(true);
+
+	}
+
+	@Test
+	public void quoteHistoricalTest1() throws Exception {
+
+		// TODO see why first request takes oddly long
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		long n0 = System.currentTimeMillis();
+		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("AAPL"), start, end, freq);
+		long n1 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("GOOGL"), start, end, freq);
+		long n2 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("QQQ"), start, end, freq);
+		long n3 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("FB"), start, end, freq);
+		long n4 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("BRK-A"), start, end, freq);
+		long n5 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("WMT"), start, end, freq);
+		long n6 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("MCK"), start, end, freq);
+		long n7 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("QQQ"), start, end, freq);
+		long n8 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("SPY"), start, end, freq);
+		long n9 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("XBI"), start, end, freq);
+		long n10 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("UWTI"), start, end, freq);
+		long n11 = System.currentTimeMillis();
+		hist = yahooHistoricalQuoteClient.quoteHistorical(new Security("USO"), start, end, freq);
+		long n12 = System.currentTimeMillis();
+		
+		Assert.assertTrue(hist.size() < 262 && hist.size() > 252);
+
+		List<Long> results = new ArrayList<>();
+		results.add(n1 - n0);
+		results.add(n2 - n1);
+		results.add(n3 - n2);
+		results.add(n4 - n3);
+		results.add(n5 - n4);
+		results.add(n6 - n5);
+		results.add(n7 - n6);
+		results.add(n8 - n7);
+		results.add(n9 - n8);
+		results.add(n10 - n9);
+		results.add(n11 - n10);
+		results.add(n12 - n11);
+
+		for (int i = 0; i < results.size(); ++i) {
+			System.out.println(results.get(i));
+			Assert.assertTrue("Iteration " + i + " is longer than acceptable", results.get(i) < 300);
+		}
+		double averageDuration = ((double) (n12 - n0)) / 12.0;
+
+		System.out.println("Average time in mills: " + averageDuration);
+		Assert.assertTrue("Average duration failure", averageDuration < 100);
+
+	}
 }

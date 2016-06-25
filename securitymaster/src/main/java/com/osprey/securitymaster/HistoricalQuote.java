@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.osprey.securitymaster.constants.EarningsReportTime;
 
-public class HistoricalSecurity {
+public class HistoricalQuote {
 
 	private final String ticker;
 	private final LocalDate historicalDate;
@@ -32,7 +32,7 @@ public class HistoricalSecurity {
 
 	private ZonedDateTime timestamp;
 
-	public HistoricalSecurity(String ticker, LocalDate historicalDate) {
+	public HistoricalQuote(String ticker, LocalDate historicalDate) {
 		this.ticker = ticker;
 		this.historicalDate = historicalDate;
 	}
@@ -170,7 +170,7 @@ public class HistoricalSecurity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		HistoricalSecurity other = (HistoricalSecurity) obj;
+		HistoricalQuote other = (HistoricalQuote) obj;
 		if (historicalDate == null) {
 			if (other.historicalDate != null)
 				return false;

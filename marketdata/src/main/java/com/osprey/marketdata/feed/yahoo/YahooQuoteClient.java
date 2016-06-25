@@ -8,9 +8,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
+import com.osprey.marketdata.feed.exception.MarketDataIOException;
+import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.marketdata.feed.yahoo.pojo.Result;
 import com.osprey.marketdata.feed.yahoo.pojo.YahooQuote;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
@@ -18,47 +24,57 @@ import com.osprey.securitymaster.Security;
 
 public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 
+	final static Logger logger = LogManager.getLogger(YahooQuoteClient.class);
+	
 	@Autowired
 	private ApplicationContext appCtx;
-
-	final static Logger logger = LogManager.getLogger(YahooQuoteClient.class);
 
 	@Autowired
 	private RestTemplate http;
 
 	@Override
-	public FundamentalPricedSecurity quoteFundamental(Security s) {
+	public FundamentalPricedSecurity quoteFundamental(Security s) throws MarketDataNotAvailableException, MarketDataIOException {
 
-		logger.debug("Quoting for {} ... ", () -> s.getSymbol());
+		logger.info("Quoting for {} ... ", () -> s.getSymbol());
 
 		YahooQuoteUrlBuilder yahooQuoteUrlBuilder = appCtx.getBean(YahooQuoteUrlBuilder.class, s.getSymbol());
 
-		String url = yahooQuoteUrlBuilder
-				.summaryDetail()
-				.summaryProfile()
+		String url = yahooQuoteUrlBuilder.summaryDetail()
+				// .summaryProfile() // TODO move to pulling once a week
 				.calendarEvents()
-				.defaultKeyStatistics()
-				.earnings()
+				// .defaultKeyStatistics() // TODO move to pulling once a week
+				// .earnings() // TODO move to pulling once a week
 				.financialData()
+				// .price() // TODO Do we ever need this?
 				.build();
 
-		YahooQuote yahooQuote = http.getForObject(url, YahooQuote.class);
+		YahooQuote yahooQuote = null;
+		try {
+			yahooQuote = http.getForObject(url, YahooQuote.class);
+		} catch (HttpClientErrorException e1) {
+			if (e1.getMessage().contains("404 Not Found")) {
+				throw new MarketDataNotAvailableException(
+						"404 when quoting " + s.getSymbol() + " Message: " + e1.getMessage());
+			} else {
+				throw new MarketDataIOException(e1);
+			}
+		} catch (HttpMessageNotReadableException e2){
+			throw new MarketDataIOException(e2);
+		}
+
+		if (yahooQuote.getQuoteSummary().getError() != null) {
+			logger.warn(yahooQuote.getQuoteSummary().getError());
+		}
 
 		Result result = yahooQuote.getQuoteSummary().getResult().get(0);
 
-		// TODO Add Error Handling
 		// TODO Strip out fmt and longFmt from generated objects
 		// TODO Strip out additionalProperties map from generated objects
-		
-		logger.info("Quoted {} @ {} - {}", new Object[] { s.getSymbol(), result.getSummaryDetail().getBid().getRaw(),
-				result.getSummaryDetail().getAsk().getRaw() });
+		// TODO Add Quote Sanity Checks
 
-		return mapResultToFundamentalSecurity(result, s.getSymbol());
-	}
+		logger.debug("Completed quoting {} ... ", () -> s.getSymbol());
 
-	private FundamentalPricedSecurity mapResultToFundamentalSecurity(Result result, String symbol) {
-		// TODO Write more code
-		return null;
+		return YahooQuoteResultMapper.map(result, new FundamentalPricedSecurity(s.getSymbol()));
 	}
 
 	@Override

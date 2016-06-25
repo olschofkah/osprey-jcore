@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.osprey.marketdata.feed.mock.MockMarketDataFeedService;
 import com.osprey.marketdata.feed.mock.MockSecurityMasterService;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.PricedSecurity;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.constants.EarningsReportTime;
@@ -116,7 +116,6 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getMarketCap() > 0);
 			Assert.assertTrue(quote.getNextDivDate().isAfter(now) || quote.getNextDivDate().isEqual(now));
 			Assert.assertTrue(quote.getNextEarningsDate().isAfter(now) || quote.getNextEarningsDate().isEqual(now));
-			Assert.assertTrue(quote.getNextEarningsReportTime() == EarningsReportTime.PRE_MARKET);
 			Assert.assertTrue(quote.getPctHeldByInst() > 0);
 			Assert.assertTrue(quote.getPeRatio() > 0);
 			Assert.assertTrue(quote.getSharesOutstanding() > 0);
@@ -158,7 +157,6 @@ public class MockMarketDataTest {
 			Assert.assertTrue(quote.getMarketCap() > 0);
 			Assert.assertTrue(quote.getNextDivDate().isAfter(now) || quote.getNextDivDate().isEqual(now));
 			Assert.assertTrue(quote.getNextEarningsDate().isAfter(now) || quote.getNextEarningsDate().isEqual(now));
-			Assert.assertTrue(quote.getNextEarningsReportTime() == EarningsReportTime.PRE_MARKET);
 			Assert.assertTrue(quote.getPctHeldByInst() > 0);
 			Assert.assertTrue(quote.getPeRatio() > 0);
 			Assert.assertTrue(quote.getSharesOutstanding() > 0);
@@ -179,13 +177,13 @@ public class MockMarketDataTest {
 		LocalDate end = start.minusDays(252);
 
 		for (Security s : securityMaster) {
-			List<HistoricalSecurity> hist = mockMarketData.fetchHistorical(s, start, end);
+			List<HistoricalQuote> hist = mockMarketData.quoteHistorical(s, start, end, null);
 
 			Assert.assertEquals(252, hist.size());
 
 			LocalDate dayCounter = start;
 
-			for (HistoricalSecurity hs : hist) {
+			for (HistoricalQuote hs : hist) {
 				Assert.assertEquals(s.getSymbol(), hs.getTicker());
 
 				Assert.assertEquals(dayCounter, hs.getHistoricalDate());
@@ -214,14 +212,14 @@ public class MockMarketDataTest {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusDays(252);
 
-		Map<Security, List<HistoricalSecurity>> histBatch = mockMarketData.fetchHistoricalBatch(securityMaster, start,
+		Map<Security, List<HistoricalQuote>> histBatch = mockMarketData.quoteHistoricalBatch(securityMaster, start,
 				end);
 
 		Assert.assertEquals(securityMaster.size(), histBatch.keySet().size());
 
-		for (List<HistoricalSecurity> hist : histBatch.values()) {
+		for (List<HistoricalQuote> hist : histBatch.values()) {
 			LocalDate dayCounter = start;
-			for (HistoricalSecurity hs : hist) {
+			for (HistoricalQuote hs : hist) {
 
 				Assert.assertEquals(dayCounter, hs.getHistoricalDate());
 

@@ -22,7 +22,7 @@ import com.osprey.screen.ScreenStrategyEntry;
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.StockScreenCriteriaGenerator;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 
@@ -53,7 +53,7 @@ public class InitialScreenProcessor implements ItemProcessor<Security, Security>
 		FundamentalPricedSecurity emptyFundamental = new FundamentalPricedSecurity(item);
 		emptyFundamental.setClose(closingPrice);
 
-		Map<FundamentalPricedSecurity, List<HistoricalSecurity>> securities = new HashMap<>(2);
+		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>(2);
 		securities.put(emptyFundamental, Collections.emptyList());
 
 		// Convert the criteria generators into criteria.

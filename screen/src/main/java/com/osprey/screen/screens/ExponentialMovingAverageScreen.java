@@ -8,7 +8,7 @@ import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.result.SMAPair;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class ExponentialMovingAverageScreen implements IStockScreen {
@@ -22,7 +22,7 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 	}
 
 	@Override
-	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalSecurity> h) {
+	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalQuote> h) {
 
 		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), h);
 		double ema1 = OspreyQuantMath.ema(smaPair.getSma1(), smaPair.getPeriod1(), h);

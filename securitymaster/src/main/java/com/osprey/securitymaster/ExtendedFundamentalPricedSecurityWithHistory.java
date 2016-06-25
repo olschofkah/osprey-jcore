@@ -16,7 +16,7 @@ public class ExtendedFundamentalPricedSecurityWithHistory extends FundamentalPri
 	protected double _50sma;
 	protected double _200sma;
 
-	private List<HistoricalSecurity> history;
+	private List<HistoricalQuote> history;
 
 	public ExtendedFundamentalPricedSecurityWithHistory(String ticker) {
 		super(ticker);
@@ -122,11 +122,11 @@ public class ExtendedFundamentalPricedSecurityWithHistory extends FundamentalPri
 		this._200sma = _200sma;
 	}
 
-	public List<HistoricalSecurity> getHistory() {
+	public List<HistoricalQuote> getHistory() {
 		return history;
 	}
 
-	public void setHistory(List<HistoricalSecurity> history) {
+	public void setHistory(List<HistoricalQuote> history) {
 		this.history = history;
 	}
 

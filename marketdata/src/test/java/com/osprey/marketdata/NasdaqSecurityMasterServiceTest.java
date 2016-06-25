@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.nasdaq.NasdaqSecurityMasterFtpService;
 import com.osprey.securitymaster.Security;
 
@@ -19,7 +20,7 @@ public class NasdaqSecurityMasterServiceTest {
 	private NasdaqSecurityMasterFtpService nasdaqSecurityMasterService;
 
 	@Test
-	public void nasdaqSecurityMasterTest() {
+	public void nasdaqSecurityMasterTest() throws MarketDataIOException{
 
 		Set<Security> securities = nasdaqSecurityMasterService.fetchSecurityMaster();
 		

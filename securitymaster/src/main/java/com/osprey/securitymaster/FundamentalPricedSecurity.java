@@ -5,14 +5,13 @@ import java.time.LocalDate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.osprey.securitymaster.constants.EarningsReportTime;
-
 public class FundamentalPricedSecurity extends PricedSecurity {
 
 	protected double dayHigh;
 	protected double dayLow;
 	protected double _52High;
 	protected double _52Low;
+	protected double previousClose;
 	protected double marketCap;
 	protected long sharesOutstanding;
 	protected double eps;
@@ -21,14 +20,21 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 	protected double annualYield;
 	protected double pctHeldByInst;
 	protected double shortInt;
-/**add ROA, ROE, earnings growth (yoy), revenue growth (yoy) and debt to equity ratio*/
+
+	protected double debtToEquity;
+	protected double returnOnAssets;
+	protected double returnOnEquity;
+	protected double revenuePerShare;
+	protected double revenueGrowth;
+
 	protected double beta;
 	protected double historicalVolatility;
 
-	protected LocalDate nextEarningsDate;
-	protected EarningsReportTime nextEarningsReportTime;
+	protected LocalDate nextEarningsDateLower;
+	protected LocalDate nextEarningsDateUpper;
 
 	protected LocalDate nextDivDate;
+	protected LocalDate nextExDivDate;
 
 	public FundamentalPricedSecurity(String ticker) {
 		super(ticker);
@@ -55,6 +61,7 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this.dayLow = s.dayLow;
 		this._52High = s._52High;
 		this._52Low = s._52Low;
+		this.previousClose = s.previousClose;
 		this.marketCap = s.marketCap;
 		this.sharesOutstanding = s.sharesOutstanding;
 		this.eps = s.eps;
@@ -64,20 +71,27 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this.pctHeldByInst = s.pctHeldByInst;
 		this.shortInt = s.shortInt;
 
+		this.debtToEquity = s.debtToEquity;
+		this.returnOnAssets = s.returnOnAssets;
+		this.returnOnEquity = s.returnOnEquity;
+		this.revenuePerShare = s.revenuePerShare;
+		this.revenueGrowth = s.revenueGrowth;
+
 		this.beta = s.beta;
 		this.historicalVolatility = s.historicalVolatility;
 
-		this.nextEarningsDate = s.nextEarningsDate;
-		this.nextEarningsReportTime = s.nextEarningsReportTime;
+		this.nextEarningsDateLower = s.nextEarningsDateLower;
+		this.nextEarningsDateUpper = s.nextEarningsDateUpper;
 		this.nextDivDate = s.nextDivDate;
+		this.nextExDivDate = s.nextExDivDate;
 	}
 
 	public LocalDate getNextEarningsDate() {
-		return nextEarningsDate;
+		return nextEarningsDateLower;
 	}
 
-	public void setNextEarningsDate(LocalDate nextEarningsDate) {
-		this.nextEarningsDate = nextEarningsDate;
+	public void setNextEarningsDateLower(LocalDate nextEarningsDate) {
+		this.nextEarningsDateLower = nextEarningsDate;
 	}
 
 	public LocalDate getNextDivDate() {
@@ -204,12 +218,68 @@ public class FundamentalPricedSecurity extends PricedSecurity {
 		this._52Low = _52Low;
 	}
 
-	public EarningsReportTime getNextEarningsReportTime() {
-		return nextEarningsReportTime;
+	public LocalDate getNextEarningsDateUpper() {
+		return nextEarningsDateUpper;
 	}
 
-	public void setNextEarningsReportTime(EarningsReportTime nextEarningsReportTime) {
-		this.nextEarningsReportTime = nextEarningsReportTime;
+	public void setNextEarningsDateUpper(LocalDate nextEarningsDateUpper) {
+		this.nextEarningsDateUpper = nextEarningsDateUpper;
+	}
+
+	public LocalDate getNextExDivDate() {
+		return nextExDivDate;
+	}
+
+	public void setNextExDivDate(LocalDate nextExDivDate) {
+		this.nextExDivDate = nextExDivDate;
+	}
+
+	public double getPreviousClose() {
+		return previousClose;
+	}
+
+	public void setPreviousClose(double previousClose) {
+		this.previousClose = previousClose;
+	}
+
+	public double getDebtToEquity() {
+		return debtToEquity;
+	}
+
+	public void setDebtToEquity(double debtToEquity) {
+		this.debtToEquity = debtToEquity;
+	}
+
+	public double getReturnOnAssets() {
+		return returnOnAssets;
+	}
+
+	public void setReturnOnAssets(double returnOnAssets) {
+		this.returnOnAssets = returnOnAssets;
+	}
+
+	public double getReturnOnEquity() {
+		return returnOnEquity;
+	}
+
+	public void setReturnOnEquity(double returnOnEquity) {
+		this.returnOnEquity = returnOnEquity;
+	}
+
+	public double getRevenuePerShare() {
+		return revenuePerShare;
+	}
+
+	public void setRevenuePerShare(double revenuePerShare) {
+		this.revenuePerShare = revenuePerShare;
+	}
+
+	public double getRevenueGrowth() {
+		return revenueGrowth;
+	}
+
+	public void setRevenueGrowth(double revenueGrowth) {
+		this.revenueGrowth = revenueGrowth;
 	}
 
 }
