@@ -1,24 +1,19 @@
 package com.osprey.screen;
 
-import java.util.List;
 import java.util.Stack;
 
 import com.osprey.screen.screens.IStockScreen;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class ScreenPlan {
 
 	private Stack<IStockScreen> screens;
-	private final FundamentalPricedSecurity security;
-	private final List<HistoricalQuote> history;
+	private final SecurityQuoteContainer sqc;
 
 	private boolean passed = true;
 
-	public ScreenPlan(FundamentalPricedSecurity security, List<HistoricalQuote> history) {
-		this.security = security;
-		this.history = history;
-
+	public ScreenPlan(SecurityQuoteContainer quoteContainer) {
+		this.sqc = quoteContainer;
 		screens = new Stack<>();
 	}
 
@@ -35,7 +30,7 @@ public class ScreenPlan {
 
 		IStockScreen lastScreen;
 		while (passed && !screens.isEmpty()) {
-			lastScreen = screens.pop().doScreen(getSecurity(), history);
+			lastScreen = screens.pop().doScreen(sqc);
 			passed = lastScreen.passed();
 		}
 
@@ -46,7 +41,7 @@ public class ScreenPlan {
 		return passed;
 	}
 
-	public FundamentalPricedSecurity getSecurity() {
-		return security;
+	public SecurityQuoteContainer getSecurityQuoteContainer() {
+		return sqc;
 	}
 }

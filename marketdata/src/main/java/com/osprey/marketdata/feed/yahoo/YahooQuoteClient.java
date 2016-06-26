@@ -12,15 +12,14 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.marketdata.feed.yahoo.pojo.Result;
 import com.osprey.marketdata.feed.yahoo.pojo.YahooQuote;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
+import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
 
 public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 
@@ -33,7 +32,7 @@ public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 	private RestTemplate http;
 
 	@Override
-	public FundamentalPricedSecurity quoteFundamental(Security s) throws MarketDataNotAvailableException, MarketDataIOException {
+	public FundamentalQuote quoteFundamental(SecurityKey s) throws MarketDataNotAvailableException, MarketDataIOException {
 
 		logger.info("Quoting for {} ... ", () -> s.getSymbol());
 
@@ -74,11 +73,11 @@ public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 
 		logger.debug("Completed quoting {} ... ", () -> s.getSymbol());
 
-		return YahooQuoteResultMapper.map(result, new FundamentalPricedSecurity(s.getSymbol()));
+		return YahooQuoteResultMapper.map(result, new FundamentalQuote(s.getSymbol()));
 	}
 
 	@Override
-	public Map<Security, FundamentalPricedSecurity> quoteFundamentalBatch(Set<Security> s) {
+	public Map<Security, FundamentalQuote> quoteFundamentalBatch(Set<SecurityKey> s) {
 		throw new NotImplementedException(
 				"quoteFundamentalBatch(Set<Security>) is not implemented for YahooQuoteClient");
 	}

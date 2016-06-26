@@ -2,11 +2,9 @@ package com.osprey.screen.screens;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class PreviousClosePriceScreen implements IStockScreen {
@@ -19,9 +17,9 @@ public class PreviousClosePriceScreen implements IStockScreen {
 	}
 
 	@Override
-	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalQuote> h) {
+	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		double closingPrice = s.getClose();
+		double closingPrice = sqc.getSecurity().getPreviousClose();
 		double price = criteria.getPrice();
 
 		switch (criteria.getRelationalOperator()) {

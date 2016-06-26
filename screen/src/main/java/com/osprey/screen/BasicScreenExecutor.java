@@ -6,9 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.osprey.securitymaster.SecurityKey;
+
 public class BasicScreenExecutor implements IStockScreenPlanExecutor {
 
-	private Set<String> resultSet = new HashSet<>();
+	private Set<SecurityKey> resultSet = new HashSet<>();
 	private List<ScreenPlan> plans;
 
 	@Override
@@ -21,13 +23,13 @@ public class BasicScreenExecutor implements IStockScreenPlanExecutor {
 		for (ScreenPlan plan : plans) {
 
 			if (plan.execute().passed()) {
-				resultSet.add(plan.getSecurity().getSymbol());
+				resultSet.add(plan.getSecurityQuoteContainer().getKey());
 			}
 
 		}
 	}
 
-	public Set<String> getResultSet() {
+	public Set<SecurityKey> getResultSet() {
 		return resultSet;
 	}
 

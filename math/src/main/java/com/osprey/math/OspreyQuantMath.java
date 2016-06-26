@@ -135,7 +135,7 @@ public final class OspreyQuantMath {
 		sma1 /= p1;
 		sma2 /= p2;
 
-		return new SMAPair(prices.get(0).getTicker(), p1, sma1, p2, sma2);
+		return new SMAPair(prices.get(0).getKey().getSymbol(), p1, sma1, p2, sma2);
 	}
 
 	/**
@@ -309,7 +309,6 @@ public final class OspreyQuantMath {
 	}
 
 	public static double beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {
-
 
 		double dailyReturn;
 		double dailyReturn_bmk;

@@ -2,13 +2,11 @@ package com.osprey.screen.screens;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.result.SMAPair;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class ExponentialMovingAverageScreen implements IStockScreen {
@@ -22,11 +20,12 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 	}
 
 	@Override
-	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalQuote> h) {
+	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), h);
-		double ema1 = OspreyQuantMath.ema(smaPair.getSma1(), smaPair.getPeriod1(), h);
-		double ema2 = OspreyQuantMath.ema(smaPair.getSma2(), smaPair.getPeriod2(), h);
+		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(),
+				sqc.getHistoricalQuotes());
+		double ema1 = OspreyQuantMath.ema(smaPair.getSma1(), smaPair.getPeriod1(), sqc.getHistoricalQuotes());
+		double ema2 = OspreyQuantMath.ema(smaPair.getSma2(), smaPair.getPeriod2(), sqc.getHistoricalQuotes());
 
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:

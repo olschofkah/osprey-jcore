@@ -8,13 +8,12 @@ import com.osprey.marketdata.feed.yahoo.pojo.Price;
 import com.osprey.marketdata.feed.yahoo.pojo.Result;
 import com.osprey.marketdata.feed.yahoo.pojo.SummaryDetail;
 import com.osprey.marketdata.feed.yahoo.pojo.SummaryProfile;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.PricedSecurity;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.utils.OspreyUtils;
 
 public class YahooQuoteResultMapper {
 
-	public static FundamentalPricedSecurity map(Result result, FundamentalPricedSecurity security) {
+	public static SecurityQuoteContainer map(Result result, SecurityQuoteContainer security) {
 
 		if (result.getCalendarEvents() != null) {
 			mapCalendarEvents(result.getCalendarEvents(), security);
@@ -58,11 +57,11 @@ public class YahooQuoteResultMapper {
 		}
 	}
 
-	private static void mapSummaryProfile(SummaryProfile summaryProfile, FundamentalPricedSecurity s) {
+	private static void mapSummaryProfile(SummaryProfile summaryProfile, SecurityQuoteContainer s) {
 		// TODO Determine if summary profile data is desired.
 	}
 
-	private static void mapSummaryDetail(SummaryDetail sd, FundamentalPricedSecurity s) {
+	private static void mapSummaryDetail(SummaryDetail sd, SecurityQuoteContainer s) {
 
 		if (sd.getAsk() != null && sd.getAsk().getRaw() != null) {
 			s.setAsk(sd.getAsk().getRaw());
@@ -142,7 +141,7 @@ public class YahooQuoteResultMapper {
 		// sd.getTotalAssets();
 	}
 
-	private static void mapFinancialData(FinancialData fd, FundamentalPricedSecurity s) {
+	private static void mapFinancialData(FinancialData fd, SecurityQuoteContainer s) {
 
 		if (fd.getDebtToEquity() != null && fd.getDebtToEquity().getRaw() != null) {
 			s.setDebtToEquity(fd.getDebtToEquity().getRaw());
@@ -162,15 +161,15 @@ public class YahooQuoteResultMapper {
 
 	}
 
-	private static void mapEarnings(Earnings_ earnings, FundamentalPricedSecurity security) {
+	private static void mapEarnings(Earnings_ earnings, SecurityQuoteContainer security) {
 		// TODO determine what if any stats fields we care about
 	}
 
-	private static void mapDefaultKeyStatistics(DefaultKeyStatistics stats, FundamentalPricedSecurity security) {
+	private static void mapDefaultKeyStatistics(DefaultKeyStatistics stats, SecurityQuoteContainer security) {
 		// TODO determine what if any stats fields we care about
 	}
 
-	private static void mapCalendarEvents(CalendarEvents calendarEvents, FundamentalPricedSecurity security) {
+	private static void mapCalendarEvents(CalendarEvents calendarEvents, SecurityQuoteContainer security) {
 
 		if (calendarEvents.getDividendDate() != null && calendarEvents.getDividendDate().getRaw() != null) {
 			security.setNextDivDate(OspreyUtils.getLocalDateFromEpoch(calendarEvents.getDividendDate().getRaw()));

@@ -16,13 +16,15 @@ import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
+import com.osprey.securitymaster.EnhancedSecurity;
 import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
-public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundamentalPricedSecurityWithHistory> {
+public class QuoteProcessor implements ItemProcessor<Security, SecurityQuoteContainer> {
 
 	final static Logger logger = LogManager.getLogger(QuoteProcessor.class);
 
@@ -36,13 +38,13 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 	private IHistoricalQuoteSerice historicalQuoteService;
 
 	@Override
-	public ExtendedFundamentalPricedSecurityWithHistory process(Security item) throws Exception {
+	public SecurityQuoteContainer process(Security item) throws Exception {
 
 		logger.debug("Quoting initial screen on {} ", () -> item.getSymbol());
 
 		checkThrottle();
 
-		FundamentalPricedSecurity quote = null;
+		SecurityQuoteContainer qc = new SecurityQuoteContainer(item.getKey());
 		try {
 			quote = fundamentalQuoteService.quoteFundamental(item);
 		} catch (MarketDataNotAvailableException e) {
@@ -62,7 +64,7 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 				quote);
 		extendedQuote.setHistory(historicals);
 
-		decorateQuoteWithCustomCalculations(extendedQuote);
+		constructEnhancedQuote(extendedQuote);
 
 		return extendedQuote;
 	}
@@ -75,25 +77,27 @@ public class QuoteProcessor implements ItemProcessor<Security, ExtendedFundament
 		throttleCapacity.getAndDecrement();
 	}
 
-	private void decorateQuoteWithCustomCalculations(ExtendedFundamentalPricedSecurityWithHistory extendedQuote) {
+	private void constructEnhancedQuote(SecurityQuoteContainer qc) {
+
+		EnhancedSecurity es = new EnhancedSecurity(qc.getKey());
+		List<HistoricalQuote> historicalQuotes = qc.getHistoricalQuotes();
 
 		try {
 			double volatility = OspreyQuantMath.volatility(
-					Math.min(extendedQuote.getHistory().size(), OspreyConstants.MARKET_DAYS_IN_YEAR),
-					extendedQuote.getHistory());
+					Math.min(historicalQuotes.size(), OspreyConstants.MARKET_DAYS_IN_YEAR), historicalQuotes);
 
-			double sma12 = OspreyQuantMath.sma(12, extendedQuote.getHistory());
-			double ema12 = OspreyQuantMath.ema(sma12, 12, extendedQuote.getHistory());
+			double sma12 = OspreyQuantMath.sma(12, historicalQuotes);
+			double ema12 = OspreyQuantMath.ema(sma12, 12, historicalQuotes);
 
 			// TODO Determine & Add more calculations.
 
-			extendedQuote.set_oVolatility(volatility);
-			extendedQuote.set_12ema(ema12);
-			extendedQuote.set_12sma(sma12);
+			es.setAlphaForEma(1);
+			es.setVolatility360(volatility);
+			es.setEma12(ema12);
 
 		} catch (InsufficientHistoryException e) {
 			logger.error("Insufficient historical prices to calculate stats on {}, size avaialble {} ",
-					new Object[] { extendedQuote.getSymbol(), extendedQuote.getHistory().size() });
+					new Object[] { qc.getKey().getSymbol(), historicalQuotes.size() });
 		}
 	}
 

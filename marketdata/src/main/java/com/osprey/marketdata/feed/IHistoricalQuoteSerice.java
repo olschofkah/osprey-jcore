@@ -10,13 +10,14 @@ import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
 
 public interface IHistoricalQuoteSerice {
 
-	public List<HistoricalQuote> quoteHistorical(Security s, LocalDate start, LocalDate end,
+	public List<HistoricalQuote> quoteHistorical(SecurityKey s, LocalDate start, LocalDate end,
 			QuoteDataFrequency frequency) throws MarketDataNotAvailableException, MarketDataIOException;
 
-	public Map<Security, List<HistoricalQuote>> quoteHistoricalBatch(Set<Security> s, LocalDate start, LocalDate end)
+	public Map<Security, List<HistoricalQuote>> quoteHistoricalBatch(Set<SecurityKey> s, LocalDate start, LocalDate end)
 			throws MarketDataNotAvailableException, MarketDataIOException;
 
 }

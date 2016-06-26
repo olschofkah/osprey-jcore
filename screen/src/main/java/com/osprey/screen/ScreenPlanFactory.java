@@ -3,8 +3,7 @@ package com.osprey.screen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.IStockScreenCriteria;
@@ -18,22 +17,21 @@ import com.osprey.screen.screens.InstrumentTypeScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.screen.screens.VolatilityScreen;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class ScreenPlanFactory {
 
-	private Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities;
+	private Set<SecurityQuoteContainer> securities;
 
 	public ScreenPlanFactory() {
 
 	}
 
-	public ScreenPlanFactory(Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities) {
+	public ScreenPlanFactory(Set<SecurityQuoteContainer> securities) {
 		this.securities = securities;
 	}
 
-	public void setSecurityUniverse(Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities) {
+	public void setSecurityUniverse(Set<SecurityQuoteContainer> securities) {
 		this.securities = securities;
 	}
 
@@ -48,8 +46,8 @@ public class ScreenPlanFactory {
 		// flip the order since they're dropped onto a stack;
 		Collections.reverse(criterias);
 
-		for (Entry<FundamentalPricedSecurity, List<HistoricalQuote>> entry : securities.entrySet()) {
-			ScreenPlan plan = new ScreenPlan(entry.getKey(), entry.getValue());
+		for (SecurityQuoteContainer sqc : securities) {
+			ScreenPlan plan = new ScreenPlan(sqc);
 			plans.add(plan);
 
 			for (IStockScreenCriteria criteria : criterias) {

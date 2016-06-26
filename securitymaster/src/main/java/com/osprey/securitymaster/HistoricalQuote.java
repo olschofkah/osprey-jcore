@@ -6,87 +6,23 @@ import java.time.ZonedDateTime;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.osprey.securitymaster.constants.EarningsReportTime;
-
 public class HistoricalQuote {
 
-	private final String ticker;
+	private final SecurityKey key;
 	private final LocalDate historicalDate;
 
-	private double close;
-	private double adjClose;
 	private double open;
+	private double close;
 	private double high;
 	private double low;
-	private double volume;
-
-	// TODO Add in estimated vs actual for earnings somewhere?
-
-	private LocalDate nextEarningsDate;
-	private LocalDate previousEarningsDate;
-	private EarningsReportTime nextEarningsReportTime;
-	private EarningsReportTime previousEarningsReportTime;
-
-	private LocalDate nextDivDate;
-	private LocalDate previousDivDate;
+	private long volume;
+	private double adjClose;
 
 	private ZonedDateTime timestamp;
 
 	public HistoricalQuote(String ticker, LocalDate historicalDate) {
-		this.ticker = ticker;
+		this.key = new SecurityKey(ticker, null);
 		this.historicalDate = historicalDate;
-	}
-
-	public LocalDate getNextEarningsDate() {
-		return nextEarningsDate;
-	}
-
-	public void setNextEarningsDate(LocalDate nextEarningsDate) {
-		this.nextEarningsDate = nextEarningsDate;
-	}
-
-	public LocalDate getPreviousEarningsDate() {
-		return previousEarningsDate;
-	}
-
-	public void setPreviousEarningsDate(LocalDate previousEarningsDate) {
-		this.previousEarningsDate = previousEarningsDate;
-	}
-
-	public LocalDate getNextDivDate() {
-		return nextDivDate;
-	}
-
-	public void setNextDivDate(LocalDate nextDivDate) {
-		this.nextDivDate = nextDivDate;
-	}
-
-	public LocalDate getPreviousDivDate() {
-		return previousDivDate;
-	}
-
-	public void setPreviousDivDate(LocalDate previousDivDate) {
-		this.previousDivDate = previousDivDate;
-	}
-
-	public String getTicker() {
-		return ticker;
-	}
-
-	public double getClose() {
-		return close;
-	}
-
-	public void setClose(double close) {
-		this.close = close;
-	}
-
-	public double getAdjClose() {
-		return adjClose;
-	}
-
-	public void setAdjClose(double adjClose) {
-		this.adjClose = adjClose;
 	}
 
 	public double getOpen() {
@@ -95,6 +31,14 @@ public class HistoricalQuote {
 
 	public void setOpen(double open) {
 		this.open = open;
+	}
+
+	public double getClose() {
+		return close;
+	}
+
+	public void setClose(double close) {
+		this.close = close;
 	}
 
 	public double getHigh() {
@@ -113,36 +57,20 @@ public class HistoricalQuote {
 		this.low = low;
 	}
 
-	public double getVolume() {
+	public long getVolume() {
 		return volume;
 	}
 
-	public void setVolume(double volume) {
+	public void setVolume(long volume) {
 		this.volume = volume;
 	}
 
-	public LocalDate getHistoricalDate() {
-		return historicalDate;
+	public double getAdjClose() {
+		return adjClose;
 	}
 
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-	}
-
-	public EarningsReportTime getNextEarningsReportTime() {
-		return nextEarningsReportTime;
-	}
-
-	public void setNextEarningsReportTime(EarningsReportTime nextEarningsReportTime) {
-		this.nextEarningsReportTime = nextEarningsReportTime;
-	}
-
-	public EarningsReportTime getPreviousEarningsReportTime() {
-		return previousEarningsReportTime;
-	}
-
-	public void setPreviousEarningsReportTime(EarningsReportTime previousEarningsReportTime) {
-		this.previousEarningsReportTime = previousEarningsReportTime;
+	public void setAdjClose(double adjClose) {
+		this.adjClose = adjClose;
 	}
 
 	public ZonedDateTime getTimestamp() {
@@ -153,12 +81,20 @@ public class HistoricalQuote {
 		this.timestamp = timestamp;
 	}
 
+	public SecurityKey getKey() {
+		return key;
+	}
+
+	public LocalDate getHistoricalDate() {
+		return historicalDate;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((historicalDate == null) ? 0 : historicalDate.hashCode());
-		result = prime * result + ((ticker == null) ? 0 : ticker.hashCode());
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		return result;
 	}
 
@@ -176,12 +112,15 @@ public class HistoricalQuote {
 				return false;
 		} else if (!historicalDate.equals(other.historicalDate))
 			return false;
-		if (ticker == null) {
-			if (other.ticker != null)
+		if (key == null) {
+			if (other.key != null)
 				return false;
-		} else if (!ticker.equals(other.ticker))
+		} else if (!key.equals(other.key))
 			return false;
 		return true;
 	}
 
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+	}
 }

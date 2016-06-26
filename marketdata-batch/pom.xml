@@ -146,6 +146,11 @@
         <artifactId>jackson-module-parameter-names</artifactId>
         <version>${jackson.version}</version><!--$NO-MVN-MAN-VER$-->
       </dependency>
+      <dependency>
+      	<groupId>org.jgroups</groupId>
+      	<artifactId>jgroups</artifactId>
+      	<version>3.6.4.Final</version>
+      </dependency>
 	</dependencies>
 	
 	<build>

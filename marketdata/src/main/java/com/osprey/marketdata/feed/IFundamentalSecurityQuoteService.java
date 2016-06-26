@@ -5,12 +5,14 @@ import java.util.Set;
 
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.FundamentalQuote;
+import com.osprey.securitymaster.SecurityKey;
 
 public interface IFundamentalSecurityQuoteService {
 
-	public FundamentalPricedSecurity quoteFundamental(Security s) throws MarketDataNotAvailableException, MarketDataIOException;
+	public FundamentalQuote quoteFundamental(SecurityKey s)
+			throws MarketDataNotAvailableException, MarketDataIOException;
 
-	public Map<Security, FundamentalPricedSecurity> quoteFundamentalBatch(Set<Security> s) throws MarketDataNotAvailableException;
+	public Map<SecurityKey, FundamentalQuote> quoteFundamentalBatch(Set<SecurityKey> s)
+			throws MarketDataNotAvailableException;
 }
