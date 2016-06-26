@@ -29,9 +29,6 @@ public class Security {
 
 	private ZonedDateTime timestamp;
 
-	private List<SecurityEvent> events;
-	private SecurityUpcomingEvents upcomingEvents;
-
 	public Security(String symbol) {
 		this.key = new SecurityKey(symbol, null);
 	}
@@ -175,21 +172,5 @@ public class Security {
 
 	public void setPreviousClose(double previousClose) {
 		this.previousClose = previousClose;
-	}
-
-	public List<SecurityEvent> getEvents() {
-		return events;
-	}
-
-	public void setEvents(List<SecurityEvent> events) {
-		this.events = events;
-	}
-
-	public SecurityUpcomingEvents getUpcomingEvents() {
-		return upcomingEvents;
-	}
-
-	public void setUpcomingEvents(SecurityUpcomingEvents futureEvents) {
-		this.upcomingEvents = futureEvents;
 	}
 }

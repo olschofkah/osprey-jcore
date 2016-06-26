@@ -3,17 +3,17 @@ package com.osprey.screen;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
 import com.osprey.trade.option.OptionStrategy;
 
 public class ScreenSuccessSecurity {
 
-	private final Security security;
+	private final SecurityKey key;
 	private List<OptionStrategy> strategies = new ArrayList<>();
 	private List<String> namedScreenSets = new ArrayList<>();
 
-	public ScreenSuccessSecurity(Security s) {
-		this.security = s;
+	public ScreenSuccessSecurity(SecurityKey s) {
+		this.key = s;
 	}
 
 	public void addScreen(String screen) {
@@ -32,10 +32,6 @@ public class ScreenSuccessSecurity {
 		this.strategies = strategies;
 	}
 
-	public Security getSecurity() {
-		return security;
-	}
-
 	public List<String> getNamedScreenSets() {
 		return namedScreenSets;
 	}
@@ -50,5 +46,9 @@ public class ScreenSuccessSecurity {
 
 	public void addAllStrategies(List<OptionStrategy> oss) {
 		strategies.addAll(oss);
+	}
+
+	public SecurityKey getKey() {
+		return key;
 	}
 }

@@ -3,9 +3,9 @@ package com.osprey.marketdata.batch.processor;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,12 +21,9 @@ import com.osprey.screen.ScreenStrategyEntry;
 import com.osprey.screen.ScreenSuccessSecurity;
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.StockScreenCriteriaGenerator;
-import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
-public class HotShitScreenProcessor
-		implements ItemProcessor<ExtendedFundamentalPricedSecurityWithHistory, ScreenSuccessSecurity> {
+public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContainer, ScreenSuccessSecurity> {
 
 	final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
 
@@ -34,9 +31,9 @@ public class HotShitScreenProcessor
 	private String screenJsonFile;
 
 	@Override
-	public ScreenSuccessSecurity process(ExtendedFundamentalPricedSecurityWithHistory item) throws Exception {
+	public ScreenSuccessSecurity process(SecurityQuoteContainer item) throws Exception {
 
-		logger.info("Performing tha hot shit on {} ", () -> item.getSymbol());
+		logger.info("Performing tha hot shit on {} ", () -> item.getKey().getSymbol());
 
 		InputStream in = getClass().getClassLoader().getResourceAsStream(screenJsonFile);
 		List<ScreenStrategyEntry> entries = new ObjectMapper()
@@ -44,8 +41,8 @@ public class HotShitScreenProcessor
 				.readValue(in, new TypeReference<List<ScreenStrategyEntry>>() {
 				});
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>(2);
-		securities.put(item, item.getHistory());
+		Set<SecurityQuoteContainer> securities = new HashSet<>(2);
+		securities.add(item);
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 
@@ -62,12 +59,13 @@ public class HotShitScreenProcessor
 			executor.setPlans(screenPlanFactory.build(criteria));
 			executor.execute();
 
-			if (executor.getResultSet().contains(item.getSymbol())) {
+			if (executor.getResultSet().contains(item.getKey())) {
 
-				logger.info("Adding {} to the hot shit for {} ", () -> item.getSymbol(), () -> LocalDate.now());
+				logger.info("Adding {} to the hot shit for {} ",
+						new Object[] { item.getKey().getSymbol(), LocalDate.now() });
 
 				if (result == null) {
-					result = new ScreenSuccessSecurity(item);
+					result = new ScreenSuccessSecurity(item.getKey());
 				}
 				result.addScreen(entry.getScreenName());
 				result.addAllStrategies(entry.getStrategies());

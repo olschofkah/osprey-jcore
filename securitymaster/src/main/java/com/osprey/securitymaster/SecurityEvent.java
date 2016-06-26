@@ -18,9 +18,9 @@ public class SecurityEvent {
 
 	private final ZonedDateTime timestamp;
 
-	public SecurityEvent(String symbol, LocalDate date, SecurityEventType event, double amount,
+	public SecurityEvent(SecurityKey key, LocalDate date, SecurityEventType event, double amount,
 			ZonedDateTime timestamp) {
-		this.key = new SecurityKey(symbol, null);
+		this.key = key;
 		this.date = date;
 		this.event = event;
 		this.amount = amount;

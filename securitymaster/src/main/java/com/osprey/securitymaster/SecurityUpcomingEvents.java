@@ -19,7 +19,11 @@ public class SecurityUpcomingEvents {
 	private LocalDate nextRevenue;
 
 	public SecurityUpcomingEvents(String symbol) {
-		this.key = new SecurityKey(symbol, null);
+		this(new SecurityKey(symbol, null));
+	}
+
+	public SecurityUpcomingEvents(SecurityKey key) {
+		this.key = key;
 	}
 
 	public ZonedDateTime getTimestamp() {

@@ -1,6 +1,7 @@
 package com.osprey.marketdata;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,11 +15,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.osprey.marketdata.feed.mock.MockMarketDataFeedService;
 import com.osprey.marketdata.feed.mock.MockSecurityMasterService;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalQuote;
-import com.osprey.securitymaster.PricedSecurity;
 import com.osprey.securitymaster.Security;
-import com.osprey.securitymaster.constants.EarningsReportTime;
+import com.osprey.securitymaster.SecurityKey;
+import com.osprey.securitymaster.SecurityQuote;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MarketDataDevConfiguration.class)
@@ -48,17 +49,16 @@ public class MockMarketDataTest {
 		Assert.assertFalse(securityMaster.isEmpty());
 
 		for (Security s : securityMaster) {
-			PricedSecurity quote = mockMarketData.quote(s);
-			Assert.assertEquals(s.getSymbol(), quote.getSymbol());
-			Assert.assertEquals(s.getInstrumentType(), quote.getInstrumentType());
+			SecurityQuote quote = mockMarketData.quote(s.getKey());
+			Assert.assertEquals(s.getKey().getSymbol(), quote.getKey().getSymbol());
 
 			Assert.assertTrue(quote.getAsk() > 0);
 			Assert.assertTrue(quote.getBid() > 0);
 			Assert.assertTrue(quote.getClose() > 0);
 			Assert.assertTrue(quote.getOpen() > 0);
-			Assert.assertTrue(quote.getLastPrice() > 0);
+			Assert.assertTrue(quote.getLast() > 0);
 			Assert.assertTrue(quote.getVolume() > 0);
-			System.out.println("Quote of " + s.getSymbol() + " is " + quote);
+			System.out.println("Quote of " + s.getKey().getSymbol() + " is " + quote);
 		}
 	}
 
@@ -70,17 +70,22 @@ public class MockMarketDataTest {
 
 		Assert.assertFalse(securityMaster.isEmpty());
 
-		Map<Security, PricedSecurity> quoteBatch = mockMarketData.quoteBatch(securityMaster);
+		Set<SecurityKey> keySet = new HashSet<>(securityMaster.size());
+		for (Security security : securityMaster) {
+			keySet.add(security.getKey());
+		}
 
-		for (PricedSecurity quote : quoteBatch.values()) {
+		Map<SecurityKey, SecurityQuote> quoteBatch = mockMarketData.quoteBatch(keySet);
+
+		for (SecurityQuote quote : quoteBatch.values()) {
 
 			Assert.assertTrue(quote.getAsk() > 0);
 			Assert.assertTrue(quote.getBid() > 0);
 			Assert.assertTrue(quote.getClose() > 0);
 			Assert.assertTrue(quote.getOpen() > 0);
-			Assert.assertTrue(quote.getLastPrice() > 0);
+			Assert.assertTrue(quote.getLast() > 0);
 			Assert.assertTrue(quote.getVolume() > 0);
-			System.out.println("Quote of " + quote.getSymbol() + " is " + quote);
+			System.out.println("Quote of " + quote.getKey().getSymbol() + " is " + quote);
 		}
 	}
 
@@ -90,80 +95,26 @@ public class MockMarketDataTest {
 
 		Assert.assertFalse(securityMaster.isEmpty());
 
-		LocalDate now = LocalDate.now();
-
 		for (Security s : securityMaster) {
-			FundamentalPricedSecurity quote = mockMarketData.quoteFundamental(s);
-			Assert.assertEquals(s.getSymbol(), quote.getSymbol());
-			Assert.assertEquals(s.getInstrumentType(), quote.getInstrumentType());
+			SecurityQuoteContainer quote = mockMarketData.quoteUltra(s);
+			quote.setSecurity(s);
 
-			Assert.assertTrue(quote.getAsk() > 0);
-			Assert.assertTrue(quote.getBid() > 0);
-			Assert.assertTrue(quote.getClose() > 0);
-			Assert.assertTrue(quote.getOpen() > 0);
-			Assert.assertTrue(quote.getLastPrice() > 0);
-			Assert.assertTrue(quote.getVolume() > 0);
+			Assert.assertEquals(s.getKey().getSymbol(), quote.getKey().getSymbol());
+			Assert.assertEquals(s.getInstrumentType(), quote.getSecurity().getInstrumentType());
 
-			Assert.assertTrue(quote.get_52High() > 0);
-			Assert.assertTrue(quote.get_52Low() > 0);
-			Assert.assertTrue(quote.getAnnualDividend() > 0);
-			Assert.assertTrue(quote.getAnnualYield() > 0);
-			Assert.assertTrue(quote.getBeta() > 0);
-			Assert.assertTrue(quote.getDayHigh() > 0);
-			Assert.assertTrue(quote.getDayLow() > 0);
-			Assert.assertTrue(quote.getEps() > 0);
-			Assert.assertTrue(quote.getHistoricalVolatility() > 0);
-			Assert.assertTrue(quote.getMarketCap() > 0);
-			Assert.assertTrue(quote.getNextDivDate().isAfter(now) || quote.getNextDivDate().isEqual(now));
-			Assert.assertTrue(quote.getNextEarningsDate().isAfter(now) || quote.getNextEarningsDate().isEqual(now));
-			Assert.assertTrue(quote.getPctHeldByInst() > 0);
-			Assert.assertTrue(quote.getPeRatio() > 0);
-			Assert.assertTrue(quote.getSharesOutstanding() > 0);
-			Assert.assertTrue(quote.getShortInt() > 0);
+			Assert.assertTrue(quote.getSecurityQuote().getAsk() > 0);
+			Assert.assertTrue(quote.getSecurityQuote().getBid() > 0);
+			Assert.assertTrue(quote.getSecurityQuote().getClose() > 0);
+			Assert.assertTrue(quote.getSecurityQuote().getOpen() > 0);
+			Assert.assertTrue(quote.getSecurityQuote().getLast() > 0);
+			Assert.assertTrue(quote.getSecurityQuote().getVolume() > 0);
 
-			System.out.println("Quote of " + s.getSymbol() + " is " + quote);
+			// TODO add tests for fundamentals
+
+			System.out.println("Quote of " + s.getKey().getSymbol() + " is " + quote);
 		}
 	}
 
-	@Test
-	public void mockSecurityFundamentalPricerBatchTest1() throws Exception {
-		Set<Security> securityMaster = securityMasterService.fetchSecurityMaster();
-
-		System.out.println("Security Master : " + securityMaster);
-
-		Assert.assertFalse(securityMaster.isEmpty());
-
-		LocalDate now = LocalDate.now();
-
-		Map<Security, FundamentalPricedSecurity> quoteBatch = mockMarketData.quoteFundamentalBatch(securityMaster);
-
-		for (FundamentalPricedSecurity quote : quoteBatch.values()) {
-
-			Assert.assertTrue(quote.getAsk() > 0);
-			Assert.assertTrue(quote.getBid() > 0);
-			Assert.assertTrue(quote.getClose() > 0);
-			Assert.assertTrue(quote.getOpen() > 0);
-			Assert.assertTrue(quote.getLastPrice() > 0);
-			Assert.assertTrue(quote.getVolume() > 0);
-			Assert.assertTrue(quote.get_52High() > 0);
-			Assert.assertTrue(quote.get_52Low() > 0);
-			Assert.assertTrue(quote.getAnnualDividend() > 0);
-			Assert.assertTrue(quote.getAnnualYield() > 0);
-			Assert.assertTrue(quote.getBeta() > 0);
-			Assert.assertTrue(quote.getDayHigh() > 0);
-			Assert.assertTrue(quote.getDayLow() > 0);
-			Assert.assertTrue(quote.getEps() > 0);
-			Assert.assertTrue(quote.getHistoricalVolatility() > 0);
-			Assert.assertTrue(quote.getMarketCap() > 0);
-			Assert.assertTrue(quote.getNextDivDate().isAfter(now) || quote.getNextDivDate().isEqual(now));
-			Assert.assertTrue(quote.getNextEarningsDate().isAfter(now) || quote.getNextEarningsDate().isEqual(now));
-			Assert.assertTrue(quote.getPctHeldByInst() > 0);
-			Assert.assertTrue(quote.getPeRatio() > 0);
-			Assert.assertTrue(quote.getSharesOutstanding() > 0);
-			Assert.assertTrue(quote.getShortInt() > 0);
-			System.out.println("Quote of " + quote.getSymbol() + " is " + quote);
-		}
-	}
 
 	@Test
 	public void mockHistoricalPricerIndividualTest1() throws Exception {
@@ -177,14 +128,14 @@ public class MockMarketDataTest {
 		LocalDate end = start.minusDays(252);
 
 		for (Security s : securityMaster) {
-			List<HistoricalQuote> hist = mockMarketData.quoteHistorical(s, start, end, null);
+			List<HistoricalQuote> hist = mockMarketData.quoteHistorical(s.getKey(), start, end, null);
 
 			Assert.assertEquals(252, hist.size());
 
 			LocalDate dayCounter = start;
 
 			for (HistoricalQuote hs : hist) {
-				Assert.assertEquals(s.getSymbol(), hs.getTicker());
+				Assert.assertEquals(s.getKey().getSymbol(), hs.getKey().getSymbol());
 
 				Assert.assertEquals(dayCounter, hs.getHistoricalDate());
 
@@ -194,41 +145,7 @@ public class MockMarketDataTest {
 				Assert.assertTrue(hs.getOpen() > 0);
 				Assert.assertTrue(hs.getAdjClose() > 0);
 				Assert.assertTrue(hs.getVolume() > 0);
-				System.out.println("Quote of " + s.getSymbol() + " is " + hs);
-
-				dayCounter = dayCounter.minusDays(1);
-			}
-		}
-	}
-
-	@Test
-	public void mockHistoricalPricerBatchTest1() throws Exception {
-		Set<Security> securityMaster = securityMasterService.fetchSecurityMaster();
-
-		System.out.println("Security Master : " + securityMaster);
-
-		Assert.assertFalse(securityMaster.isEmpty());
-
-		LocalDate start = LocalDate.now();
-		LocalDate end = start.minusDays(252);
-
-		Map<Security, List<HistoricalQuote>> histBatch = mockMarketData.quoteHistoricalBatch(securityMaster, start,
-				end);
-
-		Assert.assertEquals(securityMaster.size(), histBatch.keySet().size());
-
-		for (List<HistoricalQuote> hist : histBatch.values()) {
-			LocalDate dayCounter = start;
-			for (HistoricalQuote hs : hist) {
-
-				Assert.assertEquals(dayCounter, hs.getHistoricalDate());
-
-				Assert.assertTrue(hs.getHigh() > 0);
-				Assert.assertTrue(hs.getLow() > 0);
-				Assert.assertTrue(hs.getClose() > 0);
-				Assert.assertTrue(hs.getOpen() > 0);
-				Assert.assertTrue(hs.getAdjClose() > 0);
-				Assert.assertTrue(hs.getVolume() > 0);
+				System.out.println("Quote of " + s.getKey().getSymbol() + " is " + hs);
 
 				dayCounter = dayCounter.minusDays(1);
 			}

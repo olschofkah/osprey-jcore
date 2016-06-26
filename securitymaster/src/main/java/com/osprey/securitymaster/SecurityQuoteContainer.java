@@ -1,5 +1,6 @@
 package com.osprey.securitymaster;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,8 +15,22 @@ public class SecurityQuoteContainer {
 	private FundamentalQuote fundamentalQuote;
 	private EnhancedSecurity enhancedSecurity;
 
+	private List<SecurityEvent> events;
+	private SecurityUpcomingEvents upcomingEvents;
+
 	public SecurityQuoteContainer(SecurityKey key) {
 		this.key = key;
+	}
+
+	public SecurityQuoteContainer(SecurityKey key, List<HistoricalQuote> historicalQuotes) {
+		this(key);
+		this.historicalQuotes = historicalQuotes;
+	}
+
+	public SecurityQuoteContainer(SecurityKey key, List<HistoricalQuote> historicalQuotes,
+			FundamentalQuote fundamentalQuote) {
+		this(key, historicalQuotes);
+		this.fundamentalQuote = fundamentalQuote;
 	}
 
 	public Security getSecurity() {
@@ -89,5 +104,47 @@ public class SecurityQuoteContainer {
 		} else if (!key.equals(other.key))
 			return false;
 		return true;
+	}
+
+	public List<SecurityEvent> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<SecurityEvent> events) {
+		this.events = events;
+	}
+
+	public SecurityUpcomingEvents getUpcomingEvents() {
+		return upcomingEvents;
+	}
+
+	public void setUpcomingEvents(SecurityUpcomingEvents upcomingEvents) {
+		this.upcomingEvents = upcomingEvents;
+	}
+
+	public void timestamp() {
+		ZonedDateTime now = ZonedDateTime.now();
+
+		if (security != null) {
+			security.setTimestamp(now);
+		}
+
+		if (enhancedSecurity != null) {
+			enhancedSecurity.setTimestamp(now);
+		}
+
+		if (securityQuote != null) {
+			securityQuote.setTimestamp(now);
+		}
+
+		if (fundamentalQuote != null) {
+			fundamentalQuote.setTimestamp(now);
+		}
+
+		if (upcomingEvents != null) {
+			upcomingEvents.setTimestamp(now);
+		}
+
+		// timestamps on lists are set during creation for performance;
 	}
 }

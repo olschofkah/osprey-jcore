@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class FundamentalQuote {
 
 	private final SecurityKey key;
-	private final ZonedDateTime timestamp;
+	private ZonedDateTime timestamp;
 	private final LocalDate date;
 
 	private long _10DayAvgVolume;
@@ -70,9 +70,17 @@ public class FundamentalQuote {
 	private double trailingPe;
 
 	public FundamentalQuote(String symbol, LocalDate dt, ZonedDateTime timestamp) {
-		this.key = new SecurityKey(symbol, null);
+		this(new SecurityKey(symbol, null), dt, timestamp);
+	}
+
+	public FundamentalQuote(SecurityKey s, LocalDate dt, ZonedDateTime timestamp) {
+		this.key = s;
 		this.date = dt;
 		this.timestamp = timestamp;
+	}
+
+	public FundamentalQuote(SecurityKey key, LocalDate date) {
+		this(key, date, null);
 	}
 
 	public long get_10DayAvgVolume() {
@@ -541,7 +549,7 @@ public class FundamentalQuote {
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
-		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
+		result = prime * result + ((getTimestamp() == null) ? 0 : getTimestamp().hashCode());
 		return result;
 	}
 
@@ -564,16 +572,20 @@ public class FundamentalQuote {
 				return false;
 		} else if (!key.equals(other.key))
 			return false;
-		if (timestamp == null) {
-			if (other.timestamp != null)
+		if (getTimestamp() == null) {
+			if (other.getTimestamp() != null)
 				return false;
-		} else if (!timestamp.equals(other.timestamp))
+		} else if (!getTimestamp().equals(other.getTimestamp()))
 			return false;
 		return true;
 	}
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+	}
+
+	public void setTimestamp(ZonedDateTime timestamp) {
+		this.timestamp = timestamp;
 	}
 
 }

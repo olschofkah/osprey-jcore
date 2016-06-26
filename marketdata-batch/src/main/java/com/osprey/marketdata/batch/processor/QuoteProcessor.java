@@ -10,21 +10,18 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
 import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
+import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.securitymaster.EnhancedSecurity;
-import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalQuote;
-import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
-public class QuoteProcessor implements ItemProcessor<Security, SecurityQuoteContainer> {
+public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
 
 	final static Logger logger = LogManager.getLogger(QuoteProcessor.class);
 
@@ -33,22 +30,21 @@ public class QuoteProcessor implements ItemProcessor<Security, SecurityQuoteCont
 	private AtomicLong throttleCapacity;
 
 	@Autowired
-	private IFundamentalSecurityQuoteService fundamentalQuoteService;
+	private IUltraSecurityQuoteService fundamentalQuoteService;
 	@Autowired
 	private IHistoricalQuoteSerice historicalQuoteService;
 
 	@Override
-	public SecurityQuoteContainer process(Security item) throws Exception {
+	public SecurityQuoteContainer process(SecurityQuoteContainer item) throws Exception {
 
-		logger.debug("Quoting initial screen on {} ", () -> item.getSymbol());
+		logger.debug("Quoting initial screen on {} ", () -> item.getKey().getSymbol());
 
 		checkThrottle();
 
-		SecurityQuoteContainer qc = new SecurityQuoteContainer(item.getKey());
 		try {
-			quote = fundamentalQuoteService.quoteFundamental(item);
+			fundamentalQuoteService.quoteUltra(item);
 		} catch (MarketDataNotAvailableException e) {
-			logger.warn("Failed to quote {} | Message {}", new Object[] { item.getSymbol(), e.getMessage() });
+			logger.warn("Failed to quote {} | Message {}", new Object[] { item.getKey().getSymbol(), e.getMessage() });
 			return null;
 		}
 
@@ -57,16 +53,13 @@ public class QuoteProcessor implements ItemProcessor<Security, SecurityQuoteCont
 
 		checkThrottle();
 
-		List<HistoricalQuote> historicals = historicalQuoteService.quoteHistorical(item, overOneYearAgo, today,
+		List<HistoricalQuote> historicals = historicalQuoteService.quoteHistorical(item.getKey(), overOneYearAgo, today,
 				QuoteDataFrequency.DAY);
+		item.setHistoricalQuotes(historicals);
 
-		ExtendedFundamentalPricedSecurityWithHistory extendedQuote = new ExtendedFundamentalPricedSecurityWithHistory(
-				quote);
-		extendedQuote.setHistory(historicals);
+		addEnhancedQuote(item);
 
-		constructEnhancedQuote(extendedQuote);
-
-		return extendedQuote;
+		return item;
 	}
 
 	private void checkThrottle() throws InterruptedException {
@@ -77,7 +70,7 @@ public class QuoteProcessor implements ItemProcessor<Security, SecurityQuoteCont
 		throttleCapacity.getAndDecrement();
 	}
 
-	private void constructEnhancedQuote(SecurityQuoteContainer qc) {
+	private void addEnhancedQuote(SecurityQuoteContainer qc) {
 
 		EnhancedSecurity es = new EnhancedSecurity(qc.getKey());
 		List<HistoricalQuote> historicalQuotes = qc.getHistoricalQuotes();

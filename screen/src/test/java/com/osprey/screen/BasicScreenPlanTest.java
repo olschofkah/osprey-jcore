@@ -2,9 +2,8 @@ package com.osprey.screen;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -15,8 +14,10 @@ import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.RelationalOperator;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
 import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class BasicScreenPlanTest {
 
@@ -27,16 +28,16 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(25);
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(25);
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(5, RelationalOperator._GT);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 
@@ -48,7 +49,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
@@ -58,16 +59,16 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(25);
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(25);
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(500, RelationalOperator._GT);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
@@ -78,7 +79,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertFalse(resultSet.contains(TEST_TICKER_1));
 	}
@@ -88,16 +89,16 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(25);
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(25);
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(25, RelationalOperator._EQ);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 
@@ -109,7 +110,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
@@ -119,16 +120,16 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(25);
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(25);
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(5, RelationalOperator._GE);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 
@@ -140,7 +141,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
@@ -150,16 +151,16 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(25);
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(25);
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(35, RelationalOperator._LT);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 
@@ -171,7 +172,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
@@ -181,16 +182,16 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(25);
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(25);
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(25.001, RelationalOperator._LE);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 
@@ -202,7 +203,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
@@ -212,16 +213,16 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(closingPrices.get(closingPrices.size() - 1).getClose());
 
 		SimpleMovingAverageCriteria c1 = new SimpleMovingAverageCriteria(4, 8, RelationalOperator._GT);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 
@@ -233,7 +234,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
@@ -243,8 +244,8 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(closingPrices.get(closingPrices.size() - 1).getClose());
 
 		SimpleMovingAverageCriteria c1 = new SimpleMovingAverageCriteria(4, 8, RelationalOperator._GT);
 		PreviousClosePriceCriteria c2 = new PreviousClosePriceCriteria(25.00, RelationalOperator._GT);
@@ -253,8 +254,8 @@ public class BasicScreenPlanTest {
 		criteria.add(c1);
 		criteria.add(c2);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
@@ -265,7 +266,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}
@@ -275,8 +276,8 @@ public class BasicScreenPlanTest {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(closingPrices.get(closingPrices.size() - 1).getClose());
 
 		SimpleMovingAverageCriteria c1 = new SimpleMovingAverageCriteria(4, 8, RelationalOperator._GT);
 		PreviousClosePriceCriteria c2 = new PreviousClosePriceCriteria(55.00, RelationalOperator._GT);
@@ -285,8 +286,8 @@ public class BasicScreenPlanTest {
 		criteria.add(c1);
 		criteria.add(c2);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
@@ -297,26 +298,26 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertFalse(resultSet.contains(TEST_TICKER_1));
 	}
-	
+
 	@Test
 	public void testSingleVolatilityScreen1() throws Exception {
 
 		List<HistoricalQuote> closingPrices = createBasicHistoricalList();
 
-		FundamentalPricedSecurity s = new FundamentalPricedSecurity(TEST_TICKER_1);
-		s.setClose(closingPrices.get(closingPrices.size() - 1).getClose());
+		Security s = new Security(TEST_TICKER_1);
+		s.setPreviousClose(closingPrices.get(closingPrices.size() - 1).getClose());
 
 		VolatilityCriteria c1 = new VolatilityCriteria(10, 0.12, RelationalOperator._GT);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>();
-		securities.put(s, closingPrices);
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(new SecurityQuoteContainer(s.getKey(), closingPrices));
 
 		ScreenPlanFactory factory = new ScreenPlanFactory();
 		factory.setSecurityUniverse(securities);
@@ -327,7 +328,7 @@ public class BasicScreenPlanTest {
 		executor.setPlans(plans);
 		executor.execute();
 
-		Set<String> resultSet = executor.getResultSet();
+		Set<SecurityKey> resultSet = executor.getResultSet();
 
 		Assert.assertTrue(resultSet.contains(TEST_TICKER_1));
 	}

@@ -17,6 +17,8 @@ local.properties
 .loadpath
 .recommenders
 Servers/
+Data/
+data/
 
 # Eclipse Core
 #.project

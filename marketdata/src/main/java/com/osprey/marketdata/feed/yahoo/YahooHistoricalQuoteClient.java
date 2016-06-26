@@ -20,7 +20,7 @@ import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.securitymaster.HistoricalQuote;
-import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.utils.OspreyUtils;
 
 public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
@@ -33,7 +33,7 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
 	// TODO add symbology translator at the quote level
 
 	@Override
-	public List<HistoricalQuote> quoteHistorical(Security s, LocalDate start, LocalDate end,
+	public List<HistoricalQuote> quoteHistorical(SecurityKey s, LocalDate start, LocalDate end,
 			QuoteDataFrequency frequency) throws MarketDataNotAvailableException, MarketDataIOException {
 
 		String historicalQuoteUrl = appCtx
@@ -92,7 +92,8 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
 	}
 
 	@Override
-	public Map<Security, List<HistoricalQuote>> quoteHistoricalBatch(Set<Security> s, LocalDate start, LocalDate end) {
+	public Map<SecurityKey, List<HistoricalQuote>> quoteHistoricalBatch(Set<SecurityKey> s, LocalDate start,
+			LocalDate end) {
 		throw new NotImplementedException(
 				"fetchHistoricalBatch(Set<Security>, LocalDate, LocalDate) is not implemented for YahooHistoricalQuoteClient");
 	}

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.osprey.marketdata.feed.ILiveSecurityQuoteService;
 import com.osprey.marketdata.feed.mock.MockMarketDataFeedService;
-import com.osprey.securitymaster.PricedSecurity;
-import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
+import com.osprey.securitymaster.SecurityQuote;
 
 @RestController
 public class RestQuoteService {
@@ -21,13 +21,11 @@ public class RestQuoteService {
 	private ILiveSecurityQuoteService liveQuoteService;
 
 	@RequestMapping("/quote/{symbol}")
-	public PricedSecurity quote(@PathVariable(value = "symbol") String symbol) {
+	public SecurityQuote quote(@PathVariable(value = "symbol") String symbol) {
 
 		logger.info("/quote/{}/ called ", () -> symbol);
 
-		Security security = new Security(symbol);
-
-		PricedSecurity quote = liveQuoteService.quote(security);
+		SecurityQuote quote = liveQuoteService.quote(new SecurityKey(symbol,null));
 
 		logger.info("/quote/{}/ priced @ {} ", () -> symbol, () -> quote);
 

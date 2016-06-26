@@ -1,17 +1,14 @@
 package com.osprey.marketdata.batch.processor;
 
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,40 +18,29 @@ import com.osprey.screen.ScreenPlanFactory;
 import com.osprey.screen.ScreenStrategyEntry;
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.StockScreenCriteriaGenerator;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
-import com.osprey.securitymaster.repository.ISecurityMasterRepository;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
-public class InitialScreenProcessor implements ItemProcessor<Security, Security> {
+public class InitialScreenProcessor implements ItemProcessor<Security, SecurityQuoteContainer> {
 
 	final static Logger logger = LogManager.getLogger(InitialScreenProcessor.class);
 
 	@Value("${initial.screen.set.json}")
 	private String screenJsonFile;
 
-	@Autowired
-	private ISecurityMasterRepository securityMasterRepository;
-
 	@Override
-	public Security process(Security item) throws Exception {
+	public SecurityQuoteContainer process(Security security) throws Exception {
 
-		logger.info("Performing initial screen on {} ", () -> item.getSymbol());
+		logger.info("Performing initial screen on {} ", () -> security.getKey());
 
 		InputStream in = getClass().getClassLoader().getResourceAsStream(screenJsonFile);
 		ScreenStrategyEntry entry = new ObjectMapper().readValue(in, ScreenStrategyEntry.class);
 
-		// looking for a recent previous close for filtering
-		double closingPrice = 0;
-		for (int i = 1; i < 5 && closingPrice == 0; ++i) {
-			closingPrice = securityMasterRepository.fetchClosingPrice(item.getSymbol(), LocalDate.now().minusDays(1));
-		}
+		SecurityQuoteContainer sqc = new SecurityQuoteContainer(security.getKey());
+		sqc.setSecurity(security);
 
-		FundamentalPricedSecurity emptyFundamental = new FundamentalPricedSecurity(item);
-		emptyFundamental.setClose(closingPrice);
-
-		Map<FundamentalPricedSecurity, List<HistoricalQuote>> securities = new HashMap<>(2);
-		securities.put(emptyFundamental, Collections.emptyList());
+		Set<SecurityQuoteContainer> securities = new HashSet<>(2);
+		securities.add(sqc);
 
 		// Convert the criteria generators into criteria.
 		List<IStockScreenCriteria> criteria = new ArrayList<>(entry.getScreenCriteria().size());
@@ -69,8 +55,8 @@ public class InitialScreenProcessor implements ItemProcessor<Security, Security>
 		executor.setPlans(screenPlan);
 		executor.execute();
 
-		if (executor.getResultSet().contains(item.getSymbol())) {
-			return item;
+		if (executor.getResultSet().contains(security.getKey())) {
+			return sqc;
 		} else {
 			return null;
 		}

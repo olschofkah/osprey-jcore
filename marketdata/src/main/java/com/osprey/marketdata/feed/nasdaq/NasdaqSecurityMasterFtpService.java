@@ -69,11 +69,11 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 
 		Iterator<Security> iterator = securities.iterator();
 
-		Security s;
+		Security s = null;
 		while (iterator.hasNext()) {
 			s = iterator.next();
-			if (!optionableSymbolSet.contains(s.getSymbol())) {
-				logger.info("Removing {} due to not being optionable.", s.getSymbol());
+			if (!optionableSymbolSet.contains(s.getKey().getSymbol())) {
+				logger.info("Removing {} due to not being optionable.", s.getKey().getSymbol());
 				iterator.remove();
 			}
 		}

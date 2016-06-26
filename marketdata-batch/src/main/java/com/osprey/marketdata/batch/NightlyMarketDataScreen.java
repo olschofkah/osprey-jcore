@@ -22,13 +22,11 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.batch.item.data.MongoItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -43,8 +41,8 @@ import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.screen.ScreenSuccessSecurity;
-import com.osprey.securitymaster.ExtendedFundamentalPricedSecurityWithHistory;
 import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
 @Configuration
 @EnableBatchProcessing
@@ -62,12 +60,9 @@ public class NightlyMarketDataScreen {
 	@Autowired
 	private DataSource dataSource;
 
-	@Autowired
-	private MongoTemplate mongoTemplate;
-
 	// A queue to temporarily hold securities to quote and pull history for.
-	private final ConcurrentLinkedQueue<Security> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>(); // #1
-	private final ConcurrentLinkedQueue<ExtendedFundamentalPricedSecurityWithHistory> postQuoteQueue = new ConcurrentLinkedQueue<>(); // #2
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>(); // #1
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue = new ConcurrentLinkedQueue<>(); // #2
 
 	@Bean
 	public TaskExecutor taskExecutor() {
@@ -100,16 +95,16 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public ItemReader<Security> postInitialScreenQueueReader() {
-		return new ItemReader<Security>() {
+	public ItemReader<SecurityQuoteContainer> postInitialScreenQueueReader() {
+		return new ItemReader<SecurityQuoteContainer>() {
 
 			@Override
-			public Security read()
+			public SecurityQuoteContainer read()
 					throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 
-				Security security = postInitialScreenResultQueue.poll();
+				SecurityQuoteContainer security = postInitialScreenResultQueue.poll();
 				logger.debug("Fetching {} from the postInitialScreenResultQueue for processing",
-						() -> security.getSymbol());
+						() -> security == null ? null : security.getKey().getSymbol());
 				return security;
 			}
 
@@ -117,14 +112,14 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public ItemReader<ExtendedFundamentalPricedSecurityWithHistory> postQuoteQueueReader() {
-		return new ItemReader<ExtendedFundamentalPricedSecurityWithHistory>() {
+	public ItemReader<SecurityQuoteContainer> postQuoteQueueReader() {
+		return new ItemReader<SecurityQuoteContainer>() {
 
 			@Override
-			public ExtendedFundamentalPricedSecurityWithHistory read()
+			public SecurityQuoteContainer read()
 					throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 
-				ExtendedFundamentalPricedSecurityWithHistory security = postQuoteQueue.poll();
+				SecurityQuoteContainer security = postQuoteQueue.poll();
 				logger.debug("Fetching {} from the postQuoteQueue for processing", () -> security);
 				return security;
 			}
@@ -159,11 +154,11 @@ public class NightlyMarketDataScreen {
 	
 	
 	@Bean
-	public ItemWriter<Security> initialScreenQueueWriter() {
-		return new ItemWriter<Security>() {
+	public ItemWriter<SecurityQuoteContainer> initialScreenQueueWriter() {
+		return new ItemWriter<SecurityQuoteContainer>() {
 
 			@Override
-			public void write(List<? extends Security> items) throws Exception {
+			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
 				logger.debug("Queuing securities for further quoting ...");
 				postInitialScreenResultQueue.addAll(items);
 			}
@@ -172,24 +167,16 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public ItemWriter<ExtendedFundamentalPricedSecurityWithHistory> postQuoteQueueWriter() {
-		return new ItemWriter<ExtendedFundamentalPricedSecurityWithHistory>() {
+	public ItemWriter<SecurityQuoteContainer> postQuoteQueueWriter() {
+		return new ItemWriter<SecurityQuoteContainer>() {
 
 			@Override
-			public void write(List<? extends ExtendedFundamentalPricedSecurityWithHistory> items) throws Exception {
+			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
 				logger.debug("Queuing securities for further screening ...");
 				postQuoteQueue.addAll(items);
 			}
 
 		};
-	}
-
-	@Bean
-	MongoItemWriter<ScreenSuccessSecurity> hotListMongoItemWriter() {
-		MongoItemWriter<ScreenSuccessSecurity> mongoItemWriter = new MongoItemWriter<>();
-		mongoItemWriter.setTemplate(mongoTemplate);
-
-		return mongoItemWriter;
 	}
 
 	@Bean
@@ -213,7 +200,7 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step initialScreen() {
 		return stepBuilderFactory.get("preScreen")
-				.<Security, Security>chunk(250)
+				.<Security, SecurityQuoteContainer>chunk(250)
 				.faultTolerant()
 				.retryLimit(5)
 				.retry(MarketDataIOException.class)
@@ -227,18 +214,16 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step quoteAndCalcAndPersist() {
 		return stepBuilderFactory.get("quoteAndCalc")
-				.<Security, ExtendedFundamentalPricedSecurityWithHistory>chunk(5)
+				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(5)
 				.reader(postInitialScreenQueueReader())
 				.faultTolerant()
 				.retryLimit(5)
 				.retry(MarketDataIOException.class)
 				.skipLimit(25)
 				.skip(MarketDataNotAvailableException.class)
-				// .skipLimit(25) // needs to specify what can be skipped. 
 				.processor(quoteProcessor())
 				.writer(postQuoteQueueWriter())
 				// .writer(persistStats)
-				//.taskExecutor(taskExecutor())
 				.build();
 	}
 	
@@ -259,11 +244,10 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step hotListFilterAndPersist() {
 		return stepBuilderFactory.get("hotListFilter")
-				.<ExtendedFundamentalPricedSecurityWithHistory, ScreenSuccessSecurity>chunk(100)
+				.<SecurityQuoteContainer, ScreenSuccessSecurity>chunk(100)
 				.reader(postQuoteQueueReader())
 				.processor(hotShitScreenProcessor())
 				// .writer(peristHotList)
-				// .writer(hotListMongoItemWriter())
 				.taskExecutor(taskExecutor())
 				.build();
 	}

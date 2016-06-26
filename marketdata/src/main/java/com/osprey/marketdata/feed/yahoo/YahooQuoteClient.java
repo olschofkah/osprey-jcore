@@ -12,19 +12,19 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import com.osprey.marketdata.feed.IFundamentalSecurityQuoteService;
+import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.marketdata.feed.yahoo.pojo.Result;
 import com.osprey.marketdata.feed.yahoo.pojo.YahooQuote;
-import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityKey;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
-public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
+public class YahooQuoteClient implements IUltraSecurityQuoteService {
 
 	final static Logger logger = LogManager.getLogger(YahooQuoteClient.class);
-	
+
 	@Autowired
 	private ApplicationContext appCtx;
 
@@ -32,19 +32,34 @@ public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 	private RestTemplate http;
 
 	@Override
-	public FundamentalQuote quoteFundamental(SecurityKey s) throws MarketDataNotAvailableException, MarketDataIOException {
+	public SecurityQuoteContainer quoteUltra(SecurityKey s)
+			throws MarketDataNotAvailableException, MarketDataIOException {
+		return quoteUltra(new SecurityQuoteContainer(s));
 
-		logger.info("Quoting for {} ... ", () -> s.getSymbol());
+	}
 
-		YahooQuoteUrlBuilder yahooQuoteUrlBuilder = appCtx.getBean(YahooQuoteUrlBuilder.class, s.getSymbol());
+	@Override
+	public SecurityQuoteContainer quoteUltra(Security s) throws MarketDataNotAvailableException, MarketDataIOException {
+		SecurityQuoteContainer sqc = new SecurityQuoteContainer(s.getKey());
+		sqc.setSecurity(s);
+		return quoteUltra(sqc);
+	}
+
+	@Override
+	public SecurityQuoteContainer quoteUltra(SecurityQuoteContainer sqc)
+			throws MarketDataNotAvailableException, MarketDataIOException {
+		logger.info("Quoting for {} ... ", () -> sqc.getKey().getSymbol());
+
+		YahooQuoteUrlBuilder yahooQuoteUrlBuilder = appCtx.getBean(YahooQuoteUrlBuilder.class,
+				sqc.getKey().getSymbol());
 
 		String url = yahooQuoteUrlBuilder.summaryDetail()
-				// .summaryProfile() // TODO move to pulling once a week
+				.summaryProfile() // TODO move to pulling once a week
 				.calendarEvents()
-				// .defaultKeyStatistics() // TODO move to pulling once a week
-				// .earnings() // TODO move to pulling once a week
+				.defaultKeyStatistics() // TODO move to pulling once a week
+				.earnings() // TODO move to pulling once a week
 				.financialData()
-				// .price() // TODO Do we ever need this?
+				.price() 
 				.build();
 
 		YahooQuote yahooQuote = null;
@@ -53,11 +68,11 @@ public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 		} catch (HttpClientErrorException e1) {
 			if (e1.getMessage().contains("404 Not Found")) {
 				throw new MarketDataNotAvailableException(
-						"404 when quoting " + s.getSymbol() + " Message: " + e1.getMessage());
+						"404 when quoting " + sqc.getKey().getSymbol() + " Message: " + e1.getMessage());
 			} else {
 				throw new MarketDataIOException(e1);
 			}
-		} catch (HttpMessageNotReadableException e2){
+		} catch (HttpMessageNotReadableException e2) {
 			throw new MarketDataIOException(e2);
 		}
 
@@ -71,15 +86,9 @@ public class YahooQuoteClient implements IFundamentalSecurityQuoteService {
 		// TODO Strip out additionalProperties map from generated objects
 		// TODO Add Quote Sanity Checks
 
-		logger.debug("Completed quoting {} ... ", () -> s.getSymbol());
+		logger.debug("Completed quoting {} ... ", () -> sqc.getKey().getSymbol());
 
-		return YahooQuoteResultMapper.map(result, new FundamentalQuote(s.getSymbol()));
-	}
-
-	@Override
-	public Map<Security, FundamentalQuote> quoteFundamentalBatch(Set<SecurityKey> s) {
-		throw new NotImplementedException(
-				"quoteFundamentalBatch(Set<Security>) is not implemented for YahooQuoteClient");
+		return YahooQuoteResultMapper.map(result, sqc);
 	}
 
 }
