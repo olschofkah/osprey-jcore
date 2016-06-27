@@ -32,5 +32,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/screen"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/securitymaster"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/trade"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/integration"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

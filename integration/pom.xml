@@ -1,16 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.example.marketdata</groupId>
-	<artifactId>marketdata</artifactId>
+	<groupId>com.osprey.integration</groupId>
+	<artifactId>integration</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-
-	<name>marketdata</name>
-	<description>Market Data Capture</description>
-
+	<name>integration</name>
+	<description>Various integration libs</description>
+	
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -30,11 +26,8 @@
 		<apache.httpclient.version>4.5.2</apache.httpclient.version>
 		<apache.httpcore.version>4.4.4</apache.httpcore.version>
 		<apache.codec.version>1.10</apache.codec.version>
-		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
 	</properties>
 
-
-	<!-- TODO Strip spring boot out of this ... down to just spring context/aop -->
 	<dependencies>
 
 		<dependency>
@@ -99,11 +92,6 @@
 			<version>${log4j.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.lmax</groupId>
-			<artifactId>disruptor</artifactId>
-			<version>${lmax.disruptor.version}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -113,26 +101,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>
-				spring-boot-starter-data-elasticsearch
-			</artifactId>
-		</dependency>
+
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 
 </project>

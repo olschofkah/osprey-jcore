@@ -37,7 +37,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 	@Override
 	public SecurityQuoteContainer process(SecurityQuoteContainer item) throws Exception {
 
-		logger.debug("Quoting initial screen on {} ", () -> item.getKey().getSymbol());
+		logger.info("Quoting {} ", () -> item.getKey().getSymbol());
 
 		checkThrottle();
 

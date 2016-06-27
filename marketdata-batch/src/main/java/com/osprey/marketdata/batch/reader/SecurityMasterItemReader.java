@@ -1,6 +1,5 @@
 package com.osprey.marketdata.batch.reader;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 

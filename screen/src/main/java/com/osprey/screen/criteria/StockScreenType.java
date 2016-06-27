@@ -39,6 +39,7 @@ public enum StockScreenType {
 	// Technicals
 	SMA,
 	EMA,
+	EMA_X,
 	BOLLINGER_BAND,
 	PARABOLIC_SAR_X,
 	RSI,

@@ -30,6 +30,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
@@ -38,6 +39,7 @@ import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
 import com.osprey.marketdata.batch.reader.SecurityMasterItemReader;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorShutdownTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
+import com.osprey.marketdata.batch.writer.SlackOutputWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.screen.ScreenSuccessSecurity;
@@ -59,6 +61,11 @@ public class NightlyMarketDataScreen {
 
 	@Autowired
 	private DataSource dataSource;
+	
+	@Bean
+	public SlackClient slackClient() {
+		return new SlackClient();
+	}
 
 	// A queue to temporarily hold securities to quote and pull history for.
 	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>(); // #1
@@ -87,6 +94,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public AtomicLong throttleCapacity() {
 		return new AtomicLong();
+	}
+	
+	@Bean
+	public SlackOutputWriter slackOutputWriter(){
+		return new SlackOutputWriter();
 	}
 
 	@Bean
@@ -181,12 +193,13 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public JobExecutionListener listener() {
-		return new JobCompletionNotificationListener(new JdbcTemplate(dataSource));
+		return new JobCompletionNotificationListener(new JdbcTemplate(dataSource), slackClient());
 	}
 
 	@Bean
 	public Job processNightlySecurityMaster() {
-		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
+		return jobBuilderFactory.get("nightlySecurityMasterProcess")
+				.incrementer(new RunIdIncrementer())
 				.listener(listener())
 				.flow(initialScreen()) // #1
 				.next(disruptorStartup()) // #2
@@ -221,6 +234,7 @@ public class NightlyMarketDataScreen {
 				.retry(MarketDataIOException.class)
 				.skipLimit(25)
 				.skip(MarketDataNotAvailableException.class)
+				.skip(MarketDataIOException.class)
 				.processor(quoteProcessor())
 				.writer(postQuoteQueueWriter())
 				// .writer(persistStats)
@@ -248,6 +262,7 @@ public class NightlyMarketDataScreen {
 				.reader(postQuoteQueueReader())
 				.processor(hotShitScreenProcessor())
 				// .writer(peristHotList)
+				.writer(slackOutputWriter())
 				.taskExecutor(taskExecutor())
 				.build();
 	}

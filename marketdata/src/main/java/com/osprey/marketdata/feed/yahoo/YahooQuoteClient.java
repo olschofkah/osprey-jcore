@@ -75,9 +75,10 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 		} catch (HttpMessageNotReadableException e2) {
 			throw new MarketDataIOException(e2);
 		}
-
-		if (yahooQuote.getQuoteSummary().getError() != null) {
-			logger.warn(yahooQuote.getQuoteSummary().getError());
+		
+		if(yahooQuote.getQuoteSummary() == null || yahooQuote.getQuoteSummary().getResult() == null){
+			logger.error("Failed quoting {} | {}", new Object[]{sqc.getKey().getSymbol(), yahooQuote.getQuoteSummary().getError()});
+			throw new MarketDataIOException(yahooQuote.getQuoteSummary().getError().toString());
 		}
 
 		Result result = yahooQuote.getQuoteSummary().getResult().get(0);

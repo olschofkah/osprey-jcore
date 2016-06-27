@@ -13,21 +13,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.osprey.integration.slack.SlackClient;
+
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
 	final static Logger logger = LogManager.getLogger(JobCompletionNotificationListener.class);
 
 	private final JdbcTemplate jdbcTemplate;
+	private final SlackClient slack;
 
 	@Autowired
-	public JobCompletionNotificationListener(JdbcTemplate jdbcTemplate) {
+	public JobCompletionNotificationListener(JdbcTemplate jdbcTemplate, SlackClient slack) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.slack = slack;
 	}
 
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			logger.info("Work Complete");
+			
+			slack.postMessage("Job's done master.");
 
 			// TODO ... do stuff in the listener 
 //			List<Person> results = jdbcTemplate.query("SELECT first_name, last_name FROM people",

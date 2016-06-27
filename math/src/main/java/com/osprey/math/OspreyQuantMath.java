@@ -52,22 +52,25 @@ public final class OspreyQuantMath {
 	 * @param p
 	 * @param alpha
 	 *            - scale from 0 to 1
+	 * @param historicalOffset
+	 *            calculate the p ema for n days ago. 
 	 * @param prices
 	 * @return
 	 */
-	public static double emaSmooth(double sma, int p, double alpha, List<HistoricalQuote> prices) {
+	public static double emaSmooth(double sma, int p, double alpha, int historicalOffset,
+			List<HistoricalQuote> prices) {
 
 		if (p < 0) {
 			throw new InvalidPeriodException();
 		}
 
-		if (p > prices.size()) {
+		if (p + historicalOffset > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
 
 		double ema = sma;
 
-		for (int i = 1; i < p; ++i) {
+		for (int i = 1 + historicalOffset; i < p + historicalOffset; ++i) {
 			ema = prices.get(i).getClose() * alpha + ema * (1 - alpha);
 		}
 

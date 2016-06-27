@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Set;
 
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
+import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
+import com.osprey.screen.screens.ExponentialMovingAverageCrossoverScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageScreen;
 import com.osprey.screen.screens.IStockScreen;
 import com.osprey.screen.screens.InstrumentTypeScreen;
@@ -73,6 +75,8 @@ public class ScreenPlanFactory {
 			return null;
 		case EMA:
 			return new ExponentialMovingAverageScreen((ExponentialMovingAverageCriteria) criteria);
+		case EMA_X:
+			return new ExponentialMovingAverageCrossoverScreen((ExponentialMovingAverageCrossoverCriteria) criteria);
 		case EPS:
 		case EXCHANGE:
 		case GAP_UP_DOWN:
