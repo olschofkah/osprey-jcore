@@ -44,15 +44,15 @@ public class LiveMarketDataScreenTest {
 		LocalDate start = end.minusYears(1).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "CBOE";
+		String symbol = "IMPV";
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
 		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
 				end, freq);
 		sqc.setHistoricalQuotes(hist);
 
-		ExponentialMovingAverageCrossoverCriteria c1 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5, 0.9,
-				CrossDirection.FROM_BELOW_TO_ABOVE);
+		ExponentialMovingAverageCrossoverCriteria c1 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5,
+				0, CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		List<IStockScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);

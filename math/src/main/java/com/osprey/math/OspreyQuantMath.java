@@ -6,8 +6,9 @@ import java.util.List;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.result.SMAPair;
-import com.osprey.securitymaster.constants.OptionType;
 import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuote;
+import com.osprey.securitymaster.constants.OptionType;
 
 public final class OspreyQuantMath {
 
@@ -25,24 +26,10 @@ public final class OspreyQuantMath {
 	 *            the current day.
 	 * @return the ema-p
 	 */
-	public static double ema(double sma, int p, List<HistoricalQuote> prices) {
-
-		if (p < 0) {
-			throw new InvalidPeriodException();
-		}
-
-		if (p > prices.size()) {
-			throw new InsufficientHistoryException();
-		}
-
-		double m = 2.0 / (p + 1.0); // multiplier
-		double ema = sma;
-
-		for (int i = 1; i < p; ++i) {
-			ema = prices.get(i).getClose() * m + ema * (1 - m);
-		}
-
-		return ema;
+	public static double ema(double sma, int p, int historicalOffset, List<HistoricalQuote> prices,
+			SecurityQuote quote) {
+		double alpha = 2.0 / (p + 1.0);
+		return emaSmooth(sma, p, alpha, historicalOffset, prices, quote);
 	}
 
 	/**
@@ -53,14 +40,14 @@ public final class OspreyQuantMath {
 	 * @param alpha
 	 *            - scale from 0 to 1
 	 * @param historicalOffset
-	 *            calculate the p ema for n days ago. 
+	 *            calculate the p ema for n days ago.
 	 * @param prices
 	 * @return
 	 */
-	public static double emaSmooth(double sma, int p, double alpha, int historicalOffset,
-			List<HistoricalQuote> prices) {
+	public static double emaSmooth(double sma, int p, double alpha, int historicalOffset, List<HistoricalQuote> prices,
+			SecurityQuote quote) {
 
-		if (p < 0) {
+		if (p < 2) {
 			throw new InvalidPeriodException();
 		}
 
@@ -70,8 +57,9 @@ public final class OspreyQuantMath {
 
 		double ema = sma;
 
-		for (int i = 1 + historicalOffset; i < p + historicalOffset; ++i) {
-			ema = prices.get(i).getClose() * alpha + ema * (1 - alpha);
+		for (int i = p - 2 + historicalOffset; i >= historicalOffset; --i) {
+			// {Close - EMA(previous day)} x multiplier + EMA(previous day)
+			ema = ((i == 0 ? quote.getLast() : prices.get(i).getAdjClose()) - ema) * alpha + ema;
 		}
 
 		return ema;
@@ -85,13 +73,13 @@ public final class OspreyQuantMath {
 	 * @param prices
 	 * @return
 	 */
-	public static double MACD(int long_len, int short_len, List<HistoricalQuote> prices) {
+	public static double MACD(int long_len, int short_len, List<HistoricalQuote> prices, SecurityQuote quote) {
 
-		double sma_long = OspreyQuantMath.sma(long_len, prices);
-		double sma_short = OspreyQuantMath.sma(short_len, prices);
+		double sma_long = OspreyQuantMath.sma(long_len, 0, prices, quote);
+		double sma_short = OspreyQuantMath.sma(short_len, 0, prices, quote);
 
-		double ema_long = OspreyQuantMath.ema(sma_long, long_len, prices);
-		double ema_short = OspreyQuantMath.ema(sma_short, short_len, prices);
+		double ema_long = OspreyQuantMath.ema(sma_long, long_len, 0, prices, quote);
+		double ema_short = OspreyQuantMath.ema(sma_short, short_len, 0, prices, quote);
 
 		return ema_short - ema_long;
 
@@ -109,7 +97,7 @@ public final class OspreyQuantMath {
 	 *            - Prices to use for calculation
 	 * @return ( c0 + c1 + c2 + ... + cp) / p for every p
 	 */
-	public static SMAPair smaPair(int p1, int p2, List<HistoricalQuote> prices) {
+	public static SMAPair smaPair(int p1, int p2, int offset, List<HistoricalQuote> prices, SecurityQuote quote) {
 
 		if (p1 < 0 || p2 < 0) {
 			throw new InvalidPeriodException();
@@ -123,14 +111,16 @@ public final class OspreyQuantMath {
 
 		double sma1 = 0;
 		double sma2 = 0;
+		int p1o = p1 + offset;
+		int p2o = p2 + offset;
 
 		double histPrice = 0;
-		for (int i = 0; i < r; ++i) {
-			histPrice = prices.get(i).getClose();
-			if (i <= p1) {
+		for (int i = 0 + offset; i < r + offset; ++i) {
+			histPrice = i == 0 ? quote.getLast() : prices.get(i).getAdjClose();
+			if (i < p1o) {
 				sma1 += histPrice;
 			}
-			if (i <= p2) {
+			if (i < p2o) {
 				sma2 += histPrice;
 			}
 		}
@@ -150,7 +140,7 @@ public final class OspreyQuantMath {
 	 *            - Prices to use for calculation
 	 * @return ( c0 + c1 + c2 + ... + cp) / p
 	 */
-	public static double sma(int p, List<HistoricalQuote> prices) {
+	public static double sma(int p, int offset, List<HistoricalQuote> prices, SecurityQuote quote) {
 
 		if (p < 0) {
 			throw new InvalidPeriodException();
@@ -162,8 +152,8 @@ public final class OspreyQuantMath {
 
 		double sma1 = 0;
 
-		for (int i = 0; i < p; ++i) {
-			sma1 += prices.get(i).getClose();
+		for (int i = offset; i < p + offset; ++i) {
+			sma1 += i == 0 ? quote.getLast() : prices.get(i).getAdjClose();
 		}
 
 		sma1 /= p;

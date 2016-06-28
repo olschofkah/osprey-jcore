@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.constants.OptionType;
 
 public class MovingAverageTest {
@@ -19,8 +20,10 @@ public class MovingAverageTest {
 	public void testBasicSMA() throws Exception {
 
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
+		SecurityQuote quote = new SecurityQuote(TEST_TICKER_1);
+		quote.setLast(closingPrices.get(0).getAdjClose());
 
-		double sma = OspreyQuantMath.sma(10, closingPrices);
+		double sma = OspreyQuantMath.sma(10, 0, closingPrices, quote);
 
 		Assert.assertEquals(28.5, sma, DOUBLE_TEST_DELTA);
 	}
@@ -73,15 +76,18 @@ public class MovingAverageTest {
 	public void testBasicEMA() throws Exception {
 
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
+		
+		SecurityQuote securityQuote = new SecurityQuote(TEST_TICKER_1);
+		securityQuote.setLast(closingPrices.get(0).getAdjClose());
 
 		int p = 26;
 		double alpha =  0.3;
-		double sma = OspreyQuantMath.sma(p, closingPrices);
+		double sma = OspreyQuantMath.sma(p, 0, closingPrices, securityQuote);
 		
 		// TODO why are you calculating this here without testing the result/ 
-		double ema = OspreyQuantMath.ema(sma, p, closingPrices); 
+		double ema = OspreyQuantMath.ema(sma, p, 0, closingPrices, securityQuote); 
 		
-		double ema_smooth = OspreyQuantMath.emaSmooth(sma, p, alpha, 0, closingPrices);
+		double ema_smooth = OspreyQuantMath.emaSmooth(sma, p, alpha, 0, closingPrices, securityQuote);
 
 
 		Assert.assertEquals(39.8310946, ema_smooth, DOUBLE_TEST_DELTA);
@@ -91,12 +97,14 @@ public class MovingAverageTest {
 	public void testMACD() throws Exception {
 
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
+		SecurityQuote quote = new SecurityQuote(TEST_TICKER_1);
+		quote.setLast(closingPrices.get(0).getAdjClose());
 
 		int long_len = 26;
 		int short_len = 12;
 		
 
-		double MACD = OspreyQuantMath.MACD(long_len, short_len, closingPrices);
+		double MACD = OspreyQuantMath.MACD(long_len, short_len, closingPrices, quote);
 		
 		Assert.assertEquals(5.1818755, MACD, DOUBLE_TEST_DELTA);
 	}

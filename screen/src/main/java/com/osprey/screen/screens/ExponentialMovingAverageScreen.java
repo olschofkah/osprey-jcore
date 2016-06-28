@@ -22,10 +22,12 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(),
-				sqc.getHistoricalQuotes());
-		double ema1 = OspreyQuantMath.ema(smaPair.getSma1(), smaPair.getPeriod1(), sqc.getHistoricalQuotes());
-		double ema2 = OspreyQuantMath.ema(smaPair.getSma2(), smaPair.getPeriod2(), sqc.getHistoricalQuotes());
+		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), 0,
+				sqc.getHistoricalQuotes(), sqc.getSecurityQuote());
+		double ema1 = OspreyQuantMath.ema(smaPair.getSma1(), smaPair.getPeriod1(), 0, sqc.getHistoricalQuotes(),
+				sqc.getSecurityQuote());
+		double ema2 = OspreyQuantMath.ema(smaPair.getSma2(), smaPair.getPeriod2(), 0, sqc.getHistoricalQuotes(),
+				sqc.getSecurityQuote());
 
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:

@@ -79,8 +79,8 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 			double volatility = OspreyQuantMath.volatility(
 					Math.min(historicalQuotes.size(), OspreyConstants.MARKET_DAYS_IN_YEAR), historicalQuotes);
 
-			double sma12 = OspreyQuantMath.sma(12, historicalQuotes);
-			double ema12 = OspreyQuantMath.ema(sma12, 12, historicalQuotes);
+			double sma12 = OspreyQuantMath.sma(12, 0, historicalQuotes, qc.getSecurityQuote());
+			double ema12 = OspreyQuantMath.ema(sma12, 12, 0, historicalQuotes, qc.getSecurityQuote());
 
 			// TODO Determine & Add more calculations.
 

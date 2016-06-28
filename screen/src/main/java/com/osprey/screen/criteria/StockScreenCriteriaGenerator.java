@@ -97,6 +97,8 @@ public class StockScreenCriteriaGenerator {
 			break;
 		case VOLUME_RANGE:
 			break;
+		case EMA_X:
+			result = objectMapper.convertValue(getCriteriaBucket(), ExponentialMovingAverageCrossoverCriteria.class);
 		default:
 			break;
 

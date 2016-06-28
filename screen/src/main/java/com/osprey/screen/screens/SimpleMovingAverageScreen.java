@@ -22,8 +22,8 @@ public class SimpleMovingAverageScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(),
-				sqc.getHistoricalQuotes());
+		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), 0, 
+				sqc.getHistoricalQuotes(), sqc.getSecurityQuote());
 		double sma1 = smaPair.getSma1();
 		double sma2 = smaPair.getSma2();
 
