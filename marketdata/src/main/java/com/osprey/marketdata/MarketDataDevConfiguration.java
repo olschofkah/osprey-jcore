@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -23,9 +22,6 @@ import com.osprey.securitymaster.repository.mock.MockSecurityMasterRepository;
 @Configuration
 @Profile("dev")
 @ComponentScan("com.osprey")
-@PropertySource("classpath:nasdaq.properties")
-@PropertySource("classpath:yahoo.properties")
-@PropertySource("classpath:zacks.properties")
 public class MarketDataDevConfiguration {
 
 	@Bean

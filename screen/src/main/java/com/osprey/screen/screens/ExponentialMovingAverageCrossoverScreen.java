@@ -44,8 +44,8 @@ public class ExponentialMovingAverageCrossoverScreen implements IStockScreen {
 		
 		try {
 			
-			if (criteria.getPeriod1() + criteria.getRange() - 1 > hisotrySize
-					|| criteria.getPeriod2() + criteria.getRange() - 1 > hisotrySize) {
+			if (criteria.getPeriod1() + criteria.getRange() + 10 >= hisotrySize
+					|| criteria.getPeriod2() + criteria.getRange() + 10 >= hisotrySize) {
 				throw new InsufficientHistoryException();
 			}
 
@@ -53,16 +53,14 @@ public class ExponentialMovingAverageCrossoverScreen implements IStockScreen {
 
 				// TODO verify to either use sma or sqc.getHistoricalQuotes().get(criteria.getPeriod() + offset).getAdjClose() as seed to ema
 
-//				sma1 = OspreyQuantMath.sma(10, criteria.getPeriod1() + offset - 1, sqc.getHistoricalQuotes(),
-//						sqc.getSecurityQuote());
-//				sma2 = OspreyQuantMath.sma(10, criteria.getPeriod2() + offset - 1, sqc.getHistoricalQuotes(),
-//						sqc.getSecurityQuote());
+				sma1 = OspreyQuantMath.sma(10, criteria.getPeriod1() + offset - 1, sqc.getHistoricalQuotes(),
+						sqc.getSecurityQuote());
+				sma2 = OspreyQuantMath.sma(10, criteria.getPeriod2() + offset - 1, sqc.getHistoricalQuotes(),
+						sqc.getSecurityQuote());
 
-				ema1 = OspreyQuantMath.emaSmooth(
-						sqc.getHistoricalQuotes().get(criteria.getPeriod1() + offset).getAdjClose(),
+				ema1 = OspreyQuantMath.emaSmooth(sma1,
 						criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes(), sqc.getSecurityQuote());
-				ema2 = OspreyQuantMath.emaSmooth(
-						sqc.getHistoricalQuotes().get(criteria.getPeriod2() + offset).getAdjClose(),
+				ema2 = OspreyQuantMath.emaSmooth(sma2,
 						criteria.getPeriod2(), alpha2, offset, sqc.getHistoricalQuotes(), sqc.getSecurityQuote());
 
 				comp = ema1 > ema2 ? 1 : (ema1 < ema2 ? -1 : 0);

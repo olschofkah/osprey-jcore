@@ -8,11 +8,10 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.integration.slack.SlackClient;
-import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.screen.ScreenSuccessSecurity;
 
 public class SlackOutputWriter implements ItemWriter<ScreenSuccessSecurity> {
-	final static Logger logger = LogManager.getLogger(InitialScreenProcessor.class);
+	final static Logger logger = LogManager.getLogger(SlackOutputWriter.class);
 
 	@Autowired
 	private SlackClient slack;

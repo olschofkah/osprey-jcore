@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.core.Job;
@@ -23,14 +24,16 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.osprey.integration.slack.SlackClient;
@@ -40,8 +43,10 @@ import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
 import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
 import com.osprey.marketdata.batch.reader.SecurityMasterItemReader;
+import com.osprey.marketdata.batch.tasklet.PurgePreviousRunHotlistTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorShutdownTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
+import com.osprey.marketdata.batch.writer.HotShitDbItemWriter;
 import com.osprey.marketdata.batch.writer.SlackOutputWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
@@ -51,7 +56,6 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 
 @Configuration
 @EnableBatchProcessing
-@PropertySource("classpath:config.properties")
 public class NightlyMarketDataScreen {
 
 	final static Logger logger = LogManager.getLogger(NightlyMarketDataScreen.class);
@@ -61,9 +65,22 @@ public class NightlyMarketDataScreen {
 
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
-
+	
 	@Autowired
 	private DataSource dataSource;
+	
+	
+	@Bean
+	public DataSource postgresDataSource(){
+		return DataSourceBuilder.create()
+			.url("jdbc:postgresql://ec2-54-221-226-148.compute-1.amazonaws.com:5432/d99quhbhpv3opt?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&username=ggifajrkbtsfza&password=CTp_FFoV6er9WOd8FzNm3Wu7R8")
+			.username("ggifajrkbtsfza")
+			.password("CTp_FFoV6er9WOd8FzNm3Wu7R8")
+			.type(BasicDataSource.class)
+			.build();
+
+		// TODO EXTRACT TO CONFIG !!!
+	}
 	
 	@Bean
 	public SlackClient slackClient() {
@@ -158,6 +175,11 @@ public class NightlyMarketDataScreen {
 	}
 	
 	@Bean
+	public PurgePreviousRunHotlistTasklet purgePreviousRunHotlistTasklet(){
+		return new PurgePreviousRunHotlistTasklet(new JdbcTemplate(dataSource));
+	}
+	
+	@Bean
 	public QuoteThrottleDisruptorShutdownTasklet quoteThrottleDisruptorShutdownTasklet() {
 		return new QuoteThrottleDisruptorShutdownTasklet();
 	}
@@ -195,6 +217,11 @@ public class NightlyMarketDataScreen {
 	}
 	
 	@Bean
+	public HotShitDbItemWriter hotShitDbItemWriter(){
+		return new HotShitDbItemWriter(new JdbcTemplate(dataSource));
+	}
+	
+	@Bean
 	public ExponentialBackOffPolicy exponentialBackOffPolicy(){
 		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
 		backOffPolicy.setInitialInterval(1000);
@@ -205,6 +232,11 @@ public class NightlyMarketDataScreen {
 	public JobExecutionListener listener() {
 		return new JobCompletionNotificationListener(new JdbcTemplate(dataSource), slackClient());
 	}
+	
+    @Bean
+    public TaskScheduler taskScheduler() {
+        return new ConcurrentTaskScheduler();
+    }
 
 	@Bean
 	@Scope("prototype")
@@ -217,7 +249,8 @@ public class NightlyMarketDataScreen {
 				.next(disruptorStartup()) // #2
 				.next(quoteAndCalcAndPersist()) // #3
 				.next(disruptorShutdown()) // #4
-				.next(hotListFilterAndPersist()) // #5
+				.next(deletePreviousHotlistForToday()) // #5
+				.next(hotListFilterAndPersist()) // #6
 				.end()
 				.build();
 	}
@@ -267,6 +300,14 @@ public class NightlyMarketDataScreen {
 				.tasklet(quoteThrottleDisruptorStartupTasklet())
 				.build();
 	}
+	
+	
+	@Bean
+	public Step deletePreviousHotlistForToday() {
+		return stepBuilderFactory.get("hotListDestroyer")
+				.tasklet(purgePreviousRunHotlistTasklet())
+				.build();
+	}
 
 	@Bean
 	public Step hotListFilterAndPersist() {
@@ -274,8 +315,8 @@ public class NightlyMarketDataScreen {
 				.<SecurityQuoteContainer, ScreenSuccessSecurity>chunk(100)
 				.reader(postQuoteQueueReader())
 				.processor(hotShitScreenProcessor())
-				// .writer(peristHotList)
-				.writer(slackOutputWriter())
+				.writer(hotShitDbItemWriter())
+				//.writer(slackOutputWriter())
 				.taskExecutor(taskExecutor())
 				.build();
 	}

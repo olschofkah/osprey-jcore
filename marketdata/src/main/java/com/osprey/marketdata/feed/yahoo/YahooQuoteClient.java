@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
@@ -72,7 +73,7 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 			} else {
 				throw new MarketDataIOException(e1);
 			}
-		} catch (HttpMessageNotReadableException | HttpServerErrorException e2) {
+		} catch (HttpMessageNotReadableException | HttpServerErrorException | ResourceAccessException e2) {
 			throw new MarketDataIOException(e2);
 		}
 
