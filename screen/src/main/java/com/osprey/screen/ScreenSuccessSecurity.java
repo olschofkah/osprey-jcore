@@ -3,6 +3,9 @@ package com.osprey.screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.osprey.securitymaster.SecurityKey;
 import com.osprey.trade.option.OptionStrategy;
 
@@ -50,5 +53,34 @@ public class ScreenSuccessSecurity {
 
 	public SecurityKey getKey() {
 		return key;
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Hot Symbol: ");
+		sb.append(key.getSymbol());
+		
+		sb.append("\t|\t");
+		
+		sb.append("Screens: ");
+		for(String s : namedScreenSets){
+			sb.append(s);
+			sb.append(", ");
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.deleteCharAt(sb.length()-1);
+		
+		sb.append("\t|\t");
+		
+		sb.append("Suggested Strats: ");
+		for(OptionStrategy os: strategies){
+			sb.append(os.getName());
+			sb.append(", ");
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("\n");
+		
+		return sb.toString();
 	}
 }

@@ -29,25 +29,34 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 	}
 
 	@Override
+	public void beforeJob(JobExecution jobExecution) {
+		slack.postMessage("Starting the security master rebuild master ...");
+	}
+
+	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			logger.info("Work Complete");
-			
-			slack.postMessage("Job's done master.");
 
-			// TODO ... do stuff in the listener 
-//			List<Person> results = jdbcTemplate.query("SELECT first_name, last_name FROM people",
-//					new RowMapper<Person>() {
-//						@Override
-//						public Person mapRow(ResultSet rs, int row) throws SQLException {
-//							return new Person(rs.getString(1), rs.getString(2));
-//						}
-//					});
-//
-//			for (Person person : results) {
-//				log.info("Found <" + person + "> in the database.");
-//			}
+			slack.postMessage("The job is done master.");
 
+			// TODO ... do stuff in the listener
+			// List<Person> results = jdbcTemplate.query("SELECT first_name,
+			// last_name FROM people",
+			// new RowMapper<Person>() {
+			// @Override
+			// public Person mapRow(ResultSet rs, int row) throws SQLException {
+			// return new Person(rs.getString(1), rs.getString(2));
+			// }
+			// });
+			//
+			// for (Person person : results) {
+			// log.info("Found <" + person + "> in the database.");
+			// }
+
+		} else if (jobExecution.getStatus() == BatchStatus.FAILED) {
+			logger.info("Work Failed");
+			slack.postMessage("The job has failed master.  What would you like me to do?");
 		}
 	}
 }

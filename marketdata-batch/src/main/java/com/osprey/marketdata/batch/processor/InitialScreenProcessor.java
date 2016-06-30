@@ -12,7 +12,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.osprey.screen.BasicScreenExecutor;
+import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.ScreenPlan;
 import com.osprey.screen.ScreenPlanFactory;
 import com.osprey.screen.ScreenStrategyEntry;
@@ -51,7 +51,7 @@ public class InitialScreenProcessor implements ItemProcessor<Security, SecurityQ
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 		List<ScreenPlan> screenPlan = screenPlanFactory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(screenPlan);
 		executor.execute();
 

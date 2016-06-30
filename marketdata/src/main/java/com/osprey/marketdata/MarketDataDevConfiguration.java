@@ -43,11 +43,6 @@ public class MarketDataDevConfiguration {
 		return new YahooHistoricalQuoteClient();
 	}
 
-	// @Bean
-	// public MockSecurityMasterService mockSecurityMasterService() {
-	// return new MockSecurityMasterService();
-	// }
-
 	@Bean
 	public YahooQuoteClient yahooQuoteClient() {
 		return new YahooQuoteClient();

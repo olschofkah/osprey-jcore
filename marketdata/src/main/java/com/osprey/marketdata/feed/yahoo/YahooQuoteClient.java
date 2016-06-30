@@ -1,15 +1,12 @@
 package com.osprey.marketdata.feed.yahoo;
 
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
@@ -53,14 +50,17 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 		YahooQuoteUrlBuilder yahooQuoteUrlBuilder = appCtx.getBean(YahooQuoteUrlBuilder.class,
 				sqc.getKey().getSymbol());
 
-		String url = yahooQuoteUrlBuilder.summaryDetail()
-				.summaryProfile() // TODO move to pulling once a week
-				.calendarEvents()
-				.defaultKeyStatistics() // TODO move to pulling once a week
+		String url = yahooQuoteUrlBuilder.summaryDetail().summaryProfile() // TODO
+																			// move
+																			// to
+																			// pulling
+																			// once
+																			// a
+																			// week
+				.calendarEvents().defaultKeyStatistics() // TODO move to pulling
+															// once a week
 				.earnings() // TODO move to pulling once a week
-				.financialData()
-				.price() 
-				.build();
+				.financialData().price().build();
 
 		YahooQuote yahooQuote = null;
 		try {
@@ -72,13 +72,14 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 			} else {
 				throw new MarketDataIOException(e1);
 			}
-		} catch (HttpMessageNotReadableException e2) {
+		} catch (HttpMessageNotReadableException | HttpServerErrorException e2) {
 			throw new MarketDataIOException(e2);
 		}
-		
-		if(yahooQuote.getQuoteSummary() == null || yahooQuote.getQuoteSummary().getResult() == null){
-			logger.error("Failed quoting {} | {}", new Object[]{sqc.getKey().getSymbol(), yahooQuote.getQuoteSummary().getError()});
-			throw new MarketDataIOException(yahooQuote.getQuoteSummary().getError().toString());
+
+		if (yahooQuote == null || yahooQuote.getQuoteSummary() == null
+				|| yahooQuote.getQuoteSummary().getResult() == null) {
+			logger.error("Failed quoting {} ", new Object[] { sqc.getKey().getSymbol() });
+			throw new MarketDataIOException("Failed Quoting " + sqc.getKey().getSymbol());
 		}
 
 		Result result = yahooQuote.getQuoteSummary().getResult().get(0);

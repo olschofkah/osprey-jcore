@@ -17,7 +17,7 @@ public class SlackTest {
 	
 	@Test
 	public void slackMessageTest1() throws Exception{
-		slack.postMessage("Integration test 1");
+		slack.postMessage("How can I help master.");
 	}
 	
 }

@@ -1,8 +1,8 @@
 {
-    "screenName":"5-25-price-squeeze",
-    "strategies":[{"name":"long-bull-plus-3"},{"name":"put-credit-spread"}],
+    "screenName":"GT-15-price--15-crossover-50-in-5-ema",
+    "strategies":[{"name":"long-bull-call-otm"},{"name":"put-credit-spread"}],
 	"screenCriteria": [
-        {"criteriaBucket":{"type":"PRICE","price":25,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":5,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}}
     ]
 }

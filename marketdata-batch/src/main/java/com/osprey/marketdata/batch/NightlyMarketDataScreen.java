@@ -26,8 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.osprey.integration.slack.SlackClient;
@@ -190,6 +193,13 @@ public class NightlyMarketDataScreen {
 
 		};
 	}
+	
+	@Bean
+	public ExponentialBackOffPolicy exponentialBackOffPolicy(){
+		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+		backOffPolicy.setInitialInterval(1000);
+		return backOffPolicy;
+	}
 
 	@Bean
 	public JobExecutionListener listener() {
@@ -197,11 +207,13 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
+	@Scope("prototype")
+	//@Scheduled(cron="0 29 23 ? * MON-FRI *")
 	public Job processNightlySecurityMaster() {
 		return jobBuilderFactory.get("nightlySecurityMasterProcess")
 				.incrementer(new RunIdIncrementer())
 				.listener(listener())
-				.flow(initialScreen()) // #1
+				.flow(initialScreen()) // #1 ... this starts it
 				.next(disruptorStartup()) // #2
 				.next(quoteAndCalcAndPersist()) // #3
 				.next(disruptorShutdown()) // #4
@@ -227,9 +239,10 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step quoteAndCalcAndPersist() {
 		return stepBuilderFactory.get("quoteAndCalc")
-				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(5)
+				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
 				.reader(postInitialScreenQueueReader())
 				.faultTolerant()
+				.backOffPolicy(exponentialBackOffPolicy())
 				.retryLimit(5)
 				.retry(MarketDataIOException.class)
 				.skipLimit(25)

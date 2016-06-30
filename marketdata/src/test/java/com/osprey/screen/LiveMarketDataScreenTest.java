@@ -44,7 +44,7 @@ public class LiveMarketDataScreenTest {
 		LocalDate start = end.minusYears(1).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "IMPV";
+		String symbol = "CPK";
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
 		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
@@ -65,7 +65,7 @@ public class LiveMarketDataScreenTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 

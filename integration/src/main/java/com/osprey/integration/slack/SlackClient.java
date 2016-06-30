@@ -22,9 +22,6 @@ public class SlackClient {
 	@Value("${slack.api.user}")
 	private String user;
 
-	@Value("${slack.api.emoji}")
-	private String emoji;
-
 	@Autowired
 	private RestTemplate http;
 
@@ -35,7 +32,7 @@ public class SlackClient {
 
 		String payload = null;
 		try {
-			payload = mapper.writeValueAsString(new SlackRequest(user, message, emoji));
+			payload = mapper.writeValueAsString(new SlackRequest(user, message));
 		} catch (RestClientException | JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
@@ -43,7 +40,7 @@ public class SlackClient {
 		final String finalPayload = payload;
 
 		ResponseEntity<String> response = http.postForEntity(slackApiUrl, finalPayload, String.class);
-		
+
 		if (response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.CREATED) {
 			logger.info("Successfully notified slack of message {}", () -> finalPayload);
 		} else {
@@ -56,12 +53,10 @@ public class SlackClient {
 
 		private String username;
 		private Object text;
-		private String icon_emoji;
 
-		public SlackRequest(String user, Object text, String emoji) {
+		public SlackRequest(String user, Object text) {
 			this.setUsername(user);
 			this.text = text;
-			this.icon_emoji = emoji;
 		}
 
 		public String getUsername() {
@@ -78,14 +73,6 @@ public class SlackClient {
 
 		public void setText(Object text) {
 			this.text = text;
-		}
-
-		public String getIcon_emoji() {
-			return icon_emoji;
-		}
-
-		public void setIcon_emoji(String icon_emoji) {
-			this.icon_emoji = icon_emoji;
 		}
 
 	}

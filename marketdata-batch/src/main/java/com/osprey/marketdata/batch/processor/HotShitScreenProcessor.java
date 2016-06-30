@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.osprey.screen.BasicScreenExecutor;
+import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.ScreenPlanFactory;
 import com.osprey.screen.ScreenStrategyEntry;
 import com.osprey.screen.ScreenSuccessSecurity;
@@ -55,7 +55,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 				criteria.add(generator.generate());
 			}
 
-			BasicScreenExecutor executor = new BasicScreenExecutor();
+			SimpleScreenExecutor executor = new SimpleScreenExecutor();
 			executor.setPlans(screenPlanFactory.build(criteria));
 			executor.execute();
 

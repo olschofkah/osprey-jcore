@@ -45,7 +45,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -75,7 +75,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -106,7 +106,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -137,7 +137,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -168,7 +168,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -199,7 +199,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -230,7 +230,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -262,7 +262,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -294,7 +294,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 
@@ -324,7 +324,7 @@ public class BasicScreenPlanTest {
 
 		List<ScreenPlan> plans = factory.build(criteria);
 
-		BasicScreenExecutor executor = new BasicScreenExecutor();
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
 		executor.setPlans(plans);
 		executor.execute();
 

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.osprey.securitymaster.SecurityKey;
 
-public class BasicScreenExecutor implements IStockScreenPlanExecutor {
+public class SimpleScreenExecutor implements IStockScreenPlanExecutor {
 
 	private Set<SecurityKey> resultSet = new HashSet<>();
 	private List<ScreenPlan> plans;

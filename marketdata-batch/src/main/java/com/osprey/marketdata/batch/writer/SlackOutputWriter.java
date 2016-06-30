@@ -20,6 +20,13 @@ public class SlackOutputWriter implements ItemWriter<ScreenSuccessSecurity> {
 	@Override
 	public void write(List<? extends ScreenSuccessSecurity> items) throws Exception {
 		logger.info("Alerting slack to the hot list items {}", () -> items);
+		if (!items.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for (ScreenSuccessSecurity sss : items) {
+				sb.append(sss.toString());
+			}
+			slack.postMessage(sb.toString());
+		}
 	}
 
 }
