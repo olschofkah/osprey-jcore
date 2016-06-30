@@ -5,11 +5,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SecurityKey {
 
-	private final String symbol;
-	private final String cusip;
+	private String symbol;
+	private String cusip;
+	
+	public SecurityKey(){
+		// for ObjectMapping Only
+	}
 
 	public SecurityKey(String symbol, String cusip) {
-		super();
 		this.symbol = symbol;
 		this.cusip = cusip;
 	}

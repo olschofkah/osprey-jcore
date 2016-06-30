@@ -43,6 +43,7 @@ public class HotShitDbItemWriter implements ItemWriter<ScreenSuccessSecurity> {
 			return;
 		}
 
+		// TODO extract to repo
 		jdbc.batchUpdate("insert into tha_hot_shit values (?,?,?,?)", new BatchPreparedStatementSetter() {
 
 			@Override
@@ -50,8 +51,8 @@ public class HotShitDbItemWriter implements ItemWriter<ScreenSuccessSecurity> {
 				ScreenSuccessSecurity sec = items.get(i);
 
 				ps.setString(1, sec.getKey().getSymbol());
-				ps.setDate(2, now);
-				ps.setDate(3, today);
+				ps.setDate(2, today);
+				ps.setDate(3, now);
 
 				String secJson = null;
 				try {

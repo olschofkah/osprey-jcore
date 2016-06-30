@@ -1,8 +1,8 @@
 {
-    "screenName":"GT-15-price--15-crossover-50-in-5-ema",
+    "screenName":"GT-15-close--15-xover-50-in-3-ema",
     "strategies":[{"name":"long-bull-call-otm"},{"name":"put-credit-spread"}],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":5,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}}
+        {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":3,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}}
     ]
 }

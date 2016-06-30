@@ -30,6 +30,7 @@ public class PurgePreviousRunHotlistTasklet implements Tasklet {
 
 		logger.info("Removing existing hotlist items for {}.", () -> today);
 
+		// TODO extract to repo
 		jdbc.update("delete from tha_hot_shit where date = ?", today);
 		
 		return RepeatStatus.FINISHED;

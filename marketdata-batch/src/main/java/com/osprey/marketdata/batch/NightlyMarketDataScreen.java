@@ -28,7 +28,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
@@ -47,7 +46,6 @@ import com.osprey.marketdata.batch.tasklet.PurgePreviousRunHotlistTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorShutdownTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
 import com.osprey.marketdata.batch.writer.HotShitDbItemWriter;
-import com.osprey.marketdata.batch.writer.SlackOutputWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.screen.ScreenSuccessSecurity;
@@ -114,11 +112,6 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public AtomicLong throttleCapacity() {
 		return new AtomicLong();
-	}
-	
-	@Bean
-	public SlackOutputWriter slackOutputWriter(){
-		return new SlackOutputWriter();
 	}
 
 	@Bean
@@ -240,7 +233,6 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	@Scope("prototype")
-	//@Scheduled(cron="0 29 23 ? * MON-FRI *")
 	public Job processNightlySecurityMaster() {
 		return jobBuilderFactory.get("nightlySecurityMasterProcess")
 				.incrementer(new RunIdIncrementer())
@@ -316,7 +308,6 @@ public class NightlyMarketDataScreen {
 				.reader(postQuoteQueueReader())
 				.processor(hotShitScreenProcessor())
 				.writer(hotShitDbItemWriter())
-				//.writer(slackOutputWriter())
 				.taskExecutor(taskExecutor())
 				.build();
 	}
