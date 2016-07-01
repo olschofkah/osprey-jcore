@@ -87,9 +87,9 @@ public class MovingAverageTest {
 		// TODO why are you calculating this here without testing the result/ 
 		double ema = OspreyQuantMath.ema(sma, p, 0, closingPrices, securityQuote); 
 		
-		double ema_smooth = OspreyQuantMath.emaSmooth(sma, p, alpha, 0, closingPrices, securityQuote);
+		double ema_smooth = OspreyQuantMath.ema(sma, p, alpha, 0, closingPrices, securityQuote);
 
-		double ema_default_smooth = OspreyQuantMath.emaDefaultSmooth(p, closingPrices, securityQuote);
+		double ema_default_smooth = OspreyQuantMath.ema(p, 0, closingPrices, securityQuote);
 
 		Assert.assertEquals(0, ema_default_smooth, DOUBLE_TEST_DELTA);
 	}

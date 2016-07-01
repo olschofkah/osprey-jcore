@@ -32,16 +32,16 @@ public class HotShitDbItemWriter implements ItemWriter<ScreenSuccessSecurity> {
 	@Override
 	public void write(final List<? extends ScreenSuccessSecurity> items) throws Exception {
 
-		final ObjectMapper om = new ObjectMapper();
-		final java.sql.Date now = new java.sql.Date(ZonedDateTime.now().toInstant().toEpochMilli());
-		final java.sql.Date today = new java.sql.Date(LocalDate.now()
-				.atStartOfDay(ZoneId.of(OspreyConstants.ZONED_DATE_TIME_ZONE_ID_NY)).toInstant().toEpochMilli());
-
 		logger.info("Persisting {} hotlist items ... ", () -> items.size());
 
 		if (items.isEmpty()) {
 			return;
 		}
+		
+		final ObjectMapper om = new ObjectMapper();
+		final java.sql.Timestamp now = new java.sql.Timestamp(ZonedDateTime.now().toInstant().toEpochMilli());
+		final java.sql.Date today = new java.sql.Date(LocalDate.now()
+				.atStartOfDay(ZoneId.of(OspreyConstants.ZONED_DATE_TIME_ZONE_ID_NY)).toInstant().toEpochMilli());
 
 		// TODO extract to repo
 		jdbc.batchUpdate("insert into tha_hot_shit values (?,?,?,?)", new BatchPreparedStatementSetter() {
@@ -52,7 +52,7 @@ public class HotShitDbItemWriter implements ItemWriter<ScreenSuccessSecurity> {
 
 				ps.setString(1, sec.getKey().getSymbol());
 				ps.setDate(2, today);
-				ps.setDate(3, now);
+				ps.setTimestamp(3, now);
 
 				String secJson = null;
 				try {

@@ -11,7 +11,7 @@ public class MomentumScreenCriteria implements IStockScreenCriteria {
 	}
 
 	public MomentumScreenCriteria(double price, RelationalOperator operator) {
-		type = StockScreenType.PRICE;
+		type = StockScreenType.MOMENTUM_X;
 		this.price = price;
 		this.relationalOperator = operator;
 	}

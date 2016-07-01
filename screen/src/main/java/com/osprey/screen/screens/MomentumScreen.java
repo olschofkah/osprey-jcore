@@ -25,37 +25,39 @@ public class MomentumScreen implements IStockScreen {
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
 		
-		double closingPrice = sqc.getSecurity().getPreviousClose(); 
-		List<HistoricalQuote> closePrice_20day = sqc.getHistoricalQuotes();
-		
-
-		switch (criteria.getOperator()) {
-		case _EQ:
-			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
-							RoundingMode.HALF_UP)) == 0;
-			break;
-		case _GE:
-			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
-							RoundingMode.HALF_UP)) >= 0;
-			break;
-		case _GT:
-			passed = volatility > criteria.getVolatilityComparison();
-			break;
-		case _LE:
-			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
-							RoundingMode.HALF_UP)) <= 0;
-			break;
-		case _LT:
-			passed = volatility < criteria.getVolatilityComparison();
-			break;
-		default:
-			passed = false;
-			break;
-
-		}
+//		double closingPrice = sqc.getSecurity().getPreviousClose(); 
+//		List<HistoricalQuote> closePrice_20day = sqc.getHistoricalQuotes();
+//		
+//		OspreyQuantMath.
+//		
+//		
+//		switch (criteria.getOperator()) {
+//		case _EQ:
+//			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+//					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
+//							RoundingMode.HALF_UP)) == 0;
+//			break;
+//		case _GE:
+//			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+//					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
+//							RoundingMode.HALF_UP)) >= 0;
+//			break;
+//		case _GT:
+//			passed = volatility > criteria.getVolatilityComparison();
+//			break;
+//		case _LE:
+//			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
+//					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
+//							RoundingMode.HALF_UP)) <= 0;
+//			break;
+//		case _LT:
+//			passed = volatility < criteria.getVolatilityComparison();
+//			break;
+//		default:
+//			passed = false;
+//			break;
+//
+//		}
 
 		return this;
 	}

@@ -29,7 +29,11 @@ public final class OspreyQuantMath {
 	public static double ema(double sma, int p, int historicalOffset, List<HistoricalQuote> prices,
 			SecurityQuote quote) {
 		double alpha = 2.0 / (p + 1.0);
-		return emaSmooth(sma, p, alpha, historicalOffset, prices, quote);
+		return ema(sma, p, alpha, historicalOffset, prices, quote);
+	}
+
+	public static double ema(int p, int historicalOffset, List<HistoricalQuote> prices, SecurityQuote quote) {
+		return ema(prices.get(p - 1).getAdjClose(), p, historicalOffset, prices, quote);
 	}
 
 	/**
@@ -44,7 +48,7 @@ public final class OspreyQuantMath {
 	 * @param prices
 	 * @return
 	 */
-	public static double emaSmooth(double sma, int p, double alpha, int offset, List<HistoricalQuote> prices,
+	public static double ema(double sma, int p, double alpha, int offset, List<HistoricalQuote> prices,
 			SecurityQuote quote) {
 
 		if (p < 2) {
@@ -58,34 +62,13 @@ public final class OspreyQuantMath {
 		double ema = sma;
 
 		for (int i = p - 2 + offset; i >= offset; --i) {
-			//ema(t) = ema(t-1) + alpha * (close(t) - ema(t-1)) where alpha = 2/(1+p)
+			// ema(t) = ema(t-1) + alpha * (close(t) - ema(t-1)) where alpha =
+			// 2/(1+p)
 			// ema(1) = close(1)
 			ema = ((i == 0 ? quote.getLast() : prices.get(i).getAdjClose()) - ema) * alpha + ema;
 		}
 
-		//System.out.println("" + p + " " + ema);
-
-		return ema;
-	}
-	public static double emaDefaultSmooth(int p, List<HistoricalQuote> prices,
-			SecurityQuote quote) {
-
-		if (p < 2) {
-			throw new InvalidPeriodException();
-		}
-
-		if (p  > prices.size()) {
-			throw new InsufficientHistoryException();
-		}
-
-		double ema = prices.get(p-1).getAdjClose();
-
-		for (int i = p-1; i >= 0; --i) {
-			// {Close - EMA(previous day)} x multiplier + EMA(previous day)
-			ema = (prices.get(i).getAdjClose() - ema) * 2/(p+1) + ema;
-		}
-
-		//System.out.println("" + p + " " + ema);
+		// System.out.println("" + p + " " + ema);
 
 		return ema;
 	}
