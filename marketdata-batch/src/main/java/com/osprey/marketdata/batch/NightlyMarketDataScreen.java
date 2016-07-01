@@ -29,7 +29,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
@@ -49,6 +48,8 @@ import com.osprey.marketdata.batch.writer.HotShitDbItemWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.screen.ScreenSuccessSecurity;
+import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.repository.jdbctemplate.HotShitJdbcRepository;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
@@ -63,23 +64,22 @@ public class NightlyMarketDataScreen {
 
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
-	
+
 	@Autowired
 	private DataSource dataSource;
-	
-	
+
 	@Bean
-	public DataSource postgresDataSource(){
+	public DataSource postgresDataSource() {
 		return DataSourceBuilder.create()
-			.url("jdbc:postgresql://ec2-54-221-226-148.compute-1.amazonaws.com:5432/d99quhbhpv3opt?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&username=ggifajrkbtsfza&password=CTp_FFoV6er9WOd8FzNm3Wu7R8")
-			.username("ggifajrkbtsfza")
-			.password("CTp_FFoV6er9WOd8FzNm3Wu7R8")
-			.type(BasicDataSource.class)
-			.build();
+				.url("jdbc:postgresql://ec2-54-221-226-148.compute-1.amazonaws.com:5432/d99quhbhpv3opt?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&username=ggifajrkbtsfza&password=CTp_FFoV6er9WOd8FzNm3Wu7R8")
+				.username("ggifajrkbtsfza")
+				.password("CTp_FFoV6er9WOd8FzNm3Wu7R8")
+				.type(BasicDataSource.class)
+				.build();
 
 		// TODO EXTRACT TO CONFIG !!!
 	}
-	
+
 	@Bean
 	public SlackClient slackClient() {
 		return new SlackClient();
@@ -112,6 +112,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public AtomicLong throttleCapacity() {
 		return new AtomicLong();
+	}
+
+	@Bean
+	public IHotShitRepository hotShitRepository() {
+		return new HotShitJdbcRepository(dataSource);
 	}
 
 	@Bean
@@ -166,23 +171,22 @@ public class NightlyMarketDataScreen {
 	public HotShitScreenProcessor hotShitScreenProcessor() {
 		return new HotShitScreenProcessor();
 	}
-	
+
 	@Bean
-	public PurgePreviousRunHotlistTasklet purgePreviousRunHotlistTasklet(){
-		return new PurgePreviousRunHotlistTasklet(new JdbcTemplate(dataSource));
+	public PurgePreviousRunHotlistTasklet purgePreviousRunHotlistTasklet() {
+		return new PurgePreviousRunHotlistTasklet();
 	}
-	
+
 	@Bean
 	public QuoteThrottleDisruptorShutdownTasklet quoteThrottleDisruptorShutdownTasklet() {
 		return new QuoteThrottleDisruptorShutdownTasklet();
 	}
 
 	@Bean
-	public QuoteThrottleDisruptorStartupTasklet quoteThrottleDisruptorStartupTasklet(){
+	public QuoteThrottleDisruptorStartupTasklet quoteThrottleDisruptorStartupTasklet() {
 		return new QuoteThrottleDisruptorStartupTasklet();
 	}
-	
-	
+
 	@Bean
 	public ItemWriter<SecurityQuoteContainer> initialScreenQueueWriter() {
 		return new ItemWriter<SecurityQuoteContainer>() {
@@ -208,14 +212,14 @@ public class NightlyMarketDataScreen {
 
 		};
 	}
-	
+
 	@Bean
-	public HotShitDbItemWriter hotShitDbItemWriter(){
-		return new HotShitDbItemWriter(new JdbcTemplate(dataSource));
+	public HotShitDbItemWriter hotShitDbItemWriter() {
+		return new HotShitDbItemWriter();
 	}
-	
+
 	@Bean
-	public ExponentialBackOffPolicy exponentialBackOffPolicy(){
+	public ExponentialBackOffPolicy exponentialBackOffPolicy() {
 		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
 		backOffPolicy.setInitialInterval(1000);
 		return backOffPolicy;
@@ -223,93 +227,67 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public JobExecutionListener listener() {
-		return new JobCompletionNotificationListener(new JdbcTemplate(dataSource), slackClient());
+		return new JobCompletionNotificationListener();
 	}
-	
-    @Bean
-    public TaskScheduler taskScheduler() {
-        return new ConcurrentTaskScheduler();
-    }
+
+	@Bean
+	public TaskScheduler taskScheduler() {
+		return new ConcurrentTaskScheduler();
+	}
 
 	@Bean
 	@Scope("prototype")
 	public Job processNightlySecurityMaster() {
-		return jobBuilderFactory.get("nightlySecurityMasterProcess")
-				.incrementer(new RunIdIncrementer())
-				.listener(listener())
-				.flow(initialScreen()) // #1 ... this starts it
+		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
+				.listener(listener()).flow(initialScreen()) // #1 ... this
+															// starts it
 				.next(disruptorStartup()) // #2
 				.next(quoteAndCalcAndPersist()) // #3
 				.next(disruptorShutdown()) // #4
 				.next(deletePreviousHotlistForToday()) // #5
 				.next(hotListFilterAndPersist()) // #6
-				.end()
-				.build();
+				.end().build();
 	}
 
 	@Bean
 	public Step initialScreen() {
-		return stepBuilderFactory.get("preScreen")
-				.<Security, SecurityQuoteContainer>chunk(250)
-				.faultTolerant()
-				.retryLimit(5)
-				.retry(MarketDataIOException.class)
-				.reader(initialScreenReader())
-				.processor(initialScreenProcessor())
-				.writer(initialScreenQueueWriter())
-				.taskExecutor(taskExecutor())
+		return stepBuilderFactory.get("preScreen").<Security, SecurityQuoteContainer>chunk(250).faultTolerant()
+				.retryLimit(5).retry(MarketDataIOException.class).reader(initialScreenReader())
+				.processor(initialScreenProcessor()).writer(initialScreenQueueWriter()).taskExecutor(taskExecutor())
 				.build();
 	}
 
 	@Bean
 	public Step quoteAndCalcAndPersist() {
-		return stepBuilderFactory.get("quoteAndCalc")
-				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
-				.reader(postInitialScreenQueueReader())
-				.faultTolerant()
-				.backOffPolicy(exponentialBackOffPolicy())
-				.retryLimit(5)
-				.retry(MarketDataIOException.class)
-				.skipLimit(25)
-				.skip(MarketDataNotAvailableException.class)
-				.skip(MarketDataIOException.class)
-				.processor(quoteProcessor())
-				.writer(postQuoteQueueWriter())
+		return stepBuilderFactory.get("quoteAndCalc").<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
+				.reader(postInitialScreenQueueReader()).faultTolerant().backOffPolicy(exponentialBackOffPolicy())
+				.retryLimit(5).retry(MarketDataIOException.class).skipLimit(25)
+				.skip(MarketDataNotAvailableException.class).skip(MarketDataIOException.class)
+				.processor(quoteProcessor()).writer(postQuoteQueueWriter())
 				// .writer(persistStats)
-				.build();
-	}
-	
-	@Bean
-	public Step disruptorShutdown() {
-		return stepBuilderFactory.get("disruptorShutdown")
-				.tasklet(quoteThrottleDisruptorShutdownTasklet())
-				.build();
-	}
-	
-	@Bean
-	public Step disruptorStartup() {
-		return stepBuilderFactory.get("disruptorStartup")
-				.tasklet(quoteThrottleDisruptorStartupTasklet())
-				.build();
-	}
-	
-	
-	@Bean
-	public Step deletePreviousHotlistForToday() {
-		return stepBuilderFactory.get("hotListDestroyer")
-				.tasklet(purgePreviousRunHotlistTasklet())
 				.build();
 	}
 
 	@Bean
+	public Step disruptorShutdown() {
+		return stepBuilderFactory.get("disruptorShutdown").tasklet(quoteThrottleDisruptorShutdownTasklet()).build();
+	}
+
+	@Bean
+	public Step disruptorStartup() {
+		return stepBuilderFactory.get("disruptorStartup").tasklet(quoteThrottleDisruptorStartupTasklet()).build();
+	}
+
+	@Bean
+	public Step deletePreviousHotlistForToday() {
+		return stepBuilderFactory.get("hotListDestroyer").tasklet(purgePreviousRunHotlistTasklet()).build();
+	}
+
+	@Bean
 	public Step hotListFilterAndPersist() {
-		return stepBuilderFactory.get("hotListFilter")
-				.<SecurityQuoteContainer, ScreenSuccessSecurity>chunk(100)
-				.reader(postQuoteQueueReader())
-				.processor(hotShitScreenProcessor())
-				.writer(hotShitDbItemWriter())
-				.taskExecutor(taskExecutor())
-				.build();
+		return stepBuilderFactory.get("hotListFilter").<SecurityQuoteContainer, ScreenSuccessSecurity>chunk(100)
+				.reader(postQuoteQueueReader()).processor(hotShitScreenProcessor()).writer(hotShitDbItemWriter())
+				.taskExecutor(taskExecutor()).build();
 	}
 
 }

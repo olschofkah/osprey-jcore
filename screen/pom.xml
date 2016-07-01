@@ -25,9 +25,26 @@
 		<apache.math.version>3.6.1</apache.math.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
 		<jackson.version>2.6.6</jackson.version>
+		
+		<postgresql.version>9.4.1208</postgresql.version>
 	</properties>
 
 	<dependencies>
+
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring-framework.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

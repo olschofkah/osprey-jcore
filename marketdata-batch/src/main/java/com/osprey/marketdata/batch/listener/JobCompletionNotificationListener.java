@@ -1,8 +1,6 @@
 package com.osprey.marketdata.batch.listener;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,24 +13,22 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.screen.ScreenSuccessSecurity;
-import com.osprey.securitymaster.constants.OspreyConstants;
+import com.osprey.screen.repository.IHotShitRepository;
 
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
 	final static Logger logger = LogManager.getLogger(JobCompletionNotificationListener.class);
 
-	private final JdbcTemplate jdbc;
-	private final SlackClient slack;
+	@Autowired
+	private IHotShitRepository repo;
 
 	@Autowired
-	public JobCompletionNotificationListener(JdbcTemplate jdbcTemplate, SlackClient slack) {
-		this.jdbc = jdbcTemplate;
-		this.slack = slack;
+	private SlackClient slack;
+
+	public JobCompletionNotificationListener() {
 	}
 
 	@Override
@@ -45,25 +41,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			logger.info("Work Complete");
 
-			final java.sql.Date today = new java.sql.Date(LocalDate.now()
-					.atStartOfDay(ZoneId.of(OspreyConstants.ZONED_DATE_TIME_ZONE_ID_NY)).toInstant().toEpochMilli());
-
-			// TODO extract to repository
-			// TODO add index on just date
-			List<String> result = jdbc.queryForList("select payload from tha_hot_shit where date = ?", String.class,
-					today);
-
-			ObjectMapper om = new ObjectMapper();
-			List<ScreenSuccessSecurity> hotItems = new ArrayList<>(result.size());
-			for (String o : result) {
-				ScreenSuccessSecurity hotItem = null;
-				try {
-					hotItem = om.readValue(o, ScreenSuccessSecurity.class);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-				hotItems.add(hotItem);
-			}
+			List<ScreenSuccessSecurity> hotItems = repo.findForDate(LocalDate.now());
 
 			Map<String, List<String>> reportMap = new HashMap<>();
 			for (ScreenSuccessSecurity hotItem : hotItems) {
