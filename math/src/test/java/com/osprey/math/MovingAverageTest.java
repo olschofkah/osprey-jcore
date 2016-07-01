@@ -25,7 +25,7 @@ public class MovingAverageTest {
 
 		double sma = OspreyQuantMath.sma(10, 0, closingPrices, quote);
 
-		Assert.assertEquals(28.5, sma, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(0, sma, DOUBLE_TEST_DELTA);
 	}
 	
 	@Test
@@ -89,8 +89,9 @@ public class MovingAverageTest {
 		
 		double ema_smooth = OspreyQuantMath.emaSmooth(sma, p, alpha, 0, closingPrices, securityQuote);
 
+		double ema_default_smooth = OspreyQuantMath.emaDefaultSmooth(p, closingPrices, securityQuote);
 
-		Assert.assertEquals(39.8310946, ema_smooth, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(0, ema_default_smooth, DOUBLE_TEST_DELTA);
 	}
 	
 	// 12 day ema (31.012363486) - 26 day ema (36.194239) = 5.181875 

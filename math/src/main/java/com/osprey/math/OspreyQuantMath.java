@@ -58,10 +58,33 @@ public final class OspreyQuantMath {
 		double ema = sma;
 
 		for (int i = p - 2 + offset; i >= offset; --i) {
-			// {Close - EMA(previous day)} x multiplier + EMA(previous day)
+			//ema(t) = ema(t-1) + alpha * (close(t) - ema(t-1)) where alpha = 2/(1+p)
+			// ema(1) = close(1)
 			ema = ((i == 0 ? quote.getLast() : prices.get(i).getAdjClose()) - ema) * alpha + ema;
 		}
-		
+
+		//System.out.println("" + p + " " + ema);
+
+		return ema;
+	}
+	public static double emaDefaultSmooth(int p, List<HistoricalQuote> prices,
+			SecurityQuote quote) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p  > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double ema = prices.get(p-1).getAdjClose();
+
+		for (int i = p-1; i >= 0; --i) {
+			// {Close - EMA(previous day)} x multiplier + EMA(previous day)
+			ema = (prices.get(i).getAdjClose() - ema) * 2/(p+1) + ema;
+		}
+
 		//System.out.println("" + p + " " + ema);
 
 		return ema;
