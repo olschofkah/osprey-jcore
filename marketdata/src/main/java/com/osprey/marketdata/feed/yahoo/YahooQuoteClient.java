@@ -51,16 +51,13 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 		YahooQuoteUrlBuilder yahooQuoteUrlBuilder = appCtx.getBean(YahooQuoteUrlBuilder.class,
 				sqc.getKey().getSymbol());
 
-		String url = yahooQuoteUrlBuilder.summaryDetail().summaryProfile() // TODO
-																			// move
-																			// to
-																			// pulling
-																			// once
-																			// a
-																			// week
-				.calendarEvents().defaultKeyStatistics() // TODO move to pulling
-															// once a week
-				.earnings() // TODO move to pulling once a week
+		// TODO Determine frequency of updates on these data sets. 
+		String url = yahooQuoteUrlBuilder
+				.summaryDetail()
+				.summaryProfile() 
+				.calendarEvents()
+				.defaultKeyStatistics()
+				.earnings()
 				.financialData().price().build();
 
 		YahooQuote yahooQuote = null;

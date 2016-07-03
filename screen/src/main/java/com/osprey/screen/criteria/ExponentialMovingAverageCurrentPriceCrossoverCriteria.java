@@ -3,24 +3,23 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class ExponentialMovingAverageCrossoverCriteria implements IStockScreenCriteria {
+public class ExponentialMovingAverageCurrentPriceCrossoverCriteria implements IStockScreenCriteria {
 
 	private ScreenType type;
 	private int period1;
-	private int period2;
 	private int range;
 	private double alpha;
+
 	private CrossDirection direction;
 
-	public ExponentialMovingAverageCrossoverCriteria() {
+	public ExponentialMovingAverageCurrentPriceCrossoverCriteria() {
 
 	}
 
-	public ExponentialMovingAverageCrossoverCriteria(int period1, int period2, int range, double alpha,
+	public ExponentialMovingAverageCurrentPriceCrossoverCriteria(int period1, int range, double alpha,
 			CrossDirection direction) {
-		this.type = ScreenType.EMA_X;
+		this.type = ScreenType.EMA_X_PRICE;
 		this.period1 = period1;
-		this.period2 = period2;
 		this.range = range;
 		this.alpha = alpha;
 		this.direction = direction;
@@ -34,32 +33,16 @@ public class ExponentialMovingAverageCrossoverCriteria implements IStockScreenCr
 		return period1;
 	}
 
-	public int getPeriod2() {
-		return period2;
-	}
-
 	public int getRange() {
 		return range;
-	}
-
-	public void setRange(int range) {
-		this.range = range;
 	}
 
 	public double getAlpha() {
 		return alpha;
 	}
 
-	public void setAlpha(double alpha) {
-		this.alpha = alpha;
-	}
-
 	public CrossDirection getDirection() {
 		return direction;
-	}
-
-	public void setDirection(CrossDirection direction) {
-		this.direction = direction;
 	}
 
 }

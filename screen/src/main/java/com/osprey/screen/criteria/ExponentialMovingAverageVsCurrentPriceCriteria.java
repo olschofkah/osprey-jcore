@@ -3,21 +3,19 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class ExponentialMovingAverageCriteria implements IStockScreenCriteria {
+public class ExponentialMovingAverageVsCurrentPriceCriteria implements IStockScreenCriteria {
 
 	private ScreenType type;
 	private int period1;
-	private int period2;
 	private RelationalOperator relationalOperator;
 
-	public ExponentialMovingAverageCriteria() {
+	public ExponentialMovingAverageVsCurrentPriceCriteria() {
 
 	}
 
-	public ExponentialMovingAverageCriteria(int period1, int period2, RelationalOperator operator) {
-		type = ScreenType.EMA;
+	public ExponentialMovingAverageVsCurrentPriceCriteria(int period1, RelationalOperator operator) {
+		type = ScreenType.EMA_VS_PRICE;
 		this.period1 = period1;
-		this.period2 = period2;
 		this.relationalOperator = operator;
 	}
 
@@ -27,10 +25,6 @@ public class ExponentialMovingAverageCriteria implements IStockScreenCriteria {
 
 	public int getPeriod1() {
 		return period1;
-	}
-
-	public int getPeriod2() {
-		return period2;
 	}
 
 	public RelationalOperator getRelationalOperator() {

@@ -2,12 +2,11 @@ package com.osprey.screen;
 
 import java.util.List;
 
-import com.osprey.screen.criteria.StockScreenCriteriaGenerator;
 import com.osprey.trade.option.OptionStrategy;
 
 public class ScreenStrategyEntry {
 	private String screenName;
-	private List<StockScreenCriteriaGenerator> screenCriteria;
+	private List<ScreenCriteriaGenerator> screenCriteria;
 	private List<OptionStrategy> strategies;
 
 	public String getScreenName() {
@@ -18,11 +17,11 @@ public class ScreenStrategyEntry {
 		this.screenName = screenName;
 	}
 
-	public List<StockScreenCriteriaGenerator> getScreenCriteria() {
+	public List<ScreenCriteriaGenerator> getScreenCriteria() {
 		return screenCriteria;
 	}
 
-	public void setScreenCriteria(List<StockScreenCriteriaGenerator> screens) {
+	public void setScreenCriteria(List<ScreenCriteriaGenerator> screens) {
 		this.screenCriteria = screens;
 	}
 

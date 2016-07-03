@@ -1,20 +1,25 @@
 package com.osprey.screen.criteria;
 
+import com.osprey.screen.criteria.constants.RelationalOperator;
+import com.osprey.screen.criteria.constants.ScreenType;
+
 public class VolatilityCriteria implements IStockScreenCriteria {
 
-	private final StockScreenType type;
-	private final int period; // period in days
-	private final double volatilityComparison;
-	private final RelationalOperator operator;
+	private ScreenType type;
+	private int period; // period in days
+	private double volatilityComparison;
+	private RelationalOperator relationalOperator;
+	
+	public VolatilityCriteria(){}
 
-	public VolatilityCriteria(int period, double volatilityComparison, RelationalOperator operator) {
-		type = StockScreenType.VOLATILITY;
+	public VolatilityCriteria(int period, double volatilityComparison, RelationalOperator relationalOperator) {
+		type = ScreenType.VOLATILITY;
 		this.period = period;
 		this.volatilityComparison = volatilityComparison;
-		this.operator = operator;
+		this.relationalOperator = relationalOperator;
 	}
 
-	public StockScreenType getType() {
+	public ScreenType getType() {
 		return type;
 	}
 
@@ -26,8 +31,8 @@ public class VolatilityCriteria implements IStockScreenCriteria {
 		return volatilityComparison;
 	}
 
-	public RelationalOperator getOperator() {
-		return operator;
+	public RelationalOperator getRelationalOperator() {
+		return relationalOperator;
 	}
 
 }

@@ -11,9 +11,9 @@ import org.junit.Test;
 
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
-import com.osprey.screen.criteria.RelationalOperator;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
+import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityKey;

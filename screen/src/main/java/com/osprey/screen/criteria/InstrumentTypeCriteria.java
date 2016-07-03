@@ -2,11 +2,12 @@ package com.osprey.screen.criteria;
 
 import java.util.Set;
 
+import com.osprey.screen.criteria.constants.ScreenType;
 import com.osprey.securitymaster.constants.InstrumentType;
 
 public class InstrumentTypeCriteria implements IStockScreenCriteria {
 
-	private StockScreenType type;
+	private ScreenType type;
 	private Set<InstrumentType> instrumentTypes;
 	private boolean contains;
 
@@ -15,12 +16,12 @@ public class InstrumentTypeCriteria implements IStockScreenCriteria {
 	}
 
 	public InstrumentTypeCriteria(Set<InstrumentType> types, boolean contains) {
-		type = StockScreenType.INSTRUMENT_TYPE;
+		type = ScreenType.INSTRUMENT_TYPE;
 		this.instrumentTypes = types;
 		this.contains = contains;
 	}
 
-	public StockScreenType getType() {
+	public ScreenType getType() {
 		return type;
 	}
 

@@ -5,20 +5,44 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.NotImplementedException;
+
+import com.osprey.screen.criteria.BetaCriteria;
+import com.osprey.screen.criteria.EarningsCriteria;
+import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
+import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverCriteria;
+import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IStockScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
+import com.osprey.screen.criteria.PriceGapCriteria;
+import com.osprey.screen.criteria.PricePercentageChangeCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
+import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
+import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
+import com.osprey.screen.screens.BetaScreen;
+import com.osprey.screen.screens.EarningsScreen;
+import com.osprey.screen.screens.ExponentialMovingAverageBandCrossoverScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageCrossoverScreen;
+import com.osprey.screen.screens.ExponentialMovingAverageCurrentPriceCrossoverScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageScreen;
+import com.osprey.screen.screens.ExponentialMovingAverageVsCurrentPriceScreen;
 import com.osprey.screen.screens.IStockScreen;
 import com.osprey.screen.screens.InstrumentTypeScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
+import com.osprey.screen.screens.PriceGapScreen;
+import com.osprey.screen.screens.PricePercentageChangeScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
+import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
+import com.osprey.screen.screens.VolumeAverageComparisonScreen;
+import com.osprey.screen.screens.VolumeAverageScreen;
+import com.osprey.screen.screens._52WeekRangePercentageScreen;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class ScreenPlanFactory {
@@ -64,13 +88,21 @@ public class ScreenPlanFactory {
 
 		switch (criteria.getType()) {
 		case ADR:
+			return null;
 		case ADX:
+			return null;
 		case BETA:
+			return new BetaScreen((BetaCriteria) criteria);
 		case BLOCK_TRADE_VOL:
+			return null;
 		case BOLLINGER_BAND:
+			return null;
 		case DEBT_TO_CAPITAL:
+			return null;
 		case DMI:
+			return null;
 		case EARNINGS_ANNOUNCEMENT:
+			return new EarningsScreen((EarningsCriteria) criteria);
 		case EARNINGS_SUPRISE:
 			return null;
 		case EMA:
@@ -78,44 +110,78 @@ public class ScreenPlanFactory {
 		case EMA_X:
 			return new ExponentialMovingAverageCrossoverScreen((ExponentialMovingAverageCrossoverCriteria) criteria);
 		case EPS:
+			return null;
 		case EXCHANGE:
+			return null;
 		case GAP_UP_DOWN:
+			return new PriceGapScreen((PriceGapCriteria) criteria);
 		case INDEX:
+			return null;
 		case INSTITUTIONAL_HOLDINGS:
 			return null;
 		case INSTRUMENT_TYPE:
 			return new InstrumentTypeScreen((InstrumentTypeCriteria) criteria);
 		case MACD_HISTOGRAM:
+			return null;
 		case MARKET_CAP:
+			return null;
 		case MOMENTUM_X:
+			return null;
 		case NEW_52_WEEK:
+			return null;
 		case ON_BALANCE_VOL:
+			return null;
 		case PARABOLIC_SAR_X:
+			return null;
 		case PE_RATIO:
 			return null;
 		case PRICE:
 			return new PreviousClosePriceScreen((PreviousClosePriceCriteria) criteria);
 		case PRICE_CHANGE:
+			return new PricePercentageChangeScreen((PricePercentageChangeCriteria) criteria);
 		case PROFIT_MARGIN:
+			return null;
 		case RATE_OF_CHANGE:
+			return null;
 		case REVENUE_GROWTH:
+			return null;
 		case ROE:
+			return null;
 		case RSI:
+			return null;
 		case SECTOR:
 			return null;
 		case SMA:
 			return new SimpleMovingAverageScreen((SimpleMovingAverageCriteria) criteria);
 		case STOCHASTICS_X:
+			return null;
 		case TODAY_VOL_VS_AVG:
 			return null;
 		case VOLATILITY:
 			return new VolatilityScreen((VolatilityCriteria) criteria);
-		case VOLUME_RANGE:
+		case VOLUME_AVG:
+			return new VolumeAverageScreen((VolumeAverageCriteria) criteria);
+		case EMA_PCT_BANDS:
+			return new ExponentialMovingAverageBandCrossoverScreen(
+					(ExponentialMovingAverageBandCrossoverCriteria) criteria);
+		case EMA_X_PRICE:
+			return new ExponentialMovingAverageCurrentPriceCrossoverScreen(
+					(ExponentialMovingAverageCurrentPriceCrossoverCriteria) criteria);
+		case SYMBOL:
+			return new SymbolScreen((SymbolCriteria) criteria);
+		case VOLUME_COMPARISON:
+			return new VolumeAverageComparisonScreen((VolumeAverageComparisonCriteria) criteria);
+		case _52_PCT:
+			return new _52WeekRangePercentageScreen((_52WeekRangePercentageCriteria) criteria);
+		case EMA_VS_PRICE:
+			return new ExponentialMovingAverageVsCurrentPriceScreen(
+					(ExponentialMovingAverageVsCurrentPriceCriteria) criteria);
 		default:
 			break;
 
 		}
 
-		return null;
+		throw new NotImplementedException(
+				String.format("Criteria %s not yet implemented in the factory!", criteria.getType()));
 	}
 }

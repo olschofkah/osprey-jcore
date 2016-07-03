@@ -3,26 +3,26 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class ExponentialMovingAverageCrossoverCriteria implements IStockScreenCriteria {
+public class ExponentialMovingAverageBandCrossoverCriteria implements IStockScreenCriteria {
 
 	private ScreenType type;
 	private int period1;
-	private int period2;
 	private int range;
 	private double alpha;
+	private double bandPercent;
 	private CrossDirection direction;
 
-	public ExponentialMovingAverageCrossoverCriteria() {
+	public ExponentialMovingAverageBandCrossoverCriteria() {
 
 	}
 
-	public ExponentialMovingAverageCrossoverCriteria(int period1, int period2, int range, double alpha,
+	public ExponentialMovingAverageBandCrossoverCriteria(int period1, int range, double alpha, double bandPercent,
 			CrossDirection direction) {
-		this.type = ScreenType.EMA_X;
+		this.type = ScreenType.EMA_PCT_BANDS;
 		this.period1 = period1;
-		this.period2 = period2;
 		this.range = range;
 		this.alpha = alpha;
+		this.bandPercent = bandPercent;
 		this.direction = direction;
 	}
 
@@ -32,10 +32,6 @@ public class ExponentialMovingAverageCrossoverCriteria implements IStockScreenCr
 
 	public int getPeriod1() {
 		return period1;
-	}
-
-	public int getPeriod2() {
-		return period2;
 	}
 
 	public int getRange() {
@@ -60,6 +56,10 @@ public class ExponentialMovingAverageCrossoverCriteria implements IStockScreenCr
 
 	public void setDirection(CrossDirection direction) {
 		this.direction = direction;
+	}
+
+	public double getBandPercent() {
+		return bandPercent;
 	}
 
 }

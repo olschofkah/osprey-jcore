@@ -8,6 +8,7 @@ import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.result.SMAPair;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuote;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OptionType;
 
 public final class OspreyQuantMath {
@@ -26,14 +27,13 @@ public final class OspreyQuantMath {
 	 *            the current day.
 	 * @return the ema-p
 	 */
-	public static double ema(double sma, int p, int historicalOffset, List<HistoricalQuote> prices,
-			SecurityQuote quote) {
+	public static double ema(double sma, int p, int historicalOffset, List<HistoricalQuote> prices) {
 		double alpha = 2.0 / (p + 1.0);
-		return ema(sma, p, alpha, historicalOffset, prices, quote);
+		return ema(sma, p, alpha, historicalOffset, prices);
 	}
 
-	public static double ema(int p, int historicalOffset, List<HistoricalQuote> prices, SecurityQuote quote) {
-		return ema(prices.get(p - 1).getAdjClose(), p, historicalOffset, prices, quote);
+	public static double ema(int p, int historicalOffset, List<HistoricalQuote> prices) {
+		return ema(prices.get(p + historicalOffset - 1).getAdjClose(), p, historicalOffset, prices);
 	}
 
 	/**
@@ -48,8 +48,7 @@ public final class OspreyQuantMath {
 	 * @param prices
 	 * @return
 	 */
-	public static double ema(double sma, int p, double alpha, int offset, List<HistoricalQuote> prices,
-			SecurityQuote quote) {
+	public static double ema(double sma, int p, double alpha, int offset, List<HistoricalQuote> prices) {
 
 		if (p < 2) {
 			throw new InvalidPeriodException();
@@ -65,10 +64,8 @@ public final class OspreyQuantMath {
 			// ema(t) = ema(t-1) + alpha * (close(t) - ema(t-1)) where alpha =
 			// 2/(1+p)
 			// ema(1) = close(1)
-			ema = ((i == 0 ? quote.getLast() : prices.get(i).getAdjClose()) - ema) * alpha + ema;
+			ema = (prices.get(i).getAdjClose() - ema) * alpha + ema;
 		}
-
-		// System.out.println("" + p + " " + ema);
 
 		return ema;
 	}
@@ -83,11 +80,11 @@ public final class OspreyQuantMath {
 	 */
 	public static double MACD(int long_len, int short_len, List<HistoricalQuote> prices, SecurityQuote quote) {
 
-		double sma_long = OspreyQuantMath.sma(long_len, 0, prices, quote);
-		double sma_short = OspreyQuantMath.sma(short_len, 0, prices, quote);
+		double sma_long = OspreyQuantMath.sma(long_len, 0, prices);
+		double sma_short = OspreyQuantMath.sma(short_len, 0, prices);
 
-		double ema_long = OspreyQuantMath.ema(sma_long, long_len, 0, prices, quote);
-		double ema_short = OspreyQuantMath.ema(sma_short, short_len, 0, prices, quote);
+		double ema_long = OspreyQuantMath.ema(sma_long, long_len, 0, prices);
+		double ema_short = OspreyQuantMath.ema(sma_short, short_len, 0, prices);
 
 		return ema_short - ema_long;
 
@@ -148,7 +145,7 @@ public final class OspreyQuantMath {
 	 *            - Prices to use for calculation
 	 * @return ( c0 + c1 + c2 + ... + cp) / p
 	 */
-	public static double sma(int p, int offset, List<HistoricalQuote> prices, SecurityQuote quote) {
+	public static double sma(int p, int offset, List<HistoricalQuote> prices) {
 
 		if (p < 0) {
 			throw new InvalidPeriodException();
@@ -161,7 +158,7 @@ public final class OspreyQuantMath {
 		double sma1 = 0;
 
 		for (int i = offset; i < p + offset; ++i) {
-			sma1 += i == 0 ? quote.getLast() : prices.get(i).getAdjClose();
+			sma1 += prices.get(i).getAdjClose();
 		}
 
 		sma1 /= p;
@@ -182,13 +179,13 @@ public final class OspreyQuantMath {
 
 		double dailyReturn;
 		double price;
-		double previousPrice = prices.get(0).getClose();
+		double previousPrice = prices.get(0).getAdjClose();
 		double averageDailyReturn = 0;
 
 		List<Double> dailyReturns = new ArrayList<>(period);
 
 		for (int i = 1; i < period; ++i) {
-			price = prices.get(i).getClose();
+			price = prices.get(i).getAdjClose();
 
 			dailyReturn = price / previousPrice - 1;
 			dailyReturns.add(dailyReturn);
@@ -363,6 +360,30 @@ public final class OspreyQuantMath {
 		covariance = covariance / (period - 1);
 
 		return covariance / volatility_bmk;
+	}
+
+	public static double percentIn52Week(SecurityQuoteContainer sqc) {
+		return (sqc.getSecurityQuote().getLast() - sqc.getFundamentalQuote().get_52WeekLow())
+				/ (sqc.getFundamentalQuote().get_52WeekHigh() - sqc.getFundamentalQuote().get_52WeekLow());
+	}
+
+	public static double volumeAverage(List<HistoricalQuote> historicalQuotes, int p, int offset) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > historicalQuotes.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		long volume = 0;
+
+		for (int i = offset; i < p + offset; ++i) {
+			volume += historicalQuotes.get(i).getVolume();
+		}
+
+		return ((double) volume) / p;
 	}
 
 }

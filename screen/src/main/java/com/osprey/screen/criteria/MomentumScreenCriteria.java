@@ -1,8 +1,11 @@
 package com.osprey.screen.criteria;
 
+import com.osprey.screen.criteria.constants.RelationalOperator;
+import com.osprey.screen.criteria.constants.ScreenType;
+
 public class MomentumScreenCriteria implements IStockScreenCriteria {
 
-	private StockScreenType type;
+	private ScreenType type;
 	private double price;
 	private RelationalOperator relationalOperator;
 
@@ -11,12 +14,12 @@ public class MomentumScreenCriteria implements IStockScreenCriteria {
 	}
 
 	public MomentumScreenCriteria(double price, RelationalOperator operator) {
-		type = StockScreenType.MOMENTUM_X;
+		type = ScreenType.MOMENTUM_X;
 		this.price = price;
 		this.relationalOperator = operator;
 	}
 
-	public StockScreenType getType() {
+	public ScreenType getType() {
 		return type;
 	}
 

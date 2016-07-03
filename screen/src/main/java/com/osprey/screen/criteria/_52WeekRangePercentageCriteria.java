@@ -3,19 +3,19 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class PreviousClosePriceCriteria implements IStockScreenCriteria {
+public class _52WeekRangePercentageCriteria implements IStockScreenCriteria {
 
 	private ScreenType type;
-	private double price;
+	private double percent;
 	private RelationalOperator relationalOperator;
 
-	public PreviousClosePriceCriteria() {
+	public _52WeekRangePercentageCriteria() {
 
 	}
 
-	public PreviousClosePriceCriteria(double price, RelationalOperator operator) {
-		type = ScreenType.PRICE;
-		this.price = price;
+	public _52WeekRangePercentageCriteria(double percent, RelationalOperator operator) {
+		type = ScreenType._52_PCT;
+		this.percent = percent;
 		this.relationalOperator = operator;
 	}
 
@@ -27,8 +27,8 @@ public class PreviousClosePriceCriteria implements IStockScreenCriteria {
 		return relationalOperator;
 	}
 
-	public double getPrice() {
-		return price;
+	public double getPercent() {
+		return percent;
 	}
 
 }

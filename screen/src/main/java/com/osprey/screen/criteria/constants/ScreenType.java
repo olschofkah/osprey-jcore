@@ -1,6 +1,6 @@
-package com.osprey.screen.criteria;
+package com.osprey.screen.criteria.constants;
 
-public enum StockScreenType {
+public enum ScreenType {
 	
 	// basic
 	EXCHANGE,
@@ -11,7 +11,7 @@ public enum StockScreenType {
 	BETA,
 	VOLATILITY,
 	INSTRUMENT_TYPE,
-	
+	SYMBOL,
 	// Fundamentals
 	REVENUE_GROWTH,
 	EPS,
@@ -31,7 +31,9 @@ public enum StockScreenType {
 	GAP_UP_DOWN,
 	PRICE_CHANGE,
 	NEW_52_WEEK,
-	VOLUME_RANGE,
+	_52_PCT,
+	VOLUME_AVG,
+	VOLUME_COMPARISON,
 	BLOCK_TRADE_VOL,
 	TODAY_VOL_VS_AVG,
 	ON_BALANCE_VOL,
@@ -39,7 +41,9 @@ public enum StockScreenType {
 	// Technicals
 	SMA,
 	EMA,
+	EMA_PCT_BANDS,
 	EMA_X,
+	EMA_X_PRICE,
 	BOLLINGER_BAND,
 	PARABOLIC_SAR_X,
 	RSI,
@@ -49,6 +53,7 @@ public enum StockScreenType {
 	MACD_HISTOGRAM,
 	RATE_OF_CHANGE,
 	DMI,
-	ADX
+	ADX, 
+	EMA_VS_PRICE
 	
 }

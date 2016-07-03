@@ -23,7 +23,7 @@ public class MovingAverageTest {
 		SecurityQuote quote = new SecurityQuote(TEST_TICKER_1);
 		quote.setLast(closingPrices.get(0).getAdjClose());
 
-		double sma = OspreyQuantMath.sma(10, 0, closingPrices, quote);
+		double sma = OspreyQuantMath.sma(10, 0, closingPrices);
 
 		Assert.assertEquals(0, sma, DOUBLE_TEST_DELTA);
 	}
@@ -82,14 +82,14 @@ public class MovingAverageTest {
 
 		int p = 26;
 		double alpha =  0.3;
-		double sma = OspreyQuantMath.sma(p, 0, closingPrices, securityQuote);
+		double sma = OspreyQuantMath.sma(p, 0, closingPrices);
 		
 		// TODO why are you calculating this here without testing the result/ 
-		double ema = OspreyQuantMath.ema(sma, p, 0, closingPrices, securityQuote); 
+		double ema = OspreyQuantMath.ema(sma, p, 0, closingPrices); 
 		
-		double ema_smooth = OspreyQuantMath.ema(sma, p, alpha, 0, closingPrices, securityQuote);
+		double ema_smooth = OspreyQuantMath.ema(sma, p, alpha, 0, closingPrices);
 
-		double ema_default_smooth = OspreyQuantMath.ema(p, 0, closingPrices, securityQuote);
+		double ema_default_smooth = OspreyQuantMath.ema(p, 0, closingPrices);
 
 		Assert.assertEquals(0, ema_default_smooth, DOUBLE_TEST_DELTA);
 	}

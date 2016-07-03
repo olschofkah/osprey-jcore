@@ -23,7 +23,7 @@ public class VolatilityScreen implements IStockScreen {
 
 		double volatility = OspreyQuantMath.volatility(criteria.getPeriod(), sqc.getHistoricalQuotes());
 
-		switch (criteria.getOperator()) {
+		switch (criteria.getRelationalOperator()) {
 		case _EQ:
 			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
 					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,

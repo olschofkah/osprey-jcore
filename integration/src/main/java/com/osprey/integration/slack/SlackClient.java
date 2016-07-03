@@ -46,7 +46,6 @@ public class SlackClient {
 		} else {
 			logger.warn("Failed to notify slack of message {}", () -> finalPayload);
 		}
-
 	}
 
 	public class SlackRequest {

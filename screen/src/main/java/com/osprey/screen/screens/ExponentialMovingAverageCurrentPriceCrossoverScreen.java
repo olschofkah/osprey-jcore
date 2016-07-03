@@ -5,18 +5,18 @@ import org.apache.logging.log4j.Logger;
 
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
-import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
+import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverCriteria;
 import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
-public class ExponentialMovingAverageCrossoverScreen implements IStockScreen {
-	final static Logger logger = LogManager.getLogger(ExponentialMovingAverageCrossoverScreen.class);
+public class ExponentialMovingAverageCurrentPriceCrossoverScreen implements IStockScreen {
+	final static Logger logger = LogManager.getLogger(ExponentialMovingAverageCurrentPriceCrossoverScreen.class);
 
-	private final ExponentialMovingAverageCrossoverCriteria criteria;
-
+	private final ExponentialMovingAverageCurrentPriceCrossoverCriteria criteria;
 	private boolean passed;
 
-	public ExponentialMovingAverageCrossoverScreen(ExponentialMovingAverageCrossoverCriteria criteria) {
+	public ExponentialMovingAverageCurrentPriceCrossoverScreen(
+			ExponentialMovingAverageCurrentPriceCrossoverCriteria criteria) {
 		this.criteria = criteria;
 	}
 
@@ -24,26 +24,22 @@ public class ExponentialMovingAverageCrossoverScreen implements IStockScreen {
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
 		double ema1;
-		double ema2;
+		double close;
 		int previousComp = 2;
 		int comp;
 		boolean isAboveToBelow = criteria.getDirection() == CrossDirection.FROM_ABOVE_TO_BELOW;
 		int hisotrySize = sqc.getHistoricalQuotes().size();
 
 		double alpha1;
-		double alpha2;
 		if (criteria.getAlpha() == 0.0) {
 			alpha1 = 2.0 / (criteria.getPeriod1() + 1.0);
-			alpha2 = 2.0 / (criteria.getPeriod2() + 1.0);
 		} else {
 			alpha1 = criteria.getAlpha();
-			alpha2 = criteria.getAlpha();
 		}
 
 		try {
 
-			if (criteria.getPeriod1() + criteria.getRange() - 1 >= hisotrySize
-					|| criteria.getPeriod2() + criteria.getRange() - 1 >= hisotrySize) {
+			if (criteria.getPeriod1() + criteria.getRange() - 1 >= hisotrySize) {
 				throw new InsufficientHistoryException();
 			}
 
@@ -52,13 +48,9 @@ public class ExponentialMovingAverageCrossoverScreen implements IStockScreen {
 				ema1 = OspreyQuantMath.ema(
 						sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getAdjClose(),
 						criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes());
-				ema2 = OspreyQuantMath.ema(
-						sqc.getHistoricalQuotes().get(criteria.getPeriod2() - 1 + offset).getAdjClose(),
-						criteria.getPeriod2(), alpha2, offset, sqc.getHistoricalQuotes());
-				
-//				System.out.println(ema1 + " " + ema2);
-
-				comp = ema1 > ema2 ? 1 : (ema1 < ema2 ? -1 : 0);
+				close = sqc.getHistoricalQuotes().get(offset).getAdjClose();
+						
+				comp = close > ema1 ? 1 : (close < ema1 ? -1 : 0);
 
 				if (previousComp == 2) {
 					previousComp = comp;
