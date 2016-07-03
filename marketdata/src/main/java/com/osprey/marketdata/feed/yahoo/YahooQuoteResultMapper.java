@@ -193,7 +193,7 @@ public class YahooQuoteResultMapper {
 
 		// fundamental quote info
 		FundamentalQuote fq;
-		if (sqc.getSecurityQuote() == null) {
+		if (sqc.getFundamentalQuote() == null) {
 			fq = new FundamentalQuote(sqc.getKey(), LocalDate.now());
 			sqc.setFundamentalQuote(fq);
 		} else {
@@ -204,6 +204,14 @@ public class YahooQuoteResultMapper {
 			fq.setAverageVolume(sd.getAverageVolume().getRaw());
 		}
 
+		if (sd.getFiftyTwoWeekHigh() != null && sd.getFiftyTwoWeekHigh().getRaw() != null) {
+			fq.set_52WeekHigh(sd.getFiftyTwoWeekHigh().getRaw());
+		}
+		
+		if (sd.getFiftyTwoWeekLow() != null && sd.getFiftyTwoWeekLow().getRaw() != null) {
+			fq.set_52WeekLow(sd.getFiftyTwoWeekLow().getRaw());
+		}
+
 		// TODO set the other shit for fundamental quote
 	}
 
@@ -211,7 +219,7 @@ public class YahooQuoteResultMapper {
 
 		// fundamental quote info
 		FundamentalQuote fq;
-		if (sqc.getSecurityQuote() == null) {
+		if (sqc.getFundamentalQuote() == null) {
 			fq = new FundamentalQuote(sqc.getKey(), LocalDate.now());
 			sqc.setFundamentalQuote(fq);
 		} else {
@@ -239,7 +247,6 @@ public class YahooQuoteResultMapper {
 	}
 
 	private static void mapEarnings(Earnings_ earnings, SecurityQuoteContainer sqc) {
-		// TODO determine what if any stats fields we care about
 
 		List<SecurityEvent> events;
 		if (sqc.getEvents() == null) {
@@ -290,7 +297,7 @@ public class YahooQuoteResultMapper {
 
 		// fundamental quote info
 		FundamentalQuote fq;
-		if (sqc.getSecurityQuote() == null) {
+		if (sqc.getFundamentalQuote() == null) {
 			fq = new FundamentalQuote(sqc.getKey(), LocalDate.now());
 			sqc.setFundamentalQuote(fq);
 		} else {
@@ -301,13 +308,17 @@ public class YahooQuoteResultMapper {
 			fq.setForwardEps(stats.getForwardEps().getRaw());
 		}
 
+		if (stats.getBeta() != null && stats.getBeta().getRaw() != null) {
+			fq.setBeta(stats.getBeta().getRaw());
+		}
+
 		// TODO map other fundamental quote info.
 	}
 
 	private static void mapCalendarEvents(CalendarEvents calendarEvents, SecurityQuoteContainer sqc) {
 
 		SecurityUpcomingEvents events;
-		if (sqc.getSecurityQuote() == null) {
+		if (sqc.getUpcomingEvents() == null) {
 			events = new SecurityUpcomingEvents(sqc.getKey());
 			sqc.setUpcomingEvents(events);
 		} else {

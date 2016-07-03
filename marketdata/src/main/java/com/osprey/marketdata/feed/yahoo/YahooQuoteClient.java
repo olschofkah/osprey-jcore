@@ -58,7 +58,9 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 				.calendarEvents()
 				.defaultKeyStatistics()
 				.earnings()
-				.financialData().price().build();
+				.financialData()
+				.price()
+				.build();
 
 		YahooQuote yahooQuote = null;
 		try {

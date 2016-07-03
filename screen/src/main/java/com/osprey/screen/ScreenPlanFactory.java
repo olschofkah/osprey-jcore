@@ -14,11 +14,12 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
-import com.osprey.screen.criteria.IStockScreenCriteria;
+import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
+import com.osprey.screen.criteria.RsiCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
@@ -37,6 +38,7 @@ import com.osprey.screen.screens.InstrumentTypeScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.PriceGapScreen;
 import com.osprey.screen.screens.PricePercentageChangeScreen;
+import com.osprey.screen.screens.RsiScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
@@ -66,7 +68,7 @@ public class ScreenPlanFactory {
 	 * 
 	 * @return Map of Security to it's screening plan.
 	 */
-	public List<ScreenPlan> build(List<IStockScreenCriteria> criterias) {
+	public List<ScreenPlan> build(List<IScreenCriteria> criterias) {
 		List<ScreenPlan> plans = new ArrayList<>(securities.size());
 
 		// flip the order since they're dropped onto a stack;
@@ -76,7 +78,7 @@ public class ScreenPlanFactory {
 			ScreenPlan plan = new ScreenPlan(sqc);
 			plans.add(plan);
 
-			for (IStockScreenCriteria criteria : criterias) {
+			for (IScreenCriteria criteria : criterias) {
 				plan.add(buildScreen(criteria));
 			}
 		}
@@ -84,7 +86,7 @@ public class ScreenPlanFactory {
 		return plans;
 	}
 
-	public IStockScreen buildScreen(IStockScreenCriteria criteria) {
+	public IStockScreen buildScreen(IScreenCriteria criteria) {
 
 		switch (criteria.getType()) {
 		case ADR:
@@ -148,7 +150,7 @@ public class ScreenPlanFactory {
 		case ROE:
 			return null;
 		case RSI:
-			return null;
+			return new RsiScreen((RsiCriteria) criteria);
 		case SECTOR:
 			return null;
 		case SMA:

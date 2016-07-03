@@ -3,7 +3,7 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class ExponentialMovingAverageCrossoverCriteria implements IStockScreenCriteria {
+public class ExponentialMovingAverageCrossoverCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private int period1;

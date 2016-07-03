@@ -37,39 +37,30 @@ public class ExponentialMovingAverageCurrentPriceCrossoverScreen implements ISto
 			alpha1 = criteria.getAlpha();
 		}
 
-		try {
+		if (criteria.getPeriod1() + criteria.getRange() - 1 >= hisotrySize) {
+			throw new InsufficientHistoryException();
+		}
 
-			if (criteria.getPeriod1() + criteria.getRange() - 1 >= hisotrySize) {
-				throw new InsufficientHistoryException();
-			}
+		for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
 
-			for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
+			ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getClose(),
+					criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes());
+			close = sqc.getHistoricalQuotes().get(offset).getClose();
 
-				ema1 = OspreyQuantMath.ema(
-						sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getAdjClose(),
-						criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes());
-				close = sqc.getHistoricalQuotes().get(offset).getAdjClose();
-						
-				comp = close > ema1 ? 1 : (close < ema1 ? -1 : 0);
+			comp = close > ema1 ? 1 : (close < ema1 ? -1 : 0);
 
-				if (previousComp == 2) {
-					previousComp = comp;
-					continue;
-				}
-
-				if (((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1))
-						&& previousComp != comp) {
-					passed = true;
-					break;
-				}
-
+			if (previousComp == 2) {
 				previousComp = comp;
+				continue;
 			}
 
-		} catch (InsufficientHistoryException e) {
-			passed = false;
-			logger.error("Insufficient historical prices to calculate ema/sma on {}, size avaialble {} ",
-					new Object[] { sqc.getKey().getSymbol(), sqc.getHistoricalQuotes().size() });
+			if (((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1))
+					&& previousComp != comp) {
+				passed = true;
+				break;
+			}
+
+			previousComp = comp;
 		}
 
 		return this;

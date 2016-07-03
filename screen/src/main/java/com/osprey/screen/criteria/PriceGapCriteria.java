@@ -4,7 +4,7 @@ import com.osprey.screen.criteria.constants.GapDirection;
 import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class PriceGapCriteria implements IStockScreenCriteria {
+public class PriceGapCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private double percentGap;

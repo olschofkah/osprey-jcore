@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
-import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
+import com.osprey.screen.criteria.constants.BandSelection;
 import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
@@ -49,28 +49,32 @@ public class ExponentialMovingAverageBandCrossoverScreen implements IStockScreen
 
 			for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
 
-				ema1 = OspreyQuantMath.ema(
-						sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getAdjClose(),
+				ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getClose(),
 						criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes());
 
-				price = sqc.getHistoricalQuotes().get(offset).getAdjClose();
-				upperBand = price * (1 + criteria.getBandPercent());
-				lowerBand = price * (1 - criteria.getBandPercent());
-// TODO complete
-				//comp = ema1 > ema2 ? 1 : (ema1 < ema2 ? -1 : 0);
+				price = sqc.getHistoricalQuotes().get(offset).getClose();
+				
+				upperBand = ema1 * (1 + criteria.getBandPercent());
+				lowerBand = ema1 * (1 - criteria.getBandPercent());
 
-//				if (previousComp == 2) {
-//					previousComp = comp;
-//					continue;
-//				}
-//
-//				if (((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1))
-//						&& previousComp != comp) {
-//					passed = true;
-//					break;
-//				}
-//
-//				previousComp = comp;
+				if (criteria.getBand() == BandSelection.UPPER_BAND) {
+					comp = price > upperBand ? 1 : (price < upperBand ? -1 : 0);
+				} else { // lower band
+					comp = price > lowerBand ? 1 : (price < lowerBand ? -1 : 0);
+				}
+
+				if (previousComp == 2) {
+					previousComp = comp;
+					continue;
+				}
+
+				if (((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1))
+						&& previousComp != comp) {
+					passed = true;
+					break;
+				}
+
+				previousComp = comp;
 			}
 
 		} catch (InsufficientHistoryException e) {

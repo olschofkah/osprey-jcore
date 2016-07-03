@@ -3,7 +3,7 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class _52WeekRangePercentageCriteria implements IStockScreenCriteria {
+public class _52WeekRangePercentageCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private double percent;

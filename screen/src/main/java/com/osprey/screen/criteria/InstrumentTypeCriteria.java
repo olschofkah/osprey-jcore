@@ -5,7 +5,7 @@ import java.util.Set;
 import com.osprey.screen.criteria.constants.ScreenType;
 import com.osprey.securitymaster.constants.InstrumentType;
 
-public class InstrumentTypeCriteria implements IStockScreenCriteria {
+public class InstrumentTypeCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private Set<InstrumentType> instrumentTypes;

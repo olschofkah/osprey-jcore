@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
-import com.osprey.math.result.SMAPair;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
@@ -28,9 +27,9 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 			throw new InsufficientHistoryException();
 		}
 
-		double ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1).getAdjClose(),
+		double ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1).getClose(),
 				criteria.getPeriod1(), 0, sqc.getHistoricalQuotes());
-		double ema2 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod2() - 1).getAdjClose(),
+		double ema2 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod2() - 1).getClose(),
 				criteria.getPeriod2(), 0, sqc.getHistoricalQuotes());
 
 		switch (criteria.getRelationalOperator()) {

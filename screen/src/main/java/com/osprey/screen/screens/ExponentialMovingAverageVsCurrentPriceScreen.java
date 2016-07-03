@@ -26,10 +26,10 @@ public class ExponentialMovingAverageVsCurrentPriceScreen implements IStockScree
 			throw new InsufficientHistoryException();
 		}
 
-		double ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1).getAdjClose(),
+		double ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1).getClose(),
 				criteria.getPeriod1(), 0, sqc.getHistoricalQuotes());
 		
-		double close = sqc.getHistoricalQuotes().get(0).getAdjClose();
+		double close = sqc.getHistoricalQuotes().get(0).getClose();
 
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:

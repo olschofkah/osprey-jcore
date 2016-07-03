@@ -3,7 +3,7 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class VolumeAverageCriteria implements IStockScreenCriteria {
+public class VolumeAverageCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private long benchmarkVolume;

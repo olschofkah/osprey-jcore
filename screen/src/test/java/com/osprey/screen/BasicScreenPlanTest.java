@@ -9,7 +9,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.osprey.screen.criteria.IStockScreenCriteria;
+import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
@@ -33,7 +33,7 @@ public class BasicScreenPlanTest {
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(5, RelationalOperator._GT);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
@@ -64,7 +64,7 @@ public class BasicScreenPlanTest {
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(500, RelationalOperator._GT);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
@@ -94,7 +94,7 @@ public class BasicScreenPlanTest {
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(25, RelationalOperator._EQ);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
@@ -125,7 +125,7 @@ public class BasicScreenPlanTest {
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(5, RelationalOperator._GE);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
@@ -156,7 +156,7 @@ public class BasicScreenPlanTest {
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(35, RelationalOperator._LT);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
@@ -187,7 +187,7 @@ public class BasicScreenPlanTest {
 
 		PreviousClosePriceCriteria c1 = new PreviousClosePriceCriteria(25.001, RelationalOperator._LE);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
@@ -218,7 +218,7 @@ public class BasicScreenPlanTest {
 
 		SimpleMovingAverageCriteria c1 = new SimpleMovingAverageCriteria(4, 8, RelationalOperator._GT);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
@@ -250,7 +250,7 @@ public class BasicScreenPlanTest {
 		SimpleMovingAverageCriteria c1 = new SimpleMovingAverageCriteria(4, 8, RelationalOperator._GT);
 		PreviousClosePriceCriteria c2 = new PreviousClosePriceCriteria(25.00, RelationalOperator._GT);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 		criteria.add(c2);
 
@@ -282,7 +282,7 @@ public class BasicScreenPlanTest {
 		SimpleMovingAverageCriteria c1 = new SimpleMovingAverageCriteria(4, 8, RelationalOperator._GT);
 		PreviousClosePriceCriteria c2 = new PreviousClosePriceCriteria(55.00, RelationalOperator._GT);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 		criteria.add(c2);
 
@@ -313,7 +313,7 @@ public class BasicScreenPlanTest {
 
 		VolatilityCriteria c1 = new VolatilityCriteria(10, 0.12, RelationalOperator._GT);
 
-		List<IStockScreenCriteria> criteria = new ArrayList<>();
+		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();

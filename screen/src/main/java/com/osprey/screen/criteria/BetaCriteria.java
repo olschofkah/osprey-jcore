@@ -3,7 +3,7 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class BetaCriteria implements IStockScreenCriteria {
+public class BetaCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private double betaComparison;

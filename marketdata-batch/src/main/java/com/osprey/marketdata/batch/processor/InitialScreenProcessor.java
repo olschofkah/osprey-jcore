@@ -17,7 +17,7 @@ import com.osprey.screen.ScreenCriteriaGenerator;
 import com.osprey.screen.ScreenPlan;
 import com.osprey.screen.ScreenPlanFactory;
 import com.osprey.screen.ScreenStrategyEntry;
-import com.osprey.screen.criteria.IStockScreenCriteria;
+import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
@@ -43,7 +43,7 @@ public class InitialScreenProcessor implements ItemProcessor<Security, SecurityQ
 		securities.add(sqc);
 
 		// Convert the criteria generators into criteria.
-		List<IStockScreenCriteria> criteria = new ArrayList<>(entry.getScreenCriteria().size());
+		List<IScreenCriteria> criteria = new ArrayList<>(entry.getScreenCriteria().size());
 		for (ScreenCriteriaGenerator generator : entry.getScreenCriteria()) {
 			criteria.add(generator.generate());
 		}

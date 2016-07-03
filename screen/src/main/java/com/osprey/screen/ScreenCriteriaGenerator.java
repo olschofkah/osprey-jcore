@@ -12,11 +12,12 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
-import com.osprey.screen.criteria.IStockScreenCriteria;
+import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
+import com.osprey.screen.criteria.RsiCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
@@ -37,10 +38,10 @@ public class ScreenCriteriaGenerator {
 		this.criteriaBucket = bucket;
 	}
 
-	public IStockScreenCriteria generate() {
+	public IScreenCriteria generate() {
 		ObjectMapper objectMapper = new ObjectMapper();
 
-		IStockScreenCriteria result = null;
+		IScreenCriteria result = null;
 		switch (ScreenType.valueOf((String) getCriteriaBucket().get("type"))) {
 		case ADR:
 			break;
@@ -108,6 +109,7 @@ public class ScreenCriteriaGenerator {
 		case ROE:
 			break;
 		case RSI:
+			result = objectMapper.convertValue(getCriteriaBucket(), RsiCriteria.class);
 			break;
 		case SECTOR:
 			break;

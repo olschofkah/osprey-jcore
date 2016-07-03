@@ -47,6 +47,7 @@ import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
 import com.osprey.marketdata.batch.writer.HotShitDbItemWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
+import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.ScreenSuccessSecurity;
 import com.osprey.screen.repository.IHotShitRepository;
 import com.osprey.screen.repository.jdbctemplate.HotShitJdbcRepository;
@@ -239,8 +240,8 @@ public class NightlyMarketDataScreen {
 	@Scope("prototype")
 	public Job processNightlySecurityMaster() {
 		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
-				.listener(listener()).flow(initialScreen()) // #1 ... this
-															// starts it
+				.listener(listener())
+				.flow(initialScreen()) // #1 ... this starts it
 				.next(disruptorStartup()) // #2
 				.next(quoteAndCalcAndPersist()) // #3
 				.next(disruptorShutdown()) // #4
@@ -251,43 +252,67 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public Step initialScreen() {
-		return stepBuilderFactory.get("preScreen").<Security, SecurityQuoteContainer>chunk(250).faultTolerant()
-				.retryLimit(5).retry(MarketDataIOException.class).reader(initialScreenReader())
-				.processor(initialScreenProcessor()).writer(initialScreenQueueWriter()).taskExecutor(taskExecutor())
+		return stepBuilderFactory.get("preScreen").<Security, SecurityQuoteContainer>chunk(250)
+				.faultTolerant()
+				.retryLimit(5)
+				.retry(MarketDataIOException.class)
+				.reader(initialScreenReader())
+				.processor(initialScreenProcessor())
+				.writer(initialScreenQueueWriter())
+				.taskExecutor(taskExecutor())
 				.build();
 	}
 
 	@Bean
 	public Step quoteAndCalcAndPersist() {
 		return stepBuilderFactory.get("quoteAndCalc").<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
-				.reader(postInitialScreenQueueReader()).faultTolerant().backOffPolicy(exponentialBackOffPolicy())
-				.retryLimit(5).retry(MarketDataIOException.class).skipLimit(25)
-				.skip(MarketDataNotAvailableException.class).skip(MarketDataIOException.class)
-				.processor(quoteProcessor()).writer(postQuoteQueueWriter())
+				.reader(postInitialScreenQueueReader())
+				.faultTolerant()
+				.backOffPolicy(exponentialBackOffPolicy())
+				.retryLimit(5)
+				.retry(MarketDataIOException.class)
+				.skipLimit(25)
+				.skip(MarketDataNotAvailableException.class)
+				.skip(MarketDataIOException.class)
+				.processor(quoteProcessor())
+				.writer(postQuoteQueueWriter())
 				// .writer(persistStats)
 				.build();
 	}
 
 	@Bean
 	public Step disruptorShutdown() {
-		return stepBuilderFactory.get("disruptorShutdown").tasklet(quoteThrottleDisruptorShutdownTasklet()).build();
+		return stepBuilderFactory.get("disruptorShutdown")
+				.tasklet(quoteThrottleDisruptorShutdownTasklet())
+				.build();
 	}
 
 	@Bean
 	public Step disruptorStartup() {
-		return stepBuilderFactory.get("disruptorStartup").tasklet(quoteThrottleDisruptorStartupTasklet()).build();
+		return stepBuilderFactory.get("disruptorStartup")
+				.tasklet(quoteThrottleDisruptorStartupTasklet())
+				.build();
 	}
 
 	@Bean
 	public Step deletePreviousHotlistForToday() {
-		return stepBuilderFactory.get("hotListDestroyer").tasklet(purgePreviousRunHotlistTasklet()).build();
+		return stepBuilderFactory.get("hotListDestroyer")
+				.tasklet(purgePreviousRunHotlistTasklet())
+				.build();
 	}
 
 	@Bean
 	public Step hotListFilterAndPersist() {
-		return stepBuilderFactory.get("hotListFilter").<SecurityQuoteContainer, ScreenSuccessSecurity>chunk(100)
-				.reader(postQuoteQueueReader()).processor(hotShitScreenProcessor()).writer(hotShitDbItemWriter())
-				.taskExecutor(taskExecutor()).build();
+		return stepBuilderFactory.get("hotListFilter")
+				.<SecurityQuoteContainer, ScreenSuccessSecurity>chunk(100)
+				.faultTolerant()
+				.skip(InsufficientHistoryException.class)
+				.skipLimit(256)
+				.reader(postQuoteQueueReader())
+				.processor(hotShitScreenProcessor())
+				.writer(hotShitDbItemWriter())
+				.taskExecutor(taskExecutor())
+				.build();
 	}
 
 }

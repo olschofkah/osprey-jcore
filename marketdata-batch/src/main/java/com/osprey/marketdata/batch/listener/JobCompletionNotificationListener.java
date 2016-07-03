@@ -57,9 +57,9 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 			sb.append("The job is done master.  I've prepared ");
 			sb.append(hotItems.size());
 			sb.append(" trades for you to watch today.");
-			sb.append("\n");
-			sb.append("\n");
 			for (Entry<String, List<String>> entry : reportMap.entrySet()) {
+				sb.append("\n");
+				sb.append("\n");
 				sb.append("Screen: ");
 				sb.append(entry.getKey());
 				sb.append("\n");

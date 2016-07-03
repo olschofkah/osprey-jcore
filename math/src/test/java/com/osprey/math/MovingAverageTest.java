@@ -35,7 +35,7 @@ public class MovingAverageTest {
 
 		int p = 14;
 		int offset = 0;  
-		double rsi = OspreyQuantMath.RSI(p, offset, closingPrices);
+		double rsi = OspreyQuantMath.rsi(p, offset, closingPrices);
 
 		Assert.assertEquals(33.80281690, rsi, DOUBLE_TEST_DELTA);
 	}

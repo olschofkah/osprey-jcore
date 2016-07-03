@@ -3,7 +3,7 @@ package com.osprey.screen.criteria;
 import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class ExponentialMovingAverageVsCurrentPriceCriteria implements IStockScreenCriteria {
+public class ExponentialMovingAverageVsCurrentPriceCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private int period1;

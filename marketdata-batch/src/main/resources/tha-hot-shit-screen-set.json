@@ -1,7 +1,7 @@
 [
 {
     "screenName":"gt-15-close--15-xover-50-in-3-ema",
-    "strategies":[{"name":"long-bull-call-otm"},{"name":"put-credit-spread"}],
+    "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":3,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}}
@@ -9,7 +9,7 @@
 },
 {
     "screenName":"gt-15-close--15-xunder-50-in-3-ema",
-    "strategies":[{"name":"long-bull-put-otm"},{"name":"call-credit-spread"}],
+    "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":3,"alpha":0,"direction":"FROM_ABOVE_TO_BELOW"}}
@@ -17,19 +17,19 @@
 },
 {
     "screenName":"earnings-5--beta-2",
-    "strategies":[{"name":"long-bull-call-otm"},{"name":"put-credit-spread"}],
+    "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":7,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":7,"relationalOperator":"_LE"}},
         {"criteriaBucket":{"type":"BETA","betaComparison":2,"relationalOperator":"_GE"}}
     ]
 },
 {
     "screenName":"earnings-5--volitility-gt-20",
-    "strategies":[{"name":"long-bull-call-otm"}],
+    "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":7,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":7,"relationalOperator":"_LE"}},
         {"criteriaBucket":{"type":"VOLATILITY","period":252,"volatilityComparison":20,"relationalOperator":"_GE"}}
     ]
 },
@@ -40,7 +40,8 @@
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":3,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}},
-        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}}
+        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"RSI","period":252,"rsiComparison":50,"relationalOperator":"_LT"}}
     ]
 },
 {
@@ -50,7 +51,8 @@
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":3,"alpha":0,"direction":"FROM_ABOVE_TO_BELOW"}},
-        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}}
+        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"RSI","period":252,"rsiComparison":50,"relationalOperator":"_GT"}}
     ]
 },
 {
@@ -74,7 +76,8 @@
         {"criteriaBucket":{"type":"EMA","period1":10,"period2":50,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"PRICE_CHANGE","period":20,"percentChange":-0.03,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"PRICE_CHANGE","period":60,"percentChange":-0.03,"relationalOperator":"_LT"}},
-        {"criteriaBucket":{"type":"PRICE_CHANGE","period":120,"percentChange":-0.03,"relationalOperator":"_LT"}}
+        {"criteriaBucket":{"type":"PRICE_CHANGE","period":120,"percentChange":-0.03,"relationalOperator":"_LT"}},
+        {"criteriaBucket":{"type":"RSI","period":252,"rsiComparison":35,"relationalOperator":"_GT"}}
     ]
 },
 {
@@ -82,7 +85,8 @@
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"SYMBOL","symbols":["QQQ","SPY"],"contains":true}},
-        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":3,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}}
+        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":3,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}},
+        {"criteriaBucket":{"type":"EMA_PCT_BANDS","period1":20,"range":3,"alpha":0,"bandPercent":0.03,"direction":"FROM_BELOW_TO_ABOVE","band":"LOWER_BAND"}}
     ]
 },
 {
@@ -90,7 +94,8 @@
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"SYMBOL","symbols":["QQQ","SPY"],"contains":true}},
-        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":3,"alpha":0,"direction":"FROM_ABOVE_TO_BELOW"}}
+        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":3,"alpha":0,"direction":"FROM_ABOVE_TO_BELOW"}},
+        {"criteriaBucket":{"type":"EMA_PCT_BANDS","period1":20,"range":3,"alpha":0,"bandPercent":0.03,"direction":"FROM_ABOVE_TO_BELOW","band":"UPPER_BAND"}}
     ]
 }
 

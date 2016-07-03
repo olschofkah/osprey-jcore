@@ -25,7 +25,7 @@ public class PriceGapScreen implements IStockScreen {
 		}
 
 		double p0 = sqc.getHistoricalQuotes().get(0).getOpen();
-		double p1 = sqc.getHistoricalQuotes().get(1).getAdjClose();
+		double p1 = sqc.getHistoricalQuotes().get(1).getClose();
 
 		double pctGap = 1 - (p0 / p1);
 

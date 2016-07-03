@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import com.osprey.math.OspreyQuantMath;
-import com.osprey.screen.criteria.MomentumScreenCriteria;
+import com.osprey.screen.criteria.MomentumCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
@@ -13,11 +13,11 @@ import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class MomentumScreen implements IStockScreen {
 
-	private final MomentumScreenCriteria criteria;
+	private final MomentumCriteria criteria;
 
 	private boolean passed;
 
-	public MomentumScreen(MomentumScreenCriteria criteria) {
+	public MomentumScreen(MomentumCriteria criteria) {
 		this.criteria = criteria;
 	}
 

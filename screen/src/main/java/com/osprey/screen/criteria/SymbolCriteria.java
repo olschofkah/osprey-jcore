@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.osprey.screen.criteria.constants.ScreenType;
 
-public class SymbolCriteria implements IStockScreenCriteria {
+public class SymbolCriteria implements IScreenCriteria {
 
 	private ScreenType type;
 	private Set<String> symbols;
