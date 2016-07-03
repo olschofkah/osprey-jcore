@@ -29,13 +29,24 @@ public class MovingAverageTest {
 	}
 	
 	@Test
+	public void testRSI() throws Exception {
+
+		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
+
+		int p = 14;
+		int offset = 0;  
+		double rsi = OspreyQuantMath.RSI(p, offset, closingPrices);
+
+		Assert.assertEquals(33.80281690, rsi, DOUBLE_TEST_DELTA);
+	}
+	@Test
 	public void testVolatility1() throws Exception {
 
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 
 		double vol = OspreyQuantMath.volatility(10, closingPrices);
 
-		Assert.assertEquals(0.05648862, vol, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(2.1786312800, vol, DOUBLE_TEST_DELTA);
 	}
 
 	@Test
@@ -47,7 +58,7 @@ public class MovingAverageTest {
 
 		double beta = OspreyQuantMath.beta(10, closingPrices, closingPrices_bmk);
 
-		Assert.assertEquals(5.1528390584183E-6, beta, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(0.0302842, beta, DOUBLE_TEST_DELTA);
 	}
 	
 	/**
@@ -141,7 +152,7 @@ public class MovingAverageTest {
 		hs8.setClose(32);
 
 		HistoricalQuote hs9 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(17));
-		hs9.setClose(33);
+		hs9.setClose(20);
 		
 		HistoricalQuote hs10 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(16));
 		hs10.setClose(33.5);
@@ -278,4 +289,72 @@ public class MovingAverageTest {
 		return closingPrices_bmk;
 	}
 
+	
+	private List<HistoricalQuote> generateHistoricalPrices_rsi() {
+		LocalDate now = LocalDate.now();
+
+		HistoricalQuote hs0 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(15));
+		hs0.setClose(30);
+
+		HistoricalQuote hs1 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(14));
+		hs1.setClose(31);
+
+		HistoricalQuote hs2 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(13));
+		hs2.setClose(32);
+
+		HistoricalQuote hs3 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(12));
+		hs3.setClose(33);
+
+		HistoricalQuote hs4 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(11));
+		hs4.setClose(34);
+
+		HistoricalQuote hs5 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(10));
+		hs5.setClose(35);
+
+		HistoricalQuote hs6 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(9));
+		hs6.setClose(36);
+
+		HistoricalQuote hs7 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(8));
+		hs7.setClose(37);
+
+		HistoricalQuote hs8 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(7));
+		hs8.setClose(38);
+
+		HistoricalQuote hs9 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(6));
+		hs9.setClose(39);
+		
+		HistoricalQuote hs10 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(5));
+		hs10.setClose(40);
+		
+		HistoricalQuote hs11 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(4));
+		hs11.setClose(41);
+		
+		HistoricalQuote hs12 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(3));
+		hs12.setClose(42);
+		
+		HistoricalQuote hs13 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(2));
+		hs13.setClose(40);
+	
+		HistoricalQuote hs14 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(1));
+		hs14.setClose(38);
+		
+		List<HistoricalQuote> closingPrices_rsi = new ArrayList<HistoricalQuote>(15);
+		closingPrices_rsi.add(hs0);
+		closingPrices_rsi.add(hs1);
+		closingPrices_rsi.add(hs2);
+		closingPrices_rsi.add(hs3);
+		closingPrices_rsi.add(hs4);
+		closingPrices_rsi.add(hs5);
+		closingPrices_rsi.add(hs6);
+		closingPrices_rsi.add(hs7);
+		closingPrices_rsi.add(hs8);
+		closingPrices_rsi.add(hs9);
+		closingPrices_rsi.add(hs10);
+		closingPrices_rsi.add(hs11);
+		closingPrices_rsi.add(hs12);
+		closingPrices_rsi.add(hs13);
+		closingPrices_rsi.add(hs14);
+		
+		return closingPrices_rsi;
+	}
 }

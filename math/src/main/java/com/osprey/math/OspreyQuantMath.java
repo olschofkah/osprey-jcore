@@ -89,6 +89,35 @@ public final class OspreyQuantMath {
 		return ema_short - ema_long;
 
 	}
+	
+	// https://en.wikipedia.org/wiki/Relative_strength_index
+	// use close price for now instead of adj close
+	public static double RSI(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+
+		double aveGain = 0.0;
+		double aveLoss = 0.0;   
+		for (int i = offset; i < p + offset; ++i) {   
+			double change = prices.get(i).getClose() - prices.get(i+1).getClose();   
+			if (change >= 0) {   
+				aveGain += change;   
+			} else {   
+				aveLoss += change;   
+			}   
+		}   
+
+		double rs = aveGain / Math.abs(aveLoss);   
+		return  100.0 - 100.0 / (1.0 + rs);   
+
+	}
 
 	/**
 	 * Calculate two Simple Moving Averages simultaneously over a single series
