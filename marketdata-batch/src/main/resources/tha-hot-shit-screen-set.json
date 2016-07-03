@@ -1,6 +1,6 @@
 [
 {
-    "screenName":"gt-15-close--15-xover-50-in-3-ema",
+    "screenName":"Bull: 15above50 EMA in 3pd",
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
@@ -8,7 +8,7 @@
     ]
 },
 {
-    "screenName":"gt-15-close--15-xunder-50-in-3-ema",
+    "screenName":"Bear: 15under50 EMA in 3pd",
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
@@ -41,7 +41,7 @@
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":3,"alpha":0,"direction":"FROM_BELOW_TO_ABOVE"}},
         {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"RSI","period":252,"rsiComparison":50,"relationalOperator":"_LT"}}
+        //{"criteriaBucket":{"type":"RSI","period":252,"rsiComparison":50,"relationalOperator":"_LT"}}
     ]
 },
 {
@@ -52,7 +52,7 @@
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":3,"alpha":0,"direction":"FROM_ABOVE_TO_BELOW"}},
         {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"RSI","period":252,"rsiComparison":50,"relationalOperator":"_GT"}}
+        //{"criteriaBucket":{"type":"RSI","period":252,"rsiComparison":50,"relationalOperator":"_GT"}}
     ]
 },
 {
