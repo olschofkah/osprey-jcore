@@ -308,7 +308,7 @@ public class YahooQuoteResultMapper {
 		}
 
 		if (fd.getEarningsGrowth() != null && fd.getEarningsGrowth().getRaw() != null) {
-			fq.setEarningsGrowth(fd.getRevenueGrowth().getRaw());
+			fq.setEarningsGrowth(fd.getEarningsGrowth().getRaw());
 		}
 
 		if (fd.getEbitda() != null && fd.getEbitda().getRaw() != null) {
