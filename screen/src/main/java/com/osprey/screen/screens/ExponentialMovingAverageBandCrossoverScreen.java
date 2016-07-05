@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.osprey.math.OspreyQuantMath;
-import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.constants.BandSelection;
 import com.osprey.screen.criteria.constants.CrossDirection;
@@ -32,55 +31,34 @@ public class ExponentialMovingAverageBandCrossoverScreen implements IStockScreen
 		int previousComp = 2;
 		int comp;
 		boolean isAboveToBelow = criteria.getDirection() == CrossDirection.FROM_ABOVE_TO_BELOW;
-		int hisotrySize = sqc.getHistoricalQuotes().size();
 
-		double alpha1;
-		if (criteria.getAlpha() == 0.0) {
-			alpha1 = 2.0 / (criteria.getPeriod1() + 1.0);
-		} else {
-			alpha1 = criteria.getAlpha();
-		}
+		for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
 
-		try {
+			ema1 = OspreyQuantMath.ema(criteria.getPeriod1(), offset, sqc.getHistoricalQuotes());
 
-			if (criteria.getPeriod1() + criteria.getRange() - 1 >= hisotrySize) {
-				throw new InsufficientHistoryException();
+			price = sqc.getHistoricalQuotes().get(offset).getAdjClose();
+
+			upperBand = ema1 * (1 + criteria.getBandPercent());
+			lowerBand = ema1 * (1 - criteria.getBandPercent());
+
+			if (criteria.getBand() == BandSelection.UPPER_BAND) {
+				comp = price > upperBand ? 1 : (price < upperBand ? -1 : 0);
+			} else { // lower band
+				comp = price > lowerBand ? 1 : (price < lowerBand ? -1 : 0);
 			}
 
-			for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
-
-				ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getClose(),
-						criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes());
-
-				price = sqc.getHistoricalQuotes().get(offset).getClose();
-				
-				upperBand = ema1 * (1 + criteria.getBandPercent());
-				lowerBand = ema1 * (1 - criteria.getBandPercent());
-
-				if (criteria.getBand() == BandSelection.UPPER_BAND) {
-					comp = price > upperBand ? 1 : (price < upperBand ? -1 : 0);
-				} else { // lower band
-					comp = price > lowerBand ? 1 : (price < lowerBand ? -1 : 0);
-				}
-
-				if (previousComp == 2) {
-					previousComp = comp;
-					continue;
-				}
-
-				if (((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1))
-						&& previousComp != comp) {
-					passed = true;
-					break;
-				}
-
+			if (previousComp == 2) {
 				previousComp = comp;
+				continue;
 			}
 
-		} catch (InsufficientHistoryException e) {
-			passed = false;
-			logger.error("Insufficient historical prices to calculate ema/sma on {}, size avaialble {} ",
-					new Object[] { sqc.getKey().getSymbol(), sqc.getHistoricalQuotes().size() });
+			if (((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1))
+					&& previousComp != comp) {
+				passed = true;
+				break;
+			}
+
+			previousComp = comp;
 		}
 
 		return this;

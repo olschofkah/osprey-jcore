@@ -28,24 +28,11 @@ public class ExponentialMovingAverageCurrentPriceCrossoverScreen implements ISto
 		int previousComp = 2;
 		int comp;
 		boolean isAboveToBelow = criteria.getDirection() == CrossDirection.FROM_ABOVE_TO_BELOW;
-		int hisotrySize = sqc.getHistoricalQuotes().size();
-
-		double alpha1;
-		if (criteria.getAlpha() == 0.0) {
-			alpha1 = 2.0 / (criteria.getPeriod1() + 1.0);
-		} else {
-			alpha1 = criteria.getAlpha();
-		}
-
-		if (criteria.getPeriod1() + criteria.getRange() - 1 >= hisotrySize) {
-			throw new InsufficientHistoryException();
-		}
 
 		for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
 
-			ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getClose(),
-					criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes());
-			close = sqc.getHistoricalQuotes().get(offset).getClose();
+			ema1 = OspreyQuantMath.ema(criteria.getPeriod1(), offset, sqc.getHistoricalQuotes());
+			close = sqc.getHistoricalQuotes().get(offset).getAdjClose();
 
 			comp = close > ema1 ? 1 : (close < ema1 ? -1 : 0);
 

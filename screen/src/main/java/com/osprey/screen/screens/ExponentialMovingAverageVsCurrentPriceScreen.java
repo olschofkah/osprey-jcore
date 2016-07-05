@@ -21,15 +21,14 @@ public class ExponentialMovingAverageVsCurrentPriceScreen implements IStockScree
 
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
-		
+
 		if (criteria.getPeriod1() - 1 >= sqc.getHistoricalQuotes().size()) {
 			throw new InsufficientHistoryException();
 		}
 
-		double ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1).getClose(),
-				criteria.getPeriod1(), 0, sqc.getHistoricalQuotes());
-		
-		double close = sqc.getHistoricalQuotes().get(0).getClose();
+		double ema1 = OspreyQuantMath.ema(criteria.getPeriod1(), 0, sqc.getHistoricalQuotes());
+
+		double close = sqc.getHistoricalQuotes().get(0).getAdjClose();
 
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:

@@ -27,10 +27,8 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 			throw new InsufficientHistoryException();
 		}
 
-		double ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1).getClose(),
-				criteria.getPeriod1(), 0, sqc.getHistoricalQuotes());
-		double ema2 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod2() - 1).getClose(),
-				criteria.getPeriod2(), 0, sqc.getHistoricalQuotes());
+		double ema1 = OspreyQuantMath.ema(criteria.getPeriod1(), 0, sqc.getHistoricalQuotes());
+		double ema2 = OspreyQuantMath.ema(criteria.getPeriod2(), 0, sqc.getHistoricalQuotes());
 
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:

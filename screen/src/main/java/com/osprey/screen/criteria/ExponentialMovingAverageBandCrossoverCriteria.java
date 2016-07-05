@@ -9,7 +9,6 @@ public class ExponentialMovingAverageBandCrossoverCriteria implements IScreenCri
 	private ScreenType type;
 	private int period1;
 	private int range;
-	private double alpha;
 	private double bandPercent;
 	private CrossDirection direction;
 	private BandSelection band;
@@ -18,12 +17,11 @@ public class ExponentialMovingAverageBandCrossoverCriteria implements IScreenCri
 
 	}
 
-	public ExponentialMovingAverageBandCrossoverCriteria(int period1, int range, double alpha, double bandPercent,
+	public ExponentialMovingAverageBandCrossoverCriteria(int period1, int range, double bandPercent,
 			CrossDirection direction, BandSelection band) {
 		this.type = ScreenType.EMA_PCT_BANDS;
 		this.period1 = period1;
 		this.range = range;
-		this.alpha = alpha;
 		this.bandPercent = bandPercent;
 		this.direction = direction;
 		this.band = band;
@@ -43,14 +41,6 @@ public class ExponentialMovingAverageBandCrossoverCriteria implements IScreenCri
 
 	public void setRange(int range) {
 		this.range = range;
-	}
-
-	public double getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(double alpha) {
-		this.alpha = alpha;
 	}
 
 	public CrossDirection getDirection() {

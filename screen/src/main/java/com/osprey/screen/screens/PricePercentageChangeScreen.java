@@ -24,8 +24,8 @@ public class PricePercentageChangeScreen implements IStockScreen {
 			throw new InsufficientHistoryException();
 		}
 
-		double close0 = sqc.getHistoricalQuotes().get(0).getClose();
-		double close1 = sqc.getHistoricalQuotes().get(criteria.getPeriod() - 1).getClose();
+		double close0 = sqc.getHistoricalQuotes().get(0).getAdjClose();
+		double close1 = sqc.getHistoricalQuotes().get(criteria.getPeriod() - 1).getAdjClose();
 
 		double pctGap = 1 - (close0 / close1);
 

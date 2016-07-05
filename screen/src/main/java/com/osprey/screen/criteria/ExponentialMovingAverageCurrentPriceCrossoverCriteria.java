@@ -8,7 +8,6 @@ public class ExponentialMovingAverageCurrentPriceCrossoverCriteria implements IS
 	private ScreenType type;
 	private int period1;
 	private int range;
-	private double alpha;
 
 	private CrossDirection direction;
 
@@ -16,12 +15,11 @@ public class ExponentialMovingAverageCurrentPriceCrossoverCriteria implements IS
 
 	}
 
-	public ExponentialMovingAverageCurrentPriceCrossoverCriteria(int period1, int range, double alpha,
+	public ExponentialMovingAverageCurrentPriceCrossoverCriteria(int period1, int range,
 			CrossDirection direction) {
 		this.type = ScreenType.EMA_X_PRICE;
 		this.period1 = period1;
 		this.range = range;
-		this.alpha = alpha;
 		this.direction = direction;
 	}
 
@@ -35,10 +33,6 @@ public class ExponentialMovingAverageCurrentPriceCrossoverCriteria implements IS
 
 	public int getRange() {
 		return range;
-	}
-
-	public double getAlpha() {
-		return alpha;
 	}
 
 	public CrossDirection getDirection() {

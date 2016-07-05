@@ -1,7 +1,6 @@
 package com.osprey.securitymaster;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

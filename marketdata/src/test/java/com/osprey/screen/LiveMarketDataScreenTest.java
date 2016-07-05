@@ -83,16 +83,16 @@ public class LiveMarketDataScreenTest {
 
 		EarningsCriteria c3 = new EarningsCriteria(30, RelationalOperator._LE);
 
-		ExponentialMovingAverageBandCrossoverCriteria c4 = new ExponentialMovingAverageBandCrossoverCriteria(20, 3, 0,
+		ExponentialMovingAverageBandCrossoverCriteria c4 = new ExponentialMovingAverageBandCrossoverCriteria(20, 3,
 				0.03, CrossDirection.FROM_BELOW_TO_ABOVE, BandSelection.LOWER_BAND);
 
 		ExponentialMovingAverageCriteria c5 = new ExponentialMovingAverageCriteria(4, 9, RelationalOperator._LT);
 
-		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5, 0,
+		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5,
 				CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		ExponentialMovingAverageCurrentPriceCrossoverCriteria c7 = new ExponentialMovingAverageCurrentPriceCrossoverCriteria(
-				15, 5, 0, CrossDirection.FROM_BELOW_TO_ABOVE);
+				15, 5, CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		InstrumentTypeCriteria c8 = new InstrumentTypeCriteria(
 				new HashSet<InstrumentType>(Arrays.asList(new InstrumentType[] { InstrumentType.STOCK })), false);
@@ -206,12 +206,9 @@ public class LiveMarketDataScreenTest {
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-
 		BetaCriteria c2 = new BetaCriteria(2, RelationalOperator._GE);
 
 		EarningsCriteria c3 = new EarningsCriteria(30, RelationalOperator._LE);
-
-	
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c2);
@@ -234,7 +231,6 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
 
 	@Test
 	public void volatilityTest() throws Exception {
@@ -266,11 +262,11 @@ public class LiveMarketDataScreenTest {
 
 		ExponentialMovingAverageCriteria c5 = new ExponentialMovingAverageCriteria(4, 9, RelationalOperator._LT);
 
-		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5, 0,
+		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5,
 				CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		ExponentialMovingAverageCurrentPriceCrossoverCriteria c7 = new ExponentialMovingAverageCurrentPriceCrossoverCriteria(
-				15, 5, 0, CrossDirection.FROM_BELOW_TO_ABOVE);
+				15, 5, CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		InstrumentTypeCriteria c8 = new InstrumentTypeCriteria(
 				new HashSet<InstrumentType>(Arrays.asList(new InstrumentType[] { InstrumentType.STOCK })), false);
