@@ -14,6 +14,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverC
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
+import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
@@ -80,7 +81,9 @@ public class ScreenCriteriaGenerator {
 		case INSTRUMENT_TYPE:
 			result = objectMapper.convertValue(getCriteriaBucket(), InstrumentTypeCriteria.class);
 			break;
-		case MACD_HISTOGRAM:
+		case MACD:
+			result = objectMapper.convertValue(getCriteriaBucket(),
+					MovingAverageConverganceDiverganceCrossoverCriteria.class);
 			break;
 		case MARKET_CAP:
 			break;
@@ -147,7 +150,8 @@ public class ScreenCriteriaGenerator {
 			result = objectMapper.convertValue(getCriteriaBucket(), _52WeekRangePercentageCriteria.class);
 			break;
 		case EMA_VS_PRICE:
-			result = objectMapper.convertValue(getCriteriaBucket(), ExponentialMovingAverageVsCurrentPriceCriteria.class);
+			result = objectMapper.convertValue(getCriteriaBucket(),
+					ExponentialMovingAverageVsCurrentPriceCriteria.class);
 			break;
 		default:
 			break;

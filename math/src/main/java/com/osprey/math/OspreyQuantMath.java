@@ -1,7 +1,13 @@
 package com.osprey.math;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.math3.util.Pair;
 
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
@@ -78,6 +84,54 @@ public final class OspreyQuantMath {
 
 		return ema_short - ema_long;
 
+	}
+
+	public static Map<String, List<Pair<LocalDate, Double>>> macdCurves(int p0, int p1, int pS,
+			List<HistoricalQuote> prices) {
+
+		final double a0 = 2.0 / (p0 + 1.0);
+		final double a1 = 2.0 / (p1 + 1.0);
+		final double aS = 2.0 / (pS + 1.0);
+
+		if (p0 < 2 || pS < 2 || p0 > p1) {
+			throw new InvalidPeriodException();
+		}
+
+		// This will check that we have enough history to calculate MACD.
+		double seedAverage = sma(p1, p1 + MOVING_AVERAGE_MAGIC_NUMBER - 1, prices);
+
+		double ma0 = seedAverage;
+		double ma1 = seedAverage;
+		double macd = 0;
+
+		List<Pair<LocalDate, Double>> macdCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+
+		HistoricalQuote hq;
+		for (int i = p1 + MOVING_AVERAGE_MAGIC_NUMBER; i >= 0; --i) {
+			hq = prices.get(i);
+			ma0 = (hq.getClose() - ma0) * a0 + ma0;
+			ma1 = (hq.getClose() - ma1) * a1 + ma1;
+			macd = ma0 - ma1;
+			macdCurve.add(new Pair<>(hq.getHistoricalDate(), macd));
+		}
+
+		double macdSignal = 0;
+		List<Pair<LocalDate, Double>> macdSignalCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+
+		for (Pair<LocalDate, Double> entry : macdCurve) {
+			macdSignal = (entry.getValue() - macdSignal) * aS + macdSignal;
+			macdSignalCurve.add(new Pair<>(entry.getKey(), macdSignal));
+		}
+
+		Collections.reverse(macdCurve);
+		Collections.reverse(macdSignalCurve);
+
+		Map<String, List<Pair<LocalDate, Double>>> curves = new HashMap<>();
+
+		curves.put("macd", macdCurve);
+		curves.put("macdSignal", macdSignalCurve);
+
+		return curves;
 	}
 
 	/**

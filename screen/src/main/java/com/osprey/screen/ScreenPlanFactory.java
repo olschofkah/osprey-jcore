@@ -16,6 +16,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverC
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
+import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
@@ -35,6 +36,7 @@ import com.osprey.screen.screens.ExponentialMovingAverageScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageVsCurrentPriceScreen;
 import com.osprey.screen.screens.IStockScreen;
 import com.osprey.screen.screens.InstrumentTypeScreen;
+import com.osprey.screen.screens.MovingAverageConverganceDiverganceCrossoverScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.PriceGapScreen;
 import com.osprey.screen.screens.PricePercentageChangeScreen;
@@ -123,8 +125,9 @@ public class ScreenPlanFactory {
 			return null;
 		case INSTRUMENT_TYPE:
 			return new InstrumentTypeScreen((InstrumentTypeCriteria) criteria);
-		case MACD_HISTOGRAM:
-			return null;
+		case MACD:
+			return new MovingAverageConverganceDiverganceCrossoverScreen(
+					(MovingAverageConverganceDiverganceCrossoverCriteria) criteria);
 		case MARKET_CAP:
 			return null;
 		case MOMENTUM_X:

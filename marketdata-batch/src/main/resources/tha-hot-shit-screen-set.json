@@ -29,7 +29,7 @@
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":22,"relationalOperator":"_LE"}},
+        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":10,"relationalOperator":"_LE"}},
         {"criteriaBucket":{"type":"VOLATILITY","period":252,"volatilityComparison":0.65,"relationalOperator":"_GE"}}
     ]
 },
@@ -111,7 +111,22 @@
         {"criteriaBucket":{"type":"SYMBOL","symbols":["QQQ","SPY"],"contains":true}},
         {"criteriaBucket":{"type":"EMA_PCT_BANDS","period1":20,"range":2,"bandPercent":0.03,"direction":"FROM_ABOVE_TO_BELOW","band":"UPPER_BAND"}}
     ]
+},
+{
+    "screenName":"MACD Bull",
+    "strategies":[],
+	"screenCriteria": [
+		{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}}
+    ]
+},
+{
+    "screenName":"MACD Bear",
+    "strategies":[],
+	"screenCriteria": [
+		{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
+	    {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}}
+    ]
 }
-
 
 ]

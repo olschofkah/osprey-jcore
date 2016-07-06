@@ -50,7 +50,7 @@ public enum ScreenType {
 	STOCHASTICS_X,
 	// TODO Other Stochastics?
 	MOMENTUM_X,
-	MACD_HISTOGRAM,
+	MACD,
 	RATE_OF_CHANGE,
 	DMI,
 	ADX, 
