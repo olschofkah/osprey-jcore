@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.osprey.math.OspreyQuantMath;
-import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
 import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.securitymaster.SecurityQuoteContainer;
@@ -28,29 +27,13 @@ public class ExponentialMovingAverageCrossoverScreen implements IStockScreen {
 		int previousComp = 2;
 		int comp;
 		boolean isAboveToBelow = criteria.getDirection() == CrossDirection.FROM_ABOVE_TO_BELOW;
-		int hisotrySize = sqc.getHistoricalQuotes().size();
 
-		double alpha1;
-		double alpha2;
-		if (criteria.getAlpha() == 0.0) {
-			alpha1 = 2.0 / (criteria.getPeriod1() + 1.0);
-			alpha2 = 2.0 / (criteria.getPeriod2() + 1.0);
-		} else {
-			alpha1 = criteria.getAlpha();
-			alpha2 = criteria.getAlpha();
-		}
-
-		if (criteria.getPeriod1() + criteria.getRange() - 1 >= hisotrySize
-				|| criteria.getPeriod2() + criteria.getRange() - 1 >= hisotrySize) {
-			throw new InsufficientHistoryException();
-		}
-
+		// TODO Consider refactoring to return an array of emas instead of recalculating it for performance. 
+		
 		for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
 
-			ema1 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod1() - 1 + offset).getClose(),
-					criteria.getPeriod1(), alpha1, offset, sqc.getHistoricalQuotes());
-			ema2 = OspreyQuantMath.ema(sqc.getHistoricalQuotes().get(criteria.getPeriod2() - 1 + offset).getClose(),
-					criteria.getPeriod2(), alpha2, offset, sqc.getHistoricalQuotes());
+			ema1 = OspreyQuantMath.ema(criteria.getPeriod1(), offset, sqc.getHistoricalQuotes());
+			ema2 = OspreyQuantMath.ema(criteria.getPeriod2(), offset, sqc.getHistoricalQuotes());
 
 			// System.out.println(ema1 + " " + ema2);
 

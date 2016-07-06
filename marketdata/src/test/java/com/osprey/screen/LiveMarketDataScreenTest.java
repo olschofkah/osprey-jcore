@@ -83,16 +83,16 @@ public class LiveMarketDataScreenTest {
 
 		EarningsCriteria c3 = new EarningsCriteria(30, RelationalOperator._LE);
 
-		ExponentialMovingAverageBandCrossoverCriteria c4 = new ExponentialMovingAverageBandCrossoverCriteria(20, 3, 0,
+		ExponentialMovingAverageBandCrossoverCriteria c4 = new ExponentialMovingAverageBandCrossoverCriteria(20, 3,
 				0.03, CrossDirection.FROM_BELOW_TO_ABOVE, BandSelection.LOWER_BAND);
 
 		ExponentialMovingAverageCriteria c5 = new ExponentialMovingAverageCriteria(4, 9, RelationalOperator._LT);
 
-		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5, 0,
+		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5,
 				CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		ExponentialMovingAverageCurrentPriceCrossoverCriteria c7 = new ExponentialMovingAverageCurrentPriceCrossoverCriteria(
-				15, 5, 0, CrossDirection.FROM_BELOW_TO_ABOVE);
+				15, 5, CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		InstrumentTypeCriteria c8 = new InstrumentTypeCriteria(
 				new HashSet<InstrumentType>(Arrays.asList(new InstrumentType[] { InstrumentType.STOCK })), false);
@@ -206,6 +206,50 @@ public class LiveMarketDataScreenTest {
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
+		BetaCriteria c2 = new BetaCriteria(2, RelationalOperator._GE);
+
+		EarningsCriteria c3 = new EarningsCriteria(30, RelationalOperator._LE);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c2);
+		criteria.add(c3);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
+
+	@Test
+	public void volatilityTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "NFLX";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq);
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
 		_52WeekRangePercentageCriteria c1 = new _52WeekRangePercentageCriteria(.2, RelationalOperator._GT);
 
 		BetaCriteria c2 = new BetaCriteria(2, RelationalOperator._GE);
@@ -218,11 +262,11 @@ public class LiveMarketDataScreenTest {
 
 		ExponentialMovingAverageCriteria c5 = new ExponentialMovingAverageCriteria(4, 9, RelationalOperator._LT);
 
-		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5, 0,
+		ExponentialMovingAverageCrossoverCriteria c6 = new ExponentialMovingAverageCrossoverCriteria(15, 50, 5,
 				CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		ExponentialMovingAverageCurrentPriceCrossoverCriteria c7 = new ExponentialMovingAverageCurrentPriceCrossoverCriteria(
-				15, 5, 0, CrossDirection.FROM_BELOW_TO_ABOVE);
+				15, 5, CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		InstrumentTypeCriteria c8 = new InstrumentTypeCriteria(
 				new HashSet<InstrumentType>(Arrays.asList(new InstrumentType[] { InstrumentType.STOCK })), false);
@@ -241,15 +285,14 @@ public class LiveMarketDataScreenTest {
 		SymbolCriteria c14 = new SymbolCriteria(new HashSet<String>(Arrays.asList(new String[] { "SPY", "QQQ" })),
 				false);
 
-		VolatilityCriteria c15 = new VolatilityCriteria(23, 50, RelationalOperator._GE);
+		VolatilityCriteria c15 = new VolatilityCriteria(252, 20, RelationalOperator._GE);
 
 		VolumeAverageComparisonCriteria c16 = new VolumeAverageComparisonCriteria(12, 26, RelationalOperator._GE);
 
 		VolumeAverageCriteria c17 = new VolumeAverageCriteria(1000000, 5, RelationalOperator._GE);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
-		criteria.add(c2);
-		criteria.add(c3);
+		criteria.add(c15);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
 		securities.add(sqc);

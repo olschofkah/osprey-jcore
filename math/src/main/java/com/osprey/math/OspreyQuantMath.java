@@ -13,33 +13,22 @@ import com.osprey.securitymaster.constants.OptionType;
 
 public final class OspreyQuantMath {
 
-	/**
-	 * Exponential Moving Average
-	 * 
-	 * @param sma
-	 *            Used to seed the initial price in the ema calc. Suggested that
-	 *            this is the SMA (Simple Moving Average) but this is not
-	 *            required.
-	 * @param p
-	 *            Period in days
-	 * @param prices
-	 *            List of historical prices. The first price is expected to be
-	 *            the current day.
-	 * @return the ema-p
-	 */
-	public static double ema(double sma, int p, int historicalOffset, List<HistoricalQuote> prices) {
-		double alpha = 2.0 / (p + 1.0);
-		return ema(sma, p, alpha, historicalOffset, prices);
-	}
+	private static final int EMA_MAGIC_NUMBER = 126;
 
 	public static double ema(int p, int historicalOffset, List<HistoricalQuote> prices) {
-		return ema(prices.get(p + historicalOffset - 1).getClose(), p, historicalOffset, prices);
+		double alpha = 2.0 / (p + 1.0);
+		return smoothedMovingAverage(p, historicalOffset, alpha, prices);
+	}
+
+	public static double wildersMovingAverage(int p, int historicalOffset, List<HistoricalQuote> prices) {
+		double alpha = 1.0 / p;
+		return smoothedMovingAverage(p, historicalOffset, alpha, prices);
 	}
 
 	/**
 	 * EMA(t) = EMA(t-1) + smoothing factor * (Price(t) - EMA(t-1)
 	 * 
-	 * @param sma
+	 * @param seedAverage
 	 * @param p
 	 * @param alpha
 	 *            - scale from 0 to 1
@@ -48,26 +37,25 @@ public final class OspreyQuantMath {
 	 * @param prices
 	 * @return
 	 */
-	public static double ema(double sma, int p, double alpha, int offset, List<HistoricalQuote> prices) {
+	private static double smoothedMovingAverage(int p, int offset, double alpha, List<HistoricalQuote> prices) {
 
 		if (p < 2) {
 			throw new InvalidPeriodException();
 		}
 
-		if (p + offset > prices.size()) {
+		double seedAverage = sma(p, offset + p + EMA_MAGIC_NUMBER - 1, prices);
+
+		if (p + offset + EMA_MAGIC_NUMBER > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
 
-		double ema = sma;
+		double ma = seedAverage;
 
-		for (int i = p - 2 + offset; i >= offset; --i) {
-			// ema(t) = ema(t-1) + alpha * (close(t) - ema(t-1)) where alpha =
-			// 2/(1+p)
-			// ema(1) = close(1)
-			ema = (prices.get(i).getClose() - ema) * alpha + ema;
+		for (int i = p + offset + EMA_MAGIC_NUMBER; i >= offset; --i) {
+			ma = (prices.get(i).getClose() - ma) * alpha + ma;
 		}
 
-		return ema;
+		return ma;
 	}
 
 	/**
@@ -80,11 +68,10 @@ public final class OspreyQuantMath {
 	 */
 	public static double MACD(int long_len, int short_len, List<HistoricalQuote> prices, SecurityQuote quote) {
 
-		double sma_long = OspreyQuantMath.sma(long_len, 0, prices);
-		double sma_short = OspreyQuantMath.sma(short_len, 0, prices);
+		// TODO needs a bit more work.
 
-		double ema_long = OspreyQuantMath.ema(sma_long, long_len, 0, prices);
-		double ema_short = OspreyQuantMath.ema(sma_short, short_len, 0, prices);
+		double ema_long = OspreyQuantMath.ema(long_len, 0, prices);
+		double ema_short = OspreyQuantMath.ema(short_len, 0, prices);
 
 		return ema_short - ema_long;
 
@@ -114,7 +101,7 @@ public final class OspreyQuantMath {
 		double aveGain = 0.0;
 		double aveLoss = 0.0;
 		for (int i = offset; i < p + offset; ++i) {
-			double change = prices.get(i).getClose() - prices.get(i + 1).getClose();
+			double change = prices.get(i).getAdjClose() - prices.get(i + 1).getAdjClose();
 			if (change >= 0) {
 				aveGain += change;
 			} else {
@@ -158,7 +145,7 @@ public final class OspreyQuantMath {
 
 		double histPrice = 0;
 		for (int i = 0 + offset; i < r + offset; ++i) {
-			histPrice = i == 0 ? quote.getLast() : prices.get(i).getClose();
+			histPrice = i == 0 ? quote.getLast() : prices.get(i).getAdjClose();
 			if (i < p1o) {
 				sma1 += histPrice;
 			}
@@ -224,13 +211,13 @@ public final class OspreyQuantMath {
 
 		double dailyReturn;
 		double price;
-		double previousPrice = prices.get(0).getClose();
+		double previousPrice = prices.get(0).getAdjClose();
 		double averageDailyReturn = 0;
 
 		List<Double> dailyReturns = new ArrayList<>(period);
 
 		for (int i = 1; i < period; ++i) {
-			price = prices.get(i).getClose();
+			price = prices.get(i).getAdjClose();
 
 			dailyReturn = price / previousPrice - 1;
 			dailyReturns.add(dailyReturn);
@@ -247,7 +234,7 @@ public final class OspreyQuantMath {
 			volatility += Math.pow(dr - averageDailyReturn, 2);
 		}
 
-		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(252, 0.5);
+		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(period, 0.5);
 	}
 
 	public static double standardNormalDistribution(double x) {
@@ -358,8 +345,8 @@ public final class OspreyQuantMath {
 
 		double price;
 		double price_bmk;
-		double previousPrice = prices.get(0).getClose();
-		double previousPrice_bmk = prices_bmk.get(0).getClose();
+		double previousPrice = prices.get(0).getAdjClose();
+		double previousPrice_bmk = prices_bmk.get(0).getAdjClose();
 		double averageDailyReturn = 0;
 		double averageDailyReturn_bmk = 0;
 
@@ -367,9 +354,9 @@ public final class OspreyQuantMath {
 		List<Double> dailyReturns_bmk = new ArrayList<>(period);
 
 		for (int i = 1; i < period; ++i) {
-			price = prices.get(i).getClose();
+			price = prices.get(i).getAdjClose();
 
-			price_bmk = prices_bmk.get(i).getClose();
+			price_bmk = prices_bmk.get(i).getAdjClose();
 
 			dailyReturn = price / previousPrice - 1;
 			dailyReturn_bmk = price_bmk / previousPrice_bmk - 1;

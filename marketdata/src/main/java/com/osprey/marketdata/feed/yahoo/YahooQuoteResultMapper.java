@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.osprey.marketdata.feed.yahoo.pojo.CalendarEvents;
 import com.osprey.marketdata.feed.yahoo.pojo.DefaultKeyStatistics;
+import com.osprey.marketdata.feed.yahoo.pojo.Earnings;
 import com.osprey.marketdata.feed.yahoo.pojo.Earnings_;
 import com.osprey.marketdata.feed.yahoo.pojo.FinancialData;
 import com.osprey.marketdata.feed.yahoo.pojo.Price;
@@ -84,8 +85,6 @@ public class YahooQuoteResultMapper {
 		if (p.getRegularMarketPrice() != null && p.getRegularMarketPrice().getRaw() != null) {
 			s.setLast(p.getRegularMarketPrice().getRaw());
 		}
-
-		// TODO Need p.getOpenInterest() for equity quote?
 
 		if (p.getRegularMarketSource() != null) {
 			s.setDataCurrency(p.getRegularMarketSource());
@@ -207,12 +206,66 @@ public class YahooQuoteResultMapper {
 		if (sd.getFiftyTwoWeekHigh() != null && sd.getFiftyTwoWeekHigh().getRaw() != null) {
 			fq.set_52WeekHigh(sd.getFiftyTwoWeekHigh().getRaw());
 		}
-		
+
 		if (sd.getFiftyTwoWeekLow() != null && sd.getFiftyTwoWeekLow().getRaw() != null) {
 			fq.set_52WeekLow(sd.getFiftyTwoWeekLow().getRaw());
 		}
 
-		// TODO set the other shit for fundamental quote
+		if (sd.getAverageVolume10days() != null && sd.getAverageVolume10days().getRaw() != null) {
+			fq.set_10DayAvgVolume(sd.getAverageVolume10days().getRaw());
+		}
+
+		if (sd.getDividendRate() != null && sd.getDividendRate().getRaw() != null) {
+			fq.setDividendRate(sd.getDividendRate().getRaw());
+		}
+
+		if (sd.getDividendYield() != null && sd.getDividendYield().getRaw() != null) {
+			fq.setDividendYield(sd.getDividendYield().getRaw());
+		}
+
+		SecurityUpcomingEvents events;
+		if (sqc.getUpcomingEvents() == null) {
+			events = new SecurityUpcomingEvents(sqc.getKey());
+			sqc.setUpcomingEvents(events);
+		} else {
+			events = sqc.getUpcomingEvents();
+		}
+
+		if (sd.getExDividendDate() != null && sd.getExDividendDate().getRaw() != null) {
+			events.setNextExDivDate(OspreyUtils.getLocalDateFromEpoch(sd.getExDividendDate().getRaw()));
+		}
+
+		if (sd.getFiftyDayAverage() != null && sd.getFiftyDayAverage().getRaw() != null) {
+			fq.set_50DayAverage(sd.getFiftyDayAverage().getRaw());
+		}
+
+		if (sd.getTwoHundredDayAverage() != null && sd.getTwoHundredDayAverage().getRaw() != null) {
+			fq.set_200DayAverage(sd.getTwoHundredDayAverage().getRaw());
+		}
+
+		if (sd.getForwardPE() != null && sd.getForwardPE().getRaw() != null) {
+			fq.setForwardPe(sd.getForwardPE().getRaw());
+		}
+		if (sd.getMarketCap() != null && sd.getMarketCap().getRaw() != null) {
+			fq.setMarketCap(sd.getMarketCap().getRaw());
+		}
+
+		if (sd.getPriceToSalesTrailing12Months() != null && sd.getPriceToSalesTrailing12Months().getRaw() != null) {
+			fq.setPriceToSales(sd.getPriceToSalesTrailing12Months().getRaw());
+		}
+
+		if (sd.getTotalAssets() != null && sd.getTotalAssets().getRaw() != null) {
+			fq.setTotalAssets(sd.getTotalAssets().getRaw());
+		}
+
+		if (sd.getTrailingPE() != null && sd.getTrailingPE().getRaw() != null) {
+			fq.setTrailingPe(sd.getTrailingPE().getRaw());
+		}
+
+		if (sd.getYield() != null && sd.getYield().getRaw() != null) {
+			fq.setYield(sd.getYield().getRaw());
+		}
+
 	}
 
 	private static void mapFinancialData(FinancialData fd, SecurityQuoteContainer sqc) {
@@ -229,20 +282,82 @@ public class YahooQuoteResultMapper {
 		if (fd.getDebtToEquity() != null && fd.getDebtToEquity().getRaw() != null) {
 			fq.setDebtToEquity(fd.getDebtToEquity().getRaw());
 		}
+
 		if (fd.getReturnOnAssets() != null && fd.getReturnOnAssets().getRaw() != null) {
 			fq.setReturnOnAssets(fd.getReturnOnAssets().getRaw());
 		}
+
+		if (fd.getQuickRatio() != null && fd.getQuickRatio().getRaw() != null) {
+			fq.setQuickRatio(fd.getQuickRatio().getRaw());
+		}
+
+		if (fd.getCurrentRatio() != null && fd.getCurrentRatio().getRaw() != null) {
+			fq.setCurrentRatio(fd.getCurrentRatio().getRaw());
+		}
+
 		if (fd.getReturnOnEquity() != null && fd.getReturnOnEquity().getRaw() != null) {
 			fq.setReturnOnEquity(fd.getReturnOnEquity().getRaw());
 		}
+
 		if (fd.getRevenuePerShare() != null && fd.getRevenuePerShare().getRaw() != null) {
 			fq.setRevenuePerShare(fd.getRevenuePerShare().getRaw());
 		}
+
 		if (fd.getRevenueGrowth() != null && fd.getRevenueGrowth().getRaw() != null) {
 			fq.setRevenueGrowth(fd.getRevenueGrowth().getRaw());
 		}
 
-		// TODO set the other shit for fundamental quote
+		if (fd.getEarningsGrowth() != null && fd.getEarningsGrowth().getRaw() != null) {
+			fq.setEarningsGrowth(fd.getEarningsGrowth().getRaw());
+		}
+
+		if (fd.getEbitda() != null && fd.getEbitda().getRaw() != null) {
+			fq.setEbitda(fd.getEbitda().getRaw());
+		}
+
+		if (fd.getEbitdaMargins() != null && fd.getEbitdaMargins().getRaw() != null) {
+			fq.setEbitdaMargins(fd.getEbitdaMargins().getRaw());
+		}
+
+		if (fd.getFreeCashflow() != null && fd.getFreeCashflow().getRaw() != null) {
+			fq.setFreeCashflow(fd.getFreeCashflow().getRaw());
+		}
+
+		if (fd.getGrossMargins() != null && fd.getGrossMargins().getRaw() != null) {
+			fq.setGrossMargins(fd.getGrossMargins().getRaw());
+		}
+
+		if (fd.getGrossProfits() != null && fd.getGrossProfits().getRaw() != null) {
+			fq.setGrossProfits(fd.getGrossProfits().getRaw());
+		}
+
+		if (fd.getOperatingCashflow() != null && fd.getOperatingCashflow().getRaw() != null) {
+			fq.setOperatingCashflow(fd.getOperatingCashflow().getRaw());
+		}
+
+		if (fd.getOperatingMargins() != null && fd.getOperatingMargins().getRaw() != null) {
+			fq.setOperatingMargins(fd.getOperatingMargins().getRaw());
+		}
+
+		if (fd.getProfitMargins() != null && fd.getProfitMargins().getRaw() != null) {
+			fq.setProfitMargins(fd.getProfitMargins().getRaw());
+		}
+
+		if (fd.getTotalCash() != null && fd.getTotalCash().getRaw() != null) {
+			fq.setTotalCash(fd.getTotalCash().getRaw());
+		}
+
+		if (fd.getTotalCashPerShare() != null && fd.getTotalCashPerShare().getRaw() != null) {
+			fq.setTotalCashPerShare(fd.getTotalCashPerShare().getRaw());
+		}
+
+		if (fd.getTotalDebt() != null && fd.getTotalDebt().getRaw() != null) {
+			fq.setTotalDebt(fd.getTotalDebt().getRaw());
+		}
+
+		if (fd.getTotalRevenue() != null && fd.getTotalRevenue().getRaw() != null) {
+			fq.setTotalRevenue(fd.getTotalRevenue().getRaw());
+		}
 
 	}
 
@@ -271,6 +386,7 @@ public class YahooQuoteResultMapper {
 			events.add(new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), SecurityEventType.REVENUE,
 					quarterly.getRevenue() == null ? 0.0 : quarterly.getRevenue().getRaw(), now));
 		}
+
 	}
 
 	private static LocalDate parseEventDate(String date) {
@@ -304,15 +420,107 @@ public class YahooQuoteResultMapper {
 			fq = sqc.getFundamentalQuote();
 		}
 
+		if (stats.getEarningsQuarterlyGrowth() != null && stats.getEarningsQuarterlyGrowth().getRaw() != null) {
+			fq.setEarningsQtrGrowth(stats.getEarningsQuarterlyGrowth().getRaw());
+		}
+
+		if (stats.getEarningsQuarterlyGrowth() != null && stats.getEarningsQuarterlyGrowth().getRaw() != null) {
+			fq.setEarningsQtrGrowth(stats.getEarningsQuarterlyGrowth().getRaw());
+		}
+
+		if (stats.getSharesShortPriorMonth() != null && stats.getSharesShortPriorMonth().getRaw() != null) {
+			fq.setSharesShortPriorMonth(stats.getSharesShortPriorMonth().getRaw());
+		}
+
 		if (stats.getForwardEps() != null && stats.getForwardEps().getRaw() != null) {
 			fq.setForwardEps(stats.getForwardEps().getRaw());
+		}
+
+		if (stats.getTrailingEps() != null && stats.getTrailingEps().getRaw() != null) {
+			fq.setTrailingEps(stats.getTrailingEps().getRaw());
 		}
 
 		if (stats.getBeta() != null && stats.getBeta().getRaw() != null) {
 			fq.setBeta(stats.getBeta().getRaw());
 		}
 
-		// TODO map other fundamental quote info.
+		if (stats.getFloatShares() != null && stats.getFloatShares().getRaw() != null) {
+			fq.setFloatShares(stats.getFloatShares().getRaw());
+		}
+
+		if (stats.getEnterpriseToEbitda() != null && stats.getEnterpriseToEbitda().getRaw() != null) {
+			fq.setEnterpriseToEbitda(stats.getEnterpriseToEbitda().getRaw());
+		}
+
+		if (stats.getEnterpriseToRevenue() != null && stats.getEnterpriseToRevenue().getRaw() != null) {
+			fq.setEnterpriseToRevenue(stats.getEnterpriseToRevenue().getRaw());
+		}
+
+		if (stats.getEnterpriseValue() != null && stats.getEnterpriseValue().getRaw() != null) {
+			fq.setEnterpriseValue(stats.getEnterpriseValue().getRaw());
+		}
+
+		if (stats.getBookValue() != null && stats.getBookValue().getRaw() != null) {
+			fq.setBookValue(stats.getBookValue().getRaw());
+		}
+
+		if (stats.getPriceToBook() != null && stats.getPriceToBook().getRaw() != null) {
+			fq.setPriceToBook(stats.getPriceToBook().getRaw());
+		}
+
+		if (stats.getHeldPercentInsiders() != null && stats.getHeldPercentInsiders().getRaw() != null) {
+			fq.setHeldPctInsiders(stats.getHeldPercentInsiders().getRaw());
+		}
+
+		if (stats.getHeldPercentInstitutions() != null && stats.getHeldPercentInstitutions().getRaw() != null) {
+			fq.setHeldPctInstitutions(stats.getHeldPercentInstitutions().getRaw());
+		}
+
+		if (stats.getNetIncomeToCommon() != null && stats.getNetIncomeToCommon().getRaw() != null) {
+			fq.setNetIncomeToCommon(stats.getNetIncomeToCommon().getRaw());
+		}
+
+		if (stats.getPegRatio() != null && stats.getPegRatio().getRaw() != null) {
+			fq.setPegRatio(stats.getPegRatio().getRaw());
+		}
+
+		if (stats.getPriceToBook() != null && stats.getPriceToBook().getRaw() != null) {
+			fq.setPriceToBook(stats.getPriceToBook().getRaw());
+		}
+
+		if (stats.getPriceToSalesTrailing12Months() != null
+				&& stats.getPriceToSalesTrailing12Months().getRaw() != null) {
+			fq.setPriceToSales(stats.getPriceToSalesTrailing12Months().getRaw());
+		}
+
+		if (stats.getProfitMargins() != null && stats.getProfitMargins().getRaw() != null) {
+			fq.setProfitMargins(stats.getProfitMargins().getRaw());
+		}
+
+		if (stats.getRevenueQuarterlyGrowth() != null && stats.getRevenueQuarterlyGrowth().getRaw() != null) {
+			fq.setRevenueQtrGrowth(stats.getRevenueQuarterlyGrowth().getRaw());
+		}
+
+		if (stats.getSharesOutstanding() != null && stats.getSharesOutstanding().getRaw() != null) {
+			fq.setSharesOutstanding(stats.getSharesOutstanding().getRaw());
+		}
+
+		if (stats.getSharesShort() != null && stats.getSharesShort().getRaw() != null) {
+			fq.setSharesShort(stats.getSharesShort().getRaw());
+		}
+
+		if (stats.getShortPercentOfFloat() != null && stats.getShortPercentOfFloat().getRaw() != null) {
+			fq.setShortPercentOfFloat(stats.getShortPercentOfFloat().getRaw());
+		}
+
+		if (stats.getShortRatio() != null && stats.getShortRatio().getRaw() != null) {
+			fq.setShortRatio(stats.getShortRatio().getRaw());
+		}
+
+		if (stats.getTotalAssets() != null && stats.getTotalAssets().getRaw() != null) {
+			fq.setTotalAssets(stats.getTotalAssets().getRaw());
+		}
+
 	}
 
 	private static void mapCalendarEvents(CalendarEvents calendarEvents, SecurityQuoteContainer sqc) {
@@ -324,8 +532,6 @@ public class YahooQuoteResultMapper {
 		} else {
 			events = sqc.getUpcomingEvents();
 		}
-
-		// TODO Revenue ever show up here?
 
 		if (calendarEvents.getDividendDate() != null && calendarEvents.getDividendDate().getRaw() != null) {
 			events.setNextDivDate(OspreyUtils.getLocalDateFromEpoch(calendarEvents.getDividendDate().getRaw()));
@@ -351,6 +557,39 @@ public class YahooQuoteResultMapper {
 			}
 		}
 
+		FundamentalQuote fq;
+		if (sqc.getFundamentalQuote() == null) {
+			fq = new FundamentalQuote(sqc.getKey(), LocalDate.now());
+			sqc.setFundamentalQuote(fq);
+		} else {
+			fq = sqc.getFundamentalQuote();
+		}
+
+		Earnings earnings = calendarEvents.getEarnings();
+
+		if (earnings.getEarningsAverage() != null && earnings.getEarningsAverage().getRaw() != null) {
+			fq.setEarningsAvg(earnings.getEarningsAverage().getRaw());
+		}
+
+		if (earnings.getEarningsHigh() != null && earnings.getEarningsHigh().getRaw() != null) {
+			fq.setEarningsHigh(earnings.getEarningsHigh().getRaw());
+		}
+
+		if (earnings.getEarningsLow() != null && earnings.getEarningsLow().getRaw() != null) {
+			fq.setEarningsLow(earnings.getEarningsLow().getRaw());
+		}
+
+		if (earnings.getRevenueAverage() != null && earnings.getRevenueAverage().getRaw() != null) {
+			fq.setRevenueAvg(earnings.getRevenueAverage().getRaw());
+		}
+
+		if (earnings.getRevenueHigh() != null && earnings.getRevenueHigh().getRaw() != null) {
+			fq.setRevenueHigh(earnings.getRevenueHigh().getRaw());
+		}
+
+		if (earnings.getRevenueLow() != null && earnings.getRevenueLow().getRaw() != null) {
+			fq.setRevenueLow(earnings.getRevenueLow().getRaw());
+		}
 	}
 
 }

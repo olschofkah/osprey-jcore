@@ -96,9 +96,9 @@ public class MovingAverageTest {
 		double sma = OspreyQuantMath.sma(p, 0, closingPrices);
 		
 		// TODO why are you calculating this here without testing the result/ 
-		double ema = OspreyQuantMath.ema(sma, p, 0, closingPrices); 
+		double ema = OspreyQuantMath.ema(p, 0, closingPrices); 
 		
-		double ema_smooth = OspreyQuantMath.ema(sma, p, alpha, 0, closingPrices);
+		double ema_smooth = OspreyQuantMath.ema(p, 0, closingPrices);
 
 		double ema_default_smooth = OspreyQuantMath.ema(p, 0, closingPrices);
 

@@ -22,7 +22,7 @@ public class FundamentalQuote {
 	private double bookValue;
 	private double currentRatio;
 	private double debtToEquity;
-	private double doubleShares;
+	private double floatShares;
 	private double earningsAvg;
 	private double earningsGrowth;
 	private double earningsHigh;
@@ -49,7 +49,6 @@ public class FundamentalQuote {
 	private double priceToSales;
 	private double profitMargins;
 	private double quickRatio;
-	private long regularMarketVolume;
 	private double returnOnAssets;
 	private double returnOnEquity;
 	private double revenueAvg;
@@ -57,10 +56,11 @@ public class FundamentalQuote {
 	private double revenueHigh;
 	private double revenueLow;
 	private double revenuePerShare;
+	private double revenueQtrGrowth;
 	private double sharesOutstanding;
 	private double sharesShort;
 	private double sharesShortPriorMonth;
-	private double shortPercentOfDouble;
+	private double shortPercentOfFloat;
 	private double shortRatio;
 	private double totalCash;
 	private double totalCashPerShare;
@@ -68,6 +68,10 @@ public class FundamentalQuote {
 	private double totalRevenue;
 	private double trailingEps;
 	private double trailingPe;
+	private long totalAssets;
+	private double yield;
+	private double dividendRate;
+	private double dividendYield;
 
 	public FundamentalQuote(String symbol, LocalDate dt, ZonedDateTime timestamp) {
 		this(new SecurityKey(symbol, null), dt, timestamp);
@@ -127,8 +131,8 @@ public class FundamentalQuote {
 		return debtToEquity;
 	}
 
-	public double getDoubleShares() {
-		return doubleShares;
+	public double getFloatShares() {
+		return floatShares;
 	}
 
 	public double getEarningsAvg() {
@@ -239,10 +243,6 @@ public class FundamentalQuote {
 		return quickRatio;
 	}
 
-	public long getRegularMarketVolume() {
-		return regularMarketVolume;
-	}
-
 	public double getReturnOnAssets() {
 		return returnOnAssets;
 	}
@@ -283,8 +283,8 @@ public class FundamentalQuote {
 		return sharesShortPriorMonth;
 	}
 
-	public double getShortPercentOfDouble() {
-		return shortPercentOfDouble;
+	public double getShortPercentOfFloat() {
+		return shortPercentOfFloat;
 	}
 
 	public double getShortRatio() {
@@ -359,8 +359,8 @@ public class FundamentalQuote {
 		this.debtToEquity = debtToEquity;
 	}
 
-	public void setDoubleShares(double doubleShares) {
-		this.doubleShares = doubleShares;
+	public void setFloatShares(double floatShares) {
+		this.floatShares = floatShares;
 	}
 
 	public void setEarningsAvg(double earningsAvg) {
@@ -467,10 +467,6 @@ public class FundamentalQuote {
 		this.quickRatio = quickRatio;
 	}
 
-	public void setRegularMarketVolume(long regularMarketVolume) {
-		this.regularMarketVolume = regularMarketVolume;
-	}
-
 	public void setReturnOnAssets(double returnOnAssets) {
 		this.returnOnAssets = returnOnAssets;
 	}
@@ -511,8 +507,8 @@ public class FundamentalQuote {
 		this.sharesShortPriorMonth = sharesShortPriorMonth;
 	}
 
-	public void setShortPercentOfDouble(double shortPercentOfDouble) {
-		this.shortPercentOfDouble = shortPercentOfDouble;
+	public void setShortPercentOfFloat(double shortPercentOfDouble) {
+		this.shortPercentOfFloat = shortPercentOfDouble;
 	}
 
 	public void setShortRatio(double shortRatio) {
@@ -586,6 +582,46 @@ public class FundamentalQuote {
 
 	public void setTimestamp(ZonedDateTime timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public void setTotalAssets(Long raw) {
+		this.totalAssets = raw;
+	}
+	
+	public long getTotalAssets(){
+		return this.totalAssets;
+	}
+
+	public double getYield() {
+		return yield;
+	}
+
+	public void setYield(double yield) {
+		this.yield = yield;
+	}
+
+	public double getDividendRate() {
+		return dividendRate;
+	}
+
+	public void setDividendRate(double dividendRate) {
+		this.dividendRate = dividendRate;
+	}
+
+	public double getDividendYield() {
+		return dividendYield;
+	}
+
+	public void setDividendYield(double dividendYield) {
+		this.dividendYield = dividendYield;
+	}
+
+	public double getRevenueQtrGrowth() {
+		return revenueQtrGrowth;
+	}
+
+	public void setRevenueQtrGrowth(double revenueQtrGrowth) {
+		this.revenueQtrGrowth = revenueQtrGrowth;
 	}
 
 }

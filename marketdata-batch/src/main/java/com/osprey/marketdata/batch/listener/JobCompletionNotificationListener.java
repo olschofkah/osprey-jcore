@@ -2,6 +2,7 @@ package com.osprey.marketdata.batch.listener;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,10 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 					reportMap.get(string).add(hotItem.getKey().getSymbol());
 				}
 			}
+			
+			// TODO sort tickers. 
+			
+			List<String> symbols;
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("The job is done master.  I've prepared ");
@@ -64,10 +69,15 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 				sb.append(entry.getKey());
 				sb.append("\n");
 				sb.append("Symbol(s): ");
-				for (String symbol : entry.getValue()) {
+				
+				symbols = entry.getValue();
+				Collections.sort(symbols);
+				
+				for (String symbol : symbols) {
 					sb.append(symbol);
 					sb.append(", ");
 				}
+				
 				sb.deleteCharAt(sb.length() - 1);
 				sb.deleteCharAt(sb.length() - 1);
 			}
