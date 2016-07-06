@@ -61,6 +61,20 @@ public class MovingAverageTest {
 		Assert.assertEquals(0.0302842, beta, DOUBLE_TEST_DELTA);
 	}
 	
+	@Test
+	public void testBollingerBands() throws Exception {
+
+		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
+		
+
+		double[] bands = OspreyQuantMath.bollingerbands(10, 0, closingPrices);
+
+		Assert.assertEquals(27.2, bands[1], DOUBLE_TEST_DELTA);
+		Assert.assertEquals(15.514545, bands[2], DOUBLE_TEST_DELTA);
+		Assert.assertEquals(38.8854549, bands[0], DOUBLE_TEST_DELTA);
+		
+	}
+	
 	/**
 	 * test case can be verified in http://www.wolframalpha.com/input/?i=black+scholes&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22OptionName%22%7D+-%3E+%22VanillaEuropean%22&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22opttype%22%7D+-%3E+%22Call%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22strike%22%7D+-%3E%22$55%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22exptime%22%7D+-%3E%224+mo%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22underlying%22%7D+-%3E%22$56.25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22vol%22%7D+-%3E%2228+%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22div%22%7D+-%3E%220%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22rf%22%7D+-%3E%222.85%25%22&rawformassumption=%7B%22MC%22,+%22%22%7D+-%3E+%7B%22Formula%22%7D&rawformassumption=%7B%22MC%22,%22%22%7D-%3E%7B%22Formula%22%7D 
 	 * 

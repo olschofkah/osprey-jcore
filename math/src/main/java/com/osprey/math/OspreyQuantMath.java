@@ -3,6 +3,9 @@ package com.osprey.math;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.jcp.xml.dsig.internal.dom.ApacheData;
+
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.result.SMAPair;
@@ -185,6 +188,38 @@ public final class OspreyQuantMath {
 
 	}
 
+
+
+	public static double stdev(int p, List<HistoricalQuote> prices) {
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double[] closes = new double[prices.size()];
+		for(int i = 0; i < prices.size(); ++i){
+			closes[i] = prices.get(i).getClose();
+		}
+
+		StandardDeviation sd = new StandardDeviation();
+		return sd.evaluate(closes);
+	}
+
+	// http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
+	public static double[] bollingerbands(int p, int offset, List<HistoricalQuote> prices) {
+
+		double midband = sma(p, offset, prices);
+
+		double upperband = midband + stdev(p, prices) * 2.0;
+
+		double lowerband = midband - stdev(p, prices) * 2.0;
+
+		return (new double[] {upperband, midband, lowerband});
+
+	}
 	/**
 	 * Calculate two Simple Moving Averages simultaneously over a single series
 	 * of closing prices.
