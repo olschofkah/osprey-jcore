@@ -86,7 +86,52 @@ public final class OspreyQuantMath {
 
 	}
 
-	public static Map<String, List<Pair<LocalDate, Double>>> macdCurves(int p0, int p1, int pS,
+	public static Map<String, List<Double>> macdCurves(int p0, int p1, int pS, List<HistoricalQuote> prices) {
+
+		final double a0 = 2.0 / (p0 + 1.0);
+		final double a1 = 2.0 / (p1 + 1.0);
+		final double aS = 2.0 / (pS + 1.0);
+
+		if (p0 < 2 || pS < 2 || p0 > p1) {
+			throw new InvalidPeriodException();
+		}
+
+		// This will check that we have enough history to calculate MACD.
+		double seedAverage = sma(p1, p1 + MOVING_AVERAGE_MAGIC_NUMBER - 1, prices);
+
+		double ma0 = seedAverage;
+		double ma1 = seedAverage;
+
+		List<Double> macdCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+
+		HistoricalQuote hq;
+		for (int i = p1 + MOVING_AVERAGE_MAGIC_NUMBER; i >= 0; --i) {
+			hq = prices.get(i);
+			ma0 = (hq.getClose() - ma0) * a0 + ma0;
+			ma1 = (hq.getClose() - ma1) * a1 + ma1;
+			macdCurve.add(ma0 - ma1);
+		}
+
+		double macdSignal = macdCurve.get(0);
+		List<Double> macdSignalCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+
+		for (int i = 1; i < macdCurve.size(); ++i) {
+			macdSignal = (macdCurve.get(i) - macdSignal) * aS + macdSignal;
+			macdSignalCurve.add(macdSignal);
+		}
+
+		Collections.reverse(macdCurve);
+		Collections.reverse(macdSignalCurve);
+
+		Map<String, List<Double>> curves = new HashMap<>();
+
+		curves.put("macd", macdCurve);
+		curves.put("macdSignal", macdSignalCurve);
+
+		return curves;
+	}
+
+	public static Map<String, List<Pair<LocalDate, Double>>> macdCurvesWithDates(int p0, int p1, int pS,
 			List<HistoricalQuote> prices) {
 
 		final double a0 = 2.0 / (p0 + 1.0);
@@ -115,12 +160,12 @@ public final class OspreyQuantMath {
 			macdCurve.add(new Pair<>(hq.getHistoricalDate(), macd));
 		}
 
-		double macdSignal = 0;
+		double macdSignal = macdCurve.get(0).getValue();
 		List<Pair<LocalDate, Double>> macdSignalCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
 
-		for (Pair<LocalDate, Double> entry : macdCurve) {
-			macdSignal = (entry.getValue() - macdSignal) * aS + macdSignal;
-			macdSignalCurve.add(new Pair<>(entry.getKey(), macdSignal));
+		for (int i = 1; i < macdCurve.size(); ++i) {
+			macdSignal = (macdCurve.get(i).getValue() - macdSignal) * aS + macdSignal;
+			macdSignalCurve.add(new Pair<>(macdCurve.get(i).getKey(), macdSignal));
 		}
 
 		Collections.reverse(macdCurve);
