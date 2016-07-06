@@ -10,10 +10,13 @@ import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OptionType;
+import com.osprey.securitymaster.constants.OspreyConstants;
+import com.osprey.securitymaster.secondary.HistoricalGainQuote;
+import com.osprey.securitymaster.secondary.HistoricalLossQuote;
 
 public final class OspreyQuantMath {
 
-	private static final int EMA_MAGIC_NUMBER = 126;
+	private static final int MOVING_AVERAGE_MAGIC_NUMBER = OspreyConstants.MARKET_DAYS_IN_YEAR / 2;
 
 	public static double ema(int p, int historicalOffset, List<HistoricalQuote> prices) {
 		double alpha = 2.0 / (p + 1.0);
@@ -43,15 +46,15 @@ public final class OspreyQuantMath {
 			throw new InvalidPeriodException();
 		}
 
-		double seedAverage = sma(p, offset + p + EMA_MAGIC_NUMBER - 1, prices);
+		double seedAverage = sma(p, offset + p + MOVING_AVERAGE_MAGIC_NUMBER - 1, prices);
 
-		if (p + offset + EMA_MAGIC_NUMBER > prices.size()) {
+		if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
 
 		double ma = seedAverage;
 
-		for (int i = p + offset + EMA_MAGIC_NUMBER; i >= offset; --i) {
+		for (int i = p + offset + MOVING_AVERAGE_MAGIC_NUMBER; i >= offset; --i) {
 			ma = (prices.get(i).getClose() - ma) * alpha + ma;
 		}
 
@@ -88,7 +91,7 @@ public final class OspreyQuantMath {
 	 * @param prices
 	 * @return
 	 */
-	public static double rsi(int p, int offset, List<HistoricalQuote> prices) {
+	public static double rsiUsingSma(int p, int offset, List<HistoricalQuote> prices) {
 
 		if (p < 2) {
 			throw new InvalidPeriodException();
@@ -101,15 +104,83 @@ public final class OspreyQuantMath {
 		double aveGain = 0.0;
 		double aveLoss = 0.0;
 		for (int i = offset; i < p + offset; ++i) {
-			double change = prices.get(i).getAdjClose() - prices.get(i + 1).getAdjClose();
+			double change = prices.get(i).getClose() - prices.get(i + 1).getClose();
 			if (change >= 0) {
 				aveGain += change;
 			} else {
-				aveLoss += change;
+				aveLoss += change * -1;
 			}
 		}
 
-		double rs = aveGain / Math.abs(aveLoss);
+		double rs = (aveGain) / (aveLoss);
+		return 100.0 - 100.0 / (1.0 + rs);
+
+	}
+
+	/**
+	 * 
+	 * https://en.wikipedia.org/wiki/Relative_strength_index
+	 * 
+	 * Use close price for now instead of adj close
+	 * 
+	 * @param p
+	 * @param offset
+	 * @param prices
+	 * @return
+	 */
+	public static double rsiUsingEma(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		List<HistoricalQuote> upPeriods = new ArrayList<>();
+		List<HistoricalQuote> downPeriods = new ArrayList<>();
+		for (int i = 0; i < prices.size() - 1; ++i) {
+			upPeriods.add(new HistoricalGainQuote(prices.get(i), prices.get(i + 1)));
+			downPeriods.add(new HistoricalLossQuote(prices.get(i), prices.get(i + 1)));
+		}
+
+		double rs = ema(p, offset, upPeriods) / ema(p, offset, downPeriods);
+		return 100.0 - 100.0 / (1.0 + rs);
+
+	}
+
+	/**
+	 * 
+	 * https://en.wikipedia.org/wiki/Relative_strength_index
+	 * 
+	 * Use close price for now instead of adj close
+	 * 
+	 * @param p
+	 * @param offset
+	 * @param prices
+	 * @return
+	 */
+	public static double rsiUsingWilders(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		// Build a list of gains and losses for each day and use that to
+		// calculate a moving average.
+		List<HistoricalQuote> upPeriods = new ArrayList<>();
+		List<HistoricalQuote> downPeriods = new ArrayList<>();
+		for (int i = 0; i < prices.size() - 1; ++i) {
+			upPeriods.add(new HistoricalGainQuote(prices.get(i), prices.get(i + 1)));
+			downPeriods.add(new HistoricalLossQuote(prices.get(i), prices.get(i + 1)));
+		}
+
+		double rs = wildersMovingAverage(p, offset, upPeriods) / wildersMovingAverage(p, offset, downPeriods);
 		return 100.0 - 100.0 / (1.0 + rs);
 
 	}

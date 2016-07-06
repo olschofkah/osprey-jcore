@@ -85,5 +85,30 @@ public class LiveMarketDataCalcTest {
 		System.out.println(ema5 + " close:" + hist.get(0));
 	}
 	
+	
+	@Test
+	public void rsiCalcTest1() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(3).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "QQQ";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq);
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+		
+		System.out.println(OspreyQuantMath.rsiUsingSma(14, 0, hist));
+		System.out.println(OspreyQuantMath.rsiUsingEma(14, 0, hist));
+		System.out.println(OspreyQuantMath.rsiUsingWilders(14, 0, hist));
+		System.out.println(OspreyQuantMath.wildersMovingAverage(14,0	, hist));
+	}
+	
 
 }

@@ -41,7 +41,7 @@
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}},
-        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}}
     ]
 },
 {
@@ -52,7 +52,7 @@
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}},
-        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}}
     ]
 },
 {
@@ -81,20 +81,34 @@
     ]
 },
 {
-    "screenName":"Bull Peter",
+    "screenName":"Bull Peter X",
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"SYMBOL","symbols":["QQQ","SPY"],"contains":true}},
-        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}},
+        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}}
+    ]
+},
+{
+    "screenName":"Bull Peter Band",
+    "strategies":[],
+	"screenCriteria": [
+        {"criteriaBucket":{"type":"SYMBOL","symbols":["QQQ","SPY"],"contains":true}},
         {"criteriaBucket":{"type":"EMA_PCT_BANDS","period1":20,"range":2,"bandPercent":0.03,"direction":"FROM_BELOW_TO_ABOVE","band":"LOWER_BAND"}}
     ]
 },
 {
-    "screenName":"Bear Peter",
+    "screenName":"Bear Peter X",
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"SYMBOL","symbols":["QQQ","SPY"],"contains":true}},
-        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}},
+        {"criteriaBucket":{"type":"EMA_X_PRICE","period1":20,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}}
+    ]
+},
+{
+    "screenName":"Bear Peter Band",
+    "strategies":[],
+	"screenCriteria": [
+        {"criteriaBucket":{"type":"SYMBOL","symbols":["QQQ","SPY"],"contains":true}},
         {"criteriaBucket":{"type":"EMA_PCT_BANDS","period1":20,"range":2,"bandPercent":0.03,"direction":"FROM_ABOVE_TO_BELOW","band":"UPPER_BAND"}}
     ]
 }
