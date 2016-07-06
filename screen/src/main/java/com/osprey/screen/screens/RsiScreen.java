@@ -21,7 +21,7 @@ public class RsiScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		double rsi = OspreyQuantMath.rsiUsingSma(criteria.getPeriod(), 0, sqc.getHistoricalQuotes());
+		double rsi = OspreyQuantMath.rsiUsingWilders(criteria.getPeriod(), 0, sqc.getHistoricalQuotes());
 
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:
