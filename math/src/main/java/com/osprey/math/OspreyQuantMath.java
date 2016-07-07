@@ -88,6 +88,8 @@ public final class OspreyQuantMath {
 
 	public static Map<String, List<Double>> macdCurves(int p0, int p1, int pS, List<HistoricalQuote> prices) {
 
+		// TODO switch to a custom object returned
+
 		final double a0 = 2.0 / (p0 + 1.0);
 		final double a1 = 2.0 / (p1 + 1.0);
 		final double aS = 2.0 / (pS + 1.0);
@@ -97,15 +99,16 @@ public final class OspreyQuantMath {
 		}
 
 		// This will check that we have enough history to calculate MACD.
-		double seedAverage = sma(p1, p1 + MOVING_AVERAGE_MAGIC_NUMBER - 1, prices);
+		int mamnPlusP1 = p1 + MOVING_AVERAGE_MAGIC_NUMBER;
+		double seedAverage = sma(p1, mamnPlusP1 - 1, prices);
 
 		double ma0 = seedAverage;
 		double ma1 = seedAverage;
 
-		List<Double> macdCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+		List<Double> macdCurve = new ArrayList<>(mamnPlusP1);
 
 		HistoricalQuote hq;
-		for (int i = p1 + MOVING_AVERAGE_MAGIC_NUMBER; i >= 0; --i) {
+		for (int i = mamnPlusP1; i >= 0; --i) {
 			hq = prices.get(i);
 			ma0 = (hq.getClose() - ma0) * a0 + ma0;
 			ma1 = (hq.getClose() - ma1) * a1 + ma1;
@@ -113,7 +116,7 @@ public final class OspreyQuantMath {
 		}
 
 		double macdSignal = macdCurve.get(0);
-		List<Double> macdSignalCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+		List<Double> macdSignalCurve = new ArrayList<>(mamnPlusP1);
 
 		for (int i = 1; i < macdCurve.size(); ++i) {
 			macdSignal = (macdCurve.get(i) - macdSignal) * aS + macdSignal;
@@ -134,6 +137,8 @@ public final class OspreyQuantMath {
 	public static Map<String, List<Pair<LocalDate, Double>>> macdCurvesWithDates(int p0, int p1, int pS,
 			List<HistoricalQuote> prices) {
 
+		// TODO switch to a custom object returned
+
 		final double a0 = 2.0 / (p0 + 1.0);
 		final double a1 = 2.0 / (p1 + 1.0);
 		final double aS = 2.0 / (pS + 1.0);
@@ -143,16 +148,17 @@ public final class OspreyQuantMath {
 		}
 
 		// This will check that we have enough history to calculate MACD.
-		double seedAverage = sma(p1, p1 + MOVING_AVERAGE_MAGIC_NUMBER - 1, prices);
+		int mamnPlusP1 = p1 + MOVING_AVERAGE_MAGIC_NUMBER;
+		double seedAverage = sma(p1, mamnPlusP1 - 1, prices);
 
 		double ma0 = seedAverage;
 		double ma1 = seedAverage;
 		double macd = 0;
 
-		List<Pair<LocalDate, Double>> macdCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+		List<Pair<LocalDate, Double>> macdCurve = new ArrayList<>(mamnPlusP1);
 
 		HistoricalQuote hq;
-		for (int i = p1 + MOVING_AVERAGE_MAGIC_NUMBER; i >= 0; --i) {
+		for (int i = mamnPlusP1; i >= 0; --i) {
 			hq = prices.get(i);
 			ma0 = (hq.getClose() - ma0) * a0 + ma0;
 			ma1 = (hq.getClose() - ma1) * a1 + ma1;
@@ -161,7 +167,7 @@ public final class OspreyQuantMath {
 		}
 
 		double macdSignal = macdCurve.get(0).getValue();
-		List<Pair<LocalDate, Double>> macdSignalCurve = new ArrayList<>(p1 + MOVING_AVERAGE_MAGIC_NUMBER);
+		List<Pair<LocalDate, Double>> macdSignalCurve = new ArrayList<>(mamnPlusP1);
 
 		for (int i = 1; i < macdCurve.size(); ++i) {
 			macdSignal = (macdCurve.get(i).getValue() - macdSignal) * aS + macdSignal;

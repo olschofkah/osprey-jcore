@@ -117,7 +117,8 @@
     "strategies":[],
 	"screenCriteria": [
 		{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}}
+        {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}},
+        {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":35,"relationalOperator":"_LE"}}
     ]
 },
 {
@@ -125,7 +126,8 @@
     "strategies":[],
 	"screenCriteria": [
 		{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
-	    {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}}
+	    {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}},
+        {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":65,"relationalOperator":"_GE"}}
     ]
 }
 
