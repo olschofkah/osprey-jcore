@@ -72,7 +72,7 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 		Security s = null;
 		while (iterator.hasNext()) {
 			s = iterator.next();
-			
+
 			if (!optionableSymbolSet.contains(s.getKey().getSymbol())) {
 				logger.info("Removing {} due to not being optionable.", s.getKey().getSymbol());
 				iterator.remove();
@@ -218,20 +218,20 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 		sec.setLotSize(Integer.parseInt(lotSize));
 		sec.setExchange(exchange);
 
-		InstrumentType type = deriveInstrumentTypeOfListed(ticker, companyName, "Y".equals(etf));
+		InstrumentType type = deriveInstrumentTypeOfListed(ticker, companyName, "Y".equals(etf), "Y".equals(nextShare));
 		sec.setInstrumentType(type);
 
 		return sec;
 	}
 
-	private InstrumentType deriveInstrumentTypeOfListed(String symbol, String name, boolean isEtf) {
-
-		// TODO need a lot more logic here ...
-
+	private InstrumentType deriveInstrumentTypeOfListed(String symbol, String name, boolean isEtf,
+			boolean isNextshares) {
 		if (isEtf) {
 			return InstrumentType.ETF;
+		} else if (isNextshares) {
+			return InstrumentType.NEXTSHARES;
 		} else {
-			return InstrumentType.STOCK;
+			return InstrumentType.fromNasdaqSuffix(symbol);
 		}
 	}
 

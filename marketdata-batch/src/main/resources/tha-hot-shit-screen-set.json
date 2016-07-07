@@ -1,6 +1,6 @@
 [
 {
-    "screenName":"Bull: 15above50 EMA in 3pd",
+    "screenName":"Bull: 15above50 EMA in 2pd",
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
@@ -8,7 +8,7 @@
     ]
 },
 {
-    "screenName":"Bear: 15under50 EMA in 3pd",
+    "screenName":"Bear: 15under50 EMA in 2pd",
     "strategies":[],
 	"screenCriteria": [
         {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
@@ -34,10 +34,11 @@
     ]
 },
 {
-    "screenName":"Bull: EMA Cross (Price,Beta refine)",
+    "screenName":"Bull: EMA Cross (Price,Beta refine) Stocks",
     "strategies":[],
 	"screenCriteria": [
-	{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
+	{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["STOCK"], "contains":true}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}},
@@ -45,10 +46,35 @@
     ]
 },
 {
-    "screenName":"Bear: EMA Cross (Price,Beta refine)",
+    "screenName":"Bear: EMA Cross (Price,Beta refine) Stocks",
     "strategies":[],
 	"screenCriteria": [
-	{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
+		{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["STOCK"], "contains":true}},
+        {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_LT"}},
+        {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_LT"}},
+        {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}},
+        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}}
+    ]
+},
+{
+    "screenName":"Bull: EMA Cross (Price,Beta refine) ETFs",
+    "strategies":[],
+	"screenCriteria": [
+	{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["ETF","ETN"], "contains":true}},
+        {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}},
+        {"criteriaBucket":{"type":"BETA","betaComparison":0.8,"relationalOperator":"_GT"}}
+    ]
+},
+{
+    "screenName":"Bear: EMA Cross (Price,Beta refine) ETFs",
+    "strategies":[],
+	"screenCriteria": [
+		{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["ETF","ETN"], "contains":true}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":50,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"EMA_VS_PRICE","period1":15,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"EMA_X","period1":15,"period2":50,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}},
@@ -113,19 +139,41 @@
     ]
 },
 {
-    "screenName":"MACD Bull",
+    "screenName":"MACD Bull Stocks",
     "strategies":[],
 	"screenCriteria": [
-		{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
+		{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["STOCK"], "contains":true}},
         {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}},
         {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":35,"relationalOperator":"_LE"}}
     ]
 },
 {
-    "screenName":"MACD Bear",
+    "screenName":"MACD Bull ETFs",
     "strategies":[],
 	"screenCriteria": [
-		{"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
+		{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["ETF","ETN"], "contains":true}},
+        {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_BELOW_TO_ABOVE"}},
+        {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":35,"relationalOperator":"_LE"}}
+    ]
+},
+{
+    "screenName":"MACD Bear Stocks",
+    "strategies":[],
+	"screenCriteria": [
+		{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["STOCK"], "contains":true}},
+	    {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}},
+        {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":65,"relationalOperator":"_GE"}}
+    ]
+},
+{
+    "screenName":"MACD Bear ETFs",
+    "strategies":[],
+	"screenCriteria": [
+		{"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["ETF","ETN"], "contains":true}},
 	    {"criteriaBucket":{"type":"MACD","fastPeriod":12,"slowPeriod":26,"signalPeriod":9,"range":2,"direction":"FROM_ABOVE_TO_BELOW"}},
         {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":65,"relationalOperator":"_GE"}}
     ]
