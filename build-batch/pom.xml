@@ -13,7 +13,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<docker.image.prefix>osprey</docker.image.prefix>
 		<osprey.app.version>0.0.1-SNAPSHOT</osprey.app.version>
 	</properties>
 
@@ -32,60 +31,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.4.10</version>
-				<configuration>
-					
-					<imageName>${docker.image.prefix}/marketdata-batch</imageName>
-					<dockerDirectory>src/main/docker</dockerDirectory>
-					
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>../marketdata-batch/</directory>
-							<include>marketdata-batch-${osprey.app.version}.jar</include>
-						</resource>
-					<!-- <resource>
-							<targetPath>/</targetPath>
-							<directory>../securitymaster/</directory>
-							<include>securitymaster-${osprey.app.version}.jar</include>
-						</resource>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>../trade/</directory>
-							<include>trade-${osprey.app.version}.jar</include>
-						</resource>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>../math/</directory>
-							<include>math-${osprey.app.version}.jar</include>
-						</resource>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>../integration/</directory>
-							<include>integration-${osprey.app.version}.jar</include>
-						</resource>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>../screen/</directory>
-							<include>screen-${osprey.app.version}.jar</include>
-						</resource>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>../marketdata/</directory>
-							<include>marketdata-${osprey.app.version}.jar</include>
-						</resource>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>../marketdata-batch/</directory>
-							<include>marketdata-batch-${osprey.app.version}.jar</include>
-						</resource> -->
-					</resources>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
