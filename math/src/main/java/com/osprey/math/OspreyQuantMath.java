@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.util.Pair;
-
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.jcp.xml.dsig.internal.dom.ApacheData;
+import org.apache.commons.math3.util.Pair;
 
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;

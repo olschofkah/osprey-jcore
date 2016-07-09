@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mvn package -DskipTests
+mvn clean compile validate package -DskipTests
 
 cp ../marketdata-batch/target/marketdata-batch-${1}.jar ./lib/
 cp ../marketdata/target/marketdata-${1}.jar ./lib/

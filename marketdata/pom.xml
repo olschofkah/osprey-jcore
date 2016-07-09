@@ -31,6 +31,18 @@
 		<apache.httpcore.version>4.4.4</apache.httpcore.version>
 		<apache.codec.version>1.10</apache.codec.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
+
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+
+		<!-- Osprey Src Versions -->
+		<osprey.integration.version>0.0.1-SNAPSHOT</osprey.integration.version>
+		<osprey.marketdata.version>0.0.1-SNAPSHOT</osprey.marketdata.version>
+		<osprey.math.version>0.0.1-SNAPSHOT</osprey.math.version>
+		<osprey.screen.version>0.0.1-SNAPSHOT</osprey.screen.version>
+		<osprey.securitymaster.version>0.0.1-SNAPSHOT</osprey.securitymaster.version>
+		<osprey.trade.version>0.0.1-SNAPSHOT</osprey.trade.version>
 	</properties>
 
 
@@ -117,6 +129,28 @@
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
+		</dependency>
+
+		<!-- Osprey Dependencies -->
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>math</artifactId>
+			<version>${osprey.math.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>securitymaster</artifactId>
+			<version>${osprey.securitymaster.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>trade</artifactId>
+			<version>${osprey.trade.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>screen</artifactId>
+			<version>${osprey.screen.version}</version>
 		</dependency>
 	</dependencies>
 

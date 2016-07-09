@@ -25,8 +25,19 @@
 		<apache.math.version>3.6.1</apache.math.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
 		<jackson.version>2.6.6</jackson.version>
-		
+
 		<postgresql.version>9.4.1208</postgresql.version>
+
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+		<!-- Osprey Src Versions -->
+		<osprey.integration.version>0.0.1-SNAPSHOT</osprey.integration.version>
+		<osprey.marketdata.version>0.0.1-SNAPSHOT</osprey.marketdata.version>
+		<osprey.math.version>0.0.1-SNAPSHOT</osprey.math.version>
+		<osprey.screen.version>0.0.1-SNAPSHOT</osprey.screen.version>
+		<osprey.securitymaster.version>0.0.1-SNAPSHOT</osprey.securitymaster.version>
+		<osprey.trade.version>0.0.1-SNAPSHOT</osprey.trade.version>
 	</properties>
 
 	<dependencies>
@@ -135,8 +146,25 @@
 			<artifactId>log4j-1.2-api</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
+
+		<!-- Osprey Dependencies -->
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>math</artifactId>
+			<version>${osprey.math.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>securitymaster</artifactId>
+			<version>${osprey.securitymaster.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>trade</artifactId>
+			<version>${osprey.trade.version}</version>
+		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
