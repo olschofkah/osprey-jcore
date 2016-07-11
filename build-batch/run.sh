@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker run -i -t osprey-batch
+docker run --memory=6g -i -t ospreycapital/marketdata-batch

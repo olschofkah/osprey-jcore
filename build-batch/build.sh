@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ $# -eq 0 ]
+  then
+    echo "Must supply the current expected build version"
+    exit -1
+fi
+
 mvn clean compile validate package -DskipTests
 
 cp ../marketdata-batch/target/marketdata-batch-${1}.jar ./lib/
@@ -12,4 +18,16 @@ cp ../trade/target/trade-${1}.jar ./lib/
 
 cat Dockerfile
 
-docker build --build-arg app_version=${1} -t osprey-batch .
+DOCKER_AWS_LOGIN=`aws ecr get-login`
+
+echo "${DOCKER_AWS_LOGIN}"
+
+${DOCKER_AWS_LOGIN}
+
+docker build --build-arg app_version=${1} -t ospreycapital/marketdata-batch .
+
+# Tag the build
+docker tag ospreycapital/marketdata-batch:latest 620041067453.dkr.ecr.us-east-1.amazonaws.com/ospreycapital/marketdata-batch:latest
+
+# Push the build to AWS EC2 Container Manager
+docker push 620041067453.dkr.ecr.us-east-1.amazonaws.com/ospreycapital/marketdata-batch:latest
