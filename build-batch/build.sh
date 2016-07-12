@@ -26,6 +26,13 @@ ${DOCKER_AWS_LOGIN}
 
 docker build --build-arg app_version=${1} -t ospreycapital/marketdata-batch .
 
+
+# Tag the build
+docker tag ospreycapital/marketdata-batch:latest 620041067453.dkr.ecr.us-east-1.amazonaws.com/ospreycapital/marketdata-batch:${1}
+
+# Push the build to AWS EC2 Container Manager
+docker push 620041067453.dkr.ecr.us-east-1.amazonaws.com/ospreycapital/marketdata-batch:${1}
+
 # Tag the build
 docker tag ospreycapital/marketdata-batch:latest 620041067453.dkr.ecr.us-east-1.amazonaws.com/ospreycapital/marketdata-batch:latest
 

@@ -72,9 +72,9 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public DataSource postgresDataSource() {
 		return DataSourceBuilder.create()
-				.url("jdbc:postgresql://ec2-54-221-226-148.compute-1.amazonaws.com:5432/d99quhbhpv3opt?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory&username=ggifajrkbtsfza&password=CTp_FFoV6er9WOd8FzNm3Wu7R8")
-				.username("ggifajrkbtsfza")
-				.password("CTp_FFoV6er9WOd8FzNm3Wu7R8")
+				.url("jdbc:postgresql://ospreydb.cl1fkmenjbzm.us-east-1.rds.amazonaws.com:5432/osprey01")
+				.username("goliaeth")
+				.password("tits&ass!")
 				.type(BasicDataSource.class)
 				.build();
 

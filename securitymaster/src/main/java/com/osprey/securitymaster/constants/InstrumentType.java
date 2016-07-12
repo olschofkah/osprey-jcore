@@ -111,9 +111,9 @@ public enum InstrumentType {
 		}
 		return InstrumentType.STOCK;
 	}
-	
+
 	/**
-	 * Only valid for equities. 
+	 * Only valid for equities.
 	 * 
 	 * @param symbol
 	 * @return
@@ -125,5 +125,14 @@ public enum InstrumentType {
 			}
 		}
 		return InstrumentType.STOCK;
+	}
+
+	public static InstrumentType fromId(int id) {
+		for (InstrumentType instrumentType : values()) {
+			if (instrumentType.id == id) {
+				return instrumentType;
+			}
+		}
+		return null;
 	}
 }

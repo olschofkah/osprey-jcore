@@ -1,7 +1,9 @@
 CREATE TABLE "oc_security" (
 	"symbol" VARCHAR(10) NOT NULL UNIQUE,
 	"cusip" VARCHAR(9),
-	"company_name" VARCHAR(255) NOT NULL,
+	"instrument_cd" int4,
+	"company_name" VARCHAR(255),
+	"previous_close" float8,
 	"country" VARCHAR(10),
 	"state" VARCHAR(2),
 	"employee_cnt" int8,
@@ -9,9 +11,10 @@ CREATE TABLE "oc_security" (
 	"sector" VARCHAR(50),
 	"exchange_cd" char(1),
 	"currency" VARCHAR(5),
-	"previous_close" float8,
+	"lot_size" int4,
 	"last_update_ts" timestamptz NOT NULL,
-	"desc" VARCHAR(1024),
+	"create_ts" timestamptz NOT NULL,
+	"description" VARCHAR(1024),
 	CONSTRAINT oc_security_pk PRIMARY KEY ("symbol")
 ) WITH (
   OIDS=FALSE
