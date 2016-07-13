@@ -25,8 +25,8 @@ public class SecurityMasterTestConfiguration {
 		
 		return DataSourceBuilder.create()
 				.url("jdbc:postgresql://ospreydb.cl1fkmenjbzm.us-east-1.rds.amazonaws.com:5432/osprey01")
-				.username("goliaeth")
-				.password("tits&ass!")
+				.username("ospreyjavausr")
+				.password("F4&^mfWXqazY")
 				.type(BasicDataSource.class)
 				.build();
 

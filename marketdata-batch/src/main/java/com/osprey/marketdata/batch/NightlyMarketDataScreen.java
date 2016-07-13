@@ -33,6 +33,7 @@ import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
@@ -45,6 +46,7 @@ import com.osprey.marketdata.batch.tasklet.PurgePreviousRunHotlistTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorShutdownTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
 import com.osprey.marketdata.batch.writer.HotShitDbItemWriter;
+import com.osprey.marketdata.batch.writer.QuoteContainerItemWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.exception.InsufficientHistoryException;
@@ -53,6 +55,8 @@ import com.osprey.screen.repository.IHotShitRepository;
 import com.osprey.screen.repository.jdbctemplate.HotShitJdbcRepository;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityQuoteContainer;
+import com.osprey.securitymaster.repository.ISecurityMasterRepository;
+import com.osprey.securitymaster.repository.jdbctemplate.SecurityMasterJdbcRepository;
 
 @Configuration
 @EnableBatchProcessing
@@ -65,6 +69,9 @@ public class NightlyMarketDataScreen {
 
 	@Autowired
 	private StepBuilderFactory stepBuilderFactory;
+	
+	@Autowired
+	private PlatformTransactionManager txnManager;
 
 	@Autowired
 	private DataSource dataSource;
@@ -73,8 +80,8 @@ public class NightlyMarketDataScreen {
 	public DataSource postgresDataSource() {
 		return DataSourceBuilder.create()
 				.url("jdbc:postgresql://ospreydb.cl1fkmenjbzm.us-east-1.rds.amazonaws.com:5432/osprey01")
-				.username("goliaeth")
-				.password("tits&ass!")
+				.username("ospreyjavausr")
+				.password("F4&^mfWXqazY")
 				.type(BasicDataSource.class)
 				.build();
 
@@ -118,6 +125,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public IHotShitRepository hotShitRepository() {
 		return new HotShitJdbcRepository(dataSource);
+	}
+	
+	@Bean
+	public ISecurityMasterRepository securityMasterRepository(){
+		return new SecurityMasterJdbcRepository(dataSource);
 	}
 
 	@Bean
@@ -202,21 +214,12 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public ItemWriter<SecurityQuoteContainer> postQuoteQueueWriter() {
-		return new ItemWriter<SecurityQuoteContainer>() {
-
-			@Override
-			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
-				logger.debug("Queuing securities for further screening ...");
-				postQuoteQueue.addAll(items);
-			}
-
-		};
-	}
-
-	@Bean
 	public HotShitDbItemWriter hotShitDbItemWriter() {
 		return new HotShitDbItemWriter();
+	}
+	
+	@Bean QuoteContainerItemWriter quoteContainerItemWriter(){
+		return new QuoteContainerItemWriter(postQuoteQueue);
 	}
 
 	@Bean
@@ -252,7 +255,8 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public Step initialScreen() {
-		return stepBuilderFactory.get("preScreen").<Security, SecurityQuoteContainer>chunk(250)
+		return stepBuilderFactory.get("preScreen")
+				.<Security, SecurityQuoteContainer>chunk(250)
 				.faultTolerant()
 				.retryLimit(5)
 				.retry(MarketDataIOException.class)
@@ -265,7 +269,8 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public Step quoteAndCalcAndPersist() {
-		return stepBuilderFactory.get("quoteAndCalc").<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
+		return stepBuilderFactory.get("quoteAndCalc")
+				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
 				.reader(postInitialScreenQueueReader())
 				.faultTolerant()
 				.backOffPolicy(exponentialBackOffPolicy())
@@ -275,8 +280,8 @@ public class NightlyMarketDataScreen {
 				.skip(MarketDataNotAvailableException.class)
 				.skip(MarketDataIOException.class)
 				.processor(quoteProcessor())
-				.writer(postQuoteQueueWriter())
-				// .writer(persistStats)
+				.writer(quoteContainerItemWriter())
+				.transactionManager(txnManager)
 				.build();
 	}
 

@@ -10,12 +10,17 @@ import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityEvent;
+import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.SecurityUpcomingEvents;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 
 public class MockSecurityMasterRepository implements ISecurityMasterRepository {
+	
+	public MockSecurityMasterRepository(){
+		
+	}
 
 	public double fetchClosingPrice(String ticker, LocalDate date) {
 		return RandomUtils.nextDouble(6, 120);
@@ -64,6 +69,16 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 	public void deleteThaHotShitForDay(LocalDate date) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void deleteHistoricals(SecurityKey key) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<HistoricalQuote> findHistoricals(SecurityKey key, LocalDate minDate, LocalDate maxDate) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

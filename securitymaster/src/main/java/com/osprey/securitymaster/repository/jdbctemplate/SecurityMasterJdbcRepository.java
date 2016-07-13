@@ -1,5 +1,7 @@
 package com.osprey.securitymaster.repository.jdbctemplate;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -8,6 +10,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Isolation;
@@ -47,6 +50,12 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, clock_timestamp(), clock_timestamp(), ?, ?) ";
 	private static final String EXISTS_OC_SECURITY = "select exists (select 1 from oc_security where symbol = ? )";
 
+	private static final String SELECT_OHLC_HIST = "select symbol, date, open, high, low, close, adj_close, volume, timestamp "
+			+ " from oc_security_ohlc_hist where symbol = ? and date >= ? and date =< ?";
+	private static final String DELETE_OHLC_HIST_FOR_SYMBOL = "delete from oc_security_ohlc_hist where symbol = ?";
+	private static final String INSERT_OHLC_HIST = " insert into oc_security_ohlc_hist (symbol, date, open, high, low, close, adj_close, volume, timestamp) "
+			+ " values (?,?,?,?,?,?,?,?,clock_timestamp())";
+
 	public Security findSecurity(final SecurityKey key) {
 		return jdbc.queryForObject(SELECT_OC_SECURITY, new RowMapper<Security>() {
 
@@ -81,7 +90,17 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public void persist(SecurityQuoteContainer sqc) {
-		// TODO Auto-generated method stub
+
+		persist(sqc.getEnhancedSecurity());
+		persist(sqc.getFundamentalQuote());
+		persist(sqc.getSecurity());
+		persist(sqc.getSecurityQuote());
+		persist(sqc.getUpcomingEvents());
+
+		persistEvents(sqc.getEvents());
+
+		deleteHistoricals(sqc.getKey());
+		persistHistoricals(sqc.getHistoricalQuotes());
 
 	}
 
@@ -138,9 +157,39 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 
 	}
 
+	public List<HistoricalQuote> findHistoricals(SecurityKey key, LocalDate minDate, LocalDate maxDate) {
+
+		return jdbc.queryForList(SELECT_OHLC_HIST, HistoricalQuote.class, key.getSymbol(), Date.valueOf(minDate),
+				Date.valueOf(maxDate));
+
+	}
+
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public void persistHistoricals(List<HistoricalQuote> hist) {
-		// TODO Auto-generated method stub
+	public void deleteHistoricals(SecurityKey key) {
+		jdbc.update(DELETE_OHLC_HIST_FOR_SYMBOL, key.getSymbol());
+	}
+
+	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
+	public void persistHistoricals(final List<HistoricalQuote> hist) {
+
+		jdbc.batchUpdate(INSERT_OHLC_HIST, new BatchPreparedStatementSetter() {
+
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				HistoricalQuote h = hist.get(i);
+				ps.setString(1, h.getKey().getSymbol());
+				ps.setDate(2, Date.valueOf(h.getHistoricalDate()));
+				ps.setDouble(3, h.getOpen());
+				ps.setDouble(4, h.getHigh());
+				ps.setDouble(5, h.getLow());
+				ps.setDouble(6, h.getClose());
+				ps.setDouble(7, h.getAdjClose());
+				ps.setDouble(8, h.getVolume());
+			}
+
+			public int getBatchSize() {
+				return hist.size();
+			}
+		});
 
 	}
 }

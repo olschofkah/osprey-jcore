@@ -4,7 +4,7 @@ CREATE TABLE "oc_security" (
 	"instrument_cd" int4,
 	"company_name" VARCHAR(255),
 	"previous_close" float8,
-	"country" VARCHAR(10),
+	"country" VARCHAR(50),
 	"state" VARCHAR(2),
 	"employee_cnt" int8,
 	"industry" VARCHAR(50),
@@ -14,7 +14,7 @@ CREATE TABLE "oc_security" (
 	"lot_size" int4,
 	"last_update_ts" timestamptz NOT NULL,
 	"create_ts" timestamptz NOT NULL,
-	"description" VARCHAR(1024),
+	"description" VARCHAR(5120),
 	CONSTRAINT oc_security_pk PRIMARY KEY ("symbol")
 ) WITH (
   OIDS=FALSE
@@ -193,13 +193,13 @@ CREATE TABLE "oc_security_int_stat_log" (
 
 
 
-CREATE TABLE "oc_security_ochl_hist" (
+CREATE TABLE "oc_security_ohlc_hist" (
 	"symbol" VARCHAR(255) NOT NULL,
 	"date" DATE NOT NULL,
 	"open" float8,
-	"close" float8,
 	"high" float8,
 	"low" float8,
+	"close" float8,
 	"adj_close" float8,
 	"volume" float8,
 	"timestamp" timestamptz NOT NULL,

@@ -17,17 +17,13 @@ import com.osprey.marketdata.feed.yahoo.YahooHistoricalUrlBuilder;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteUrlBuilder;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
+import com.osprey.securitymaster.repository.jdbctemplate.SecurityMasterJdbcRepository;
 import com.osprey.securitymaster.repository.mock.MockSecurityMasterRepository;
 
 @Configuration
 @Profile("dev")
 @ComponentScan("com.osprey")
 public class MarketDataDevConfiguration {
-
-	@Bean
-	public ISecurityMasterRepository securityMasterRepository() {
-		return new MockSecurityMasterRepository();
-	}
 
 	@Bean
 	public NasdaqSecurityMasterFtpService nasdaqSecurityMasterFtpService() {

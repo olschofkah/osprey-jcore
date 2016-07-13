@@ -33,4 +33,8 @@ public interface ISecurityMasterRepository {
 
 	public void persistHistoricals(List<HistoricalQuote> hist);
 
+	void deleteHistoricals(SecurityKey key);
+
+	List<HistoricalQuote> findHistoricals(SecurityKey key, LocalDate minDate, LocalDate maxDate);
+
 }
