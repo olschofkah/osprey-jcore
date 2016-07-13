@@ -120,8 +120,8 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			// update
 			jdbc.update(UPDATE_OC_SECURITY, s.getCompanyDescription(), s.getCompanyName(), s.getCountry(),
 					s.getCurrency(), s.getEmployeeCount(), s.getExchange().getCode(), s.getIndustry(),
-					s.getInstrumentType().getId(), s.getLotSize(), s.getSector(), s.getState(), s.getKey().getSymbol(),
-					s.getPreviousClose());
+					s.getInstrumentType().getId(), s.getLotSize(), s.getSector(), s.getState(), s.getPreviousClose(),
+					s.getKey().getSymbol());
 
 		} else {
 			// insert

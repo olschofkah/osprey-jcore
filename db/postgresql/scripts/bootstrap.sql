@@ -5,7 +5,7 @@ CREATE TABLE "oc_security" (
 	"company_name" VARCHAR(255),
 	"previous_close" float8,
 	"country" VARCHAR(50),
-	"state" VARCHAR(2),
+	"state" VARCHAR(50),
 	"employee_cnt" int8,
 	"industry" VARCHAR(50),
 	"sector" VARCHAR(50),
