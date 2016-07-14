@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.osprey.math.OspreyQuantMath;
-import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverCriteria;
 import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.securitymaster.SecurityQuoteContainer;

@@ -291,8 +291,6 @@ public final class OspreyQuantMath {
 
 	}
 
-
-
 	public static double stdev(int p, List<HistoricalQuote> prices) {
 		if (p < 2) {
 			throw new InvalidPeriodException();
@@ -303,7 +301,7 @@ public final class OspreyQuantMath {
 		}
 
 		double[] closes = new double[prices.size()];
-		for(int i = 0; i < prices.size(); ++i){
+		for (int i = 0; i < prices.size(); ++i) {
 			closes[i] = prices.get(i).getClose();
 		}
 
@@ -320,9 +318,10 @@ public final class OspreyQuantMath {
 
 		double lowerband = midband - stdev(p, prices) * 2.0;
 
-		return (new double[] {upperband, midband, lowerband});
+		return (new double[] { upperband, midband, lowerband });
 
 	}
+
 	/**
 	 * Calculate two Simple Moving Averages simultaneously over a single series
 	 * of closing prices.
@@ -625,6 +624,41 @@ public final class OspreyQuantMath {
 		}
 
 		return ((double) volume) / p;
+	}
+
+	public static double momentum(int p, int offset, List<HistoricalQuote> hq) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > hq.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		return hq.get(0 + offset).getAdjClose() - hq.get(p + offset - 1).getAdjClose();
+	}
+
+	public static List<Pair<LocalDate, Double>> momentumCurve(int p, List<HistoricalQuote> hq) {
+		
+		// P is expected to be at least 2
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p > hq.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		List<Pair<LocalDate, Double>> curve = new ArrayList<>(hq.size() - p);
+
+		for (int i = hq.size() - p - 1; i >= 0; --i) {
+			curve.add(new Pair<LocalDate, Double>(hq.get(i).getHistoricalDate(),
+					hq.get(i).getAdjClose() - hq.get(i + p - 1).getAdjClose()));
+		}
+
+		return curve;
 	}
 
 }

@@ -14,6 +14,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverC
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
+import com.osprey.screen.criteria.MomentumCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
@@ -88,6 +89,7 @@ public class ScreenCriteriaGenerator {
 		case MARKET_CAP:
 			break;
 		case MOMENTUM_X:
+			result = objectMapper.convertValue(getCriteriaBucket(), MomentumCriteria.class);
 			break;
 		case NEW_52_WEEK:
 			break;

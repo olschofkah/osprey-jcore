@@ -23,7 +23,6 @@ public class EnhancedSecurity {
 	private double beta30;
 	private double beta90;
 	private double beta360;
-	private double alphaForEma;
 
 	public EnhancedSecurity(SecurityKey key) {
 		this.key = key;
@@ -139,14 +138,6 @@ public class EnhancedSecurity {
 
 	public void setBeta360(double beta360) {
 		this.beta360 = beta360;
-	}
-
-	public double getAlphaForEma() {
-		return alphaForEma;
-	}
-
-	public void setAlphaForEma(double alphaForEma) {
-		this.alphaForEma = alphaForEma;
 	}
 
 	public SecurityKey getKey() {

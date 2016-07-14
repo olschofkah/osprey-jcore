@@ -3,6 +3,8 @@ package com.osprey.screen;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.apache.commons.math3.util.Pair;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.InstrumentType;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MarketdataApplication.class)
@@ -108,6 +111,42 @@ public class LiveMarketDataCalcTest {
 		System.out.println(OspreyQuantMath.rsiUsingEma(14, 0, hist));
 		System.out.println(OspreyQuantMath.rsiUsingWilders(14, 0, hist));
 		System.out.println(OspreyQuantMath.wildersMovingAverage(14,0	, hist));
+	}
+	
+	@Test
+	public void momentumCurveTest1() throws Exception{
+		
+		// Determine the range of historical data to pull from yahoo
+		LocalDate end = LocalDate.now(); // today
+		LocalDate start = end.minusYears(3).minusDays(10); // 3 years & 10 days ago
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY; // Frequency, daily
+
+		// Define the symbol
+		String symbol = "QQQ";
+
+		// Construct the security object
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		// Pull the fundamental and current quote from live yahoo for QQQ
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		
+		// Pull the historical quotes for the previously defined range from yahoo for QQQ
+		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq);
+		
+		
+		
+		// set some data
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+		
+		
+		List<Pair<LocalDate, Double>> momentumCurve = OspreyQuantMath.momentumCurve(2, hist);
+		
+		System.out.println(momentumCurve);
+		
+		Assert.assertTrue(750 < momentumCurve.size());
 	}
 	
 

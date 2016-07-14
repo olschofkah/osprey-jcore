@@ -83,7 +83,6 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 
 			// TODO Determine & Add more calculations.
 
-			es.setAlphaForEma(1);
 			es.setVolatility360(volatility);
 			es.setEma12(ema12);
 

@@ -1,15 +1,14 @@
 package com.osprey.screen.screens;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.apache.commons.math3.util.Pair;
 
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.screen.criteria.MomentumCriteria;
-import com.osprey.screen.criteria.VolatilityCriteria;
-import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.screen.criteria.constants.CrossDirection;
 import com.osprey.securitymaster.SecurityQuoteContainer;
-import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class MomentumScreen implements IStockScreen {
 
@@ -25,39 +24,33 @@ public class MomentumScreen implements IStockScreen {
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
 		
-//		double closingPrice = sqc.getSecurity().getPreviousClose(); 
-//		List<HistoricalQuote> closePrice_20day = sqc.getHistoricalQuotes();
-//		
-//		OspreyQuantMath.
-//		
-//		
-//		switch (criteria.getOperator()) {
-//		case _EQ:
-//			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-//					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
-//							RoundingMode.HALF_UP)) == 0;
-//			break;
-//		case _GE:
-//			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-//					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
-//							RoundingMode.HALF_UP)) >= 0;
-//			break;
-//		case _GT:
-//			passed = volatility > criteria.getVolatilityComparison();
-//			break;
-//		case _LE:
-//			passed = new BigDecimal(volatility).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-//					.compareTo(new BigDecimal(criteria.getVolatilityComparison()).setScale(OspreyConstants.PRICE_SCALE,
-//							RoundingMode.HALF_UP)) <= 0;
-//			break;
-//		case _LT:
-//			passed = volatility < criteria.getVolatilityComparison();
-//			break;
-//		default:
-//			passed = false;
-//			break;
-//
-//		}
+		double momentum = 0.0;
+		int previousComp = 2;
+		int comp;
+		boolean isAboveToBelow = criteria.getDirection() == CrossDirection.FROM_ABOVE_TO_BELOW;
+		
+		List<Pair<LocalDate, Double>> curve = OspreyQuantMath.momentumCurve(criteria.getPeriod1(), sqc.getHistoricalQuotes());
+		
+
+		for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
+
+			momentum = curve.get(offset).getValue();
+
+			comp = momentum > criteria.getCrossoverPoint() ? 1 : (momentum < criteria.getCrossoverPoint() ? -1 : 0);
+
+			if (previousComp == 2) {
+				previousComp = comp;
+				continue;
+			}
+
+			if (((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1))
+					&& previousComp != comp) {
+				passed = true;
+				break;
+			}
+
+			previousComp = comp;
+		}
 
 		return this;
 	}

@@ -16,6 +16,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverC
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
+import com.osprey.screen.criteria.MomentumCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
@@ -36,6 +37,7 @@ import com.osprey.screen.screens.ExponentialMovingAverageScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageVsCurrentPriceScreen;
 import com.osprey.screen.screens.IStockScreen;
 import com.osprey.screen.screens.InstrumentTypeScreen;
+import com.osprey.screen.screens.MomentumScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceCrossoverScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.PriceGapScreen;
@@ -131,7 +133,7 @@ public class ScreenPlanFactory {
 		case MARKET_CAP:
 			return null;
 		case MOMENTUM_X:
-			return null;
+			return new MomentumScreen((MomentumCriteria) criteria);
 		case NEW_52_WEEK:
 			return null;
 		case ON_BALANCE_VOL:
