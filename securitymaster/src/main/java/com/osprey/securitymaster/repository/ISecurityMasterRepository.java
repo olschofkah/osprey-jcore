@@ -37,4 +37,8 @@ public interface ISecurityMasterRepository {
 
 	List<HistoricalQuote> findHistoricals(SecurityKey key, LocalDate minDate, LocalDate maxDate);
 
+	public List<Security> findSecurities();
+
+	Security findSecurity(SecurityKey key);
+
 }

@@ -81,4 +81,14 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 		return null;
 	}
 
+	public List<Security> findSecurities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Security findSecurity(SecurityKey key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

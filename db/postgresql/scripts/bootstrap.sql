@@ -14,7 +14,7 @@ CREATE TABLE "oc_security" (
 	"lot_size" int4,
 	"last_update_ts" timestamptz NOT NULL,
 	"create_ts" timestamptz NOT NULL,
-	"description" VARCHAR(5120),
+	"description" VARCHAR(2048),
 	CONSTRAINT oc_security_pk PRIMARY KEY ("symbol")
 ) WITH (
   OIDS=FALSE

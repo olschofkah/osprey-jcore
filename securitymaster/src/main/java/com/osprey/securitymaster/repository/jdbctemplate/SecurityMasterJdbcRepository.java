@@ -41,7 +41,9 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	}
 
 	private static final String SELECT_OC_SECURITY = " select symbol, cusip, instrument_cd, lot_size, company_name, country, state, employee_cnt, industry, sector, exchange_cd, currency, last_update_ts, description, previous_close "
-			+ " from oc_security where symbol = ?";
+			+ " from oc_security where symbol = ? ";
+	private static final String SELECT_OC_SECURITIES = " select symbol, cusip, instrument_cd, lot_size, company_name, country, state, employee_cnt, industry, sector, exchange_cd, currency, last_update_ts, description, previous_close "
+			+ " from oc_security ";
 	private static final String UPDATE_OC_SECURITY = "update oc_security "
 			+ " set description = ?, company_name = ?, country = ?, currency = ?, employee_cnt = ?, exchange_cd = ?, industry = ?, instrument_cd = ?, lot_size = ?, sector = ?, state = ?, last_update_ts = clock_timestamp(), previous_close = ?"
 			+ " where symbol = ? ";
@@ -57,30 +59,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " values (?,?,?,?,?,?,?,?,clock_timestamp())";
 
 	public Security findSecurity(final SecurityKey key) {
-		return jdbc.queryForObject(SELECT_OC_SECURITY, new RowMapper<Security>() {
-
-			public Security mapRow(ResultSet rs, int rowNum) throws SQLException {
-				Security security = new Security(key);
-				security.setCompanyDescription(rs.getString("description"));
-				security.setCompanyName(rs.getString("company_name"));
-				security.setCountry(rs.getString("country"));
-				security.setCurrency(rs.getString("currency"));
-				security.setEmployeeCount(rs.getInt("employee_cnt"));
-				security.setExchange(Exchange.fromCode(rs.getString("exchange_cd")));
-				security.setIndustry(rs.getString("industry"));
-				security.setInstrumentType(InstrumentType.fromId(rs.getInt("instrument_cd")));
-				security.setLotSize(rs.getInt("lot_size"));
-				security.setSector(rs.getString("sector"));
-				security.setState(rs.getString("state"));
-				security.setPreviousClose(rs.getDouble("previous_close"));
-
-				Timestamp timestamp = rs.getTimestamp("last_update_ts");
-				security.setTimestamp(OspreyUtils.getZonedDateTimeFromEpoch(timestamp.getTime()));
-
-				return security;
-			}
-		}, key.getSymbol());
-
+		return jdbc.queryForObject(SELECT_OC_SECURITY, new SecurityRowMapper(), key.getSymbol());
 	}
 
 	public double fetchClosingPrice(String symbol, LocalDate date) {
@@ -191,5 +170,9 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			}
 		});
 
+	}
+
+	public List<Security> findSecurities() {
+		return jdbc.query(SELECT_OC_SECURITIES, new SecurityRowMapper());
 	}
 }

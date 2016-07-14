@@ -32,6 +32,8 @@ import com.osprey.securitymaster.utils.OspreyUtils;
 public class YahooQuoteResultMapper {
 
 	final static Logger logger = LogManager.getLogger(YahooQuoteResultMapper.class);
+	
+	private static final int MAX_LONG_DESC_SIZE = 2043;
 
 	public static SecurityQuoteContainer map(Result result, SecurityQuoteContainer sqc) {
 
@@ -130,7 +132,15 @@ public class YahooQuoteResultMapper {
 				s.setIndustry(sp.getIndustry());
 			}
 			if (sp.getLongBusinessSummary() != null) {
-				s.setCompanyDescription(sp.getLongBusinessSummary());
+
+				// trim the size of the long business description to avoid
+				// excessive sizes.
+				String desc = sp.getLongBusinessSummary().trim();
+				if (desc.length() > MAX_LONG_DESC_SIZE) {
+					desc = desc.substring(0, MAX_LONG_DESC_SIZE) + " ...";
+				}
+
+				s.setCompanyDescription(desc);
 			}
 			if (sp.getSector() != null) {
 				s.setSector(sp.getSector());
