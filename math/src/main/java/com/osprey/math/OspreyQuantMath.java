@@ -224,11 +224,10 @@ public final class OspreyQuantMath {
 	}
 
 	/*
-	%K = (Current Close - Lowest Low)/(Highest High - Lowest Low) * 100
-	%D = 3-day SMA of %K
-	Lowest Low = lowest low for the look-back period
-	Highest High = highest high for the look-back period
-	%K is multiplied by 100 to move the decimal point two places
+	 * %K = (Current Close - Lowest Low)/(Highest High - Lowest Low) * 100 %D =
+	 * 3-day SMA of %K Lowest Low = lowest low for the look-back period Highest
+	 * High = highest high for the look-back period %K is multiplied by 100 to
+	 * move the decimal point two places
 	 */
 
 	public static double stochasticOscillatorK(int p, int offset, List<HistoricalQuote> prices) {
@@ -244,25 +243,20 @@ public final class OspreyQuantMath {
 		double maxHigh = 0;
 		double minLow = 0;
 
+		HistoricalQuote hq;
 		for (int i = offset; i < p + offset; ++i) {
-
-			if (maxHigh < prices.get(i).getHigh()) {
-				maxHigh = prices.get(i).getHigh();
-
+			hq = prices.get(i);
+			if (maxHigh < hq.getHigh()) {
+				maxHigh = hq.getHigh();
 			}
-
-			if (minLow > prices.get(i).getLow()) {
-				minLow = prices.get(i).getLow();
-
+			if (minLow > hq.getLow()) {
+				minLow = hq.getLow();
 			}
-
 		}
 
 		return (prices.get(0).getClose() - minLow) / (maxHigh - minLow) * 100.0;
 
-
 	}
-
 
 	public static double stochasticOscillatorD(int p, int offset, List<HistoricalQuote> prices) {
 
@@ -273,447 +267,450 @@ public final class OspreyQuantMath {
 		if (p + offset > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
-		return  (stochasticOscillatorK(p, offset+1, prices) + stochasticOscillatorK(p, offset+2, prices) + stochasticOscillatorK(p, offset, prices))/3;
+
+		return (stochasticOscillatorK(p, offset + 1, prices) + stochasticOscillatorK(p, offset + 2, prices)
+				+ stochasticOscillatorK(p, offset, prices)) / 3;
+
+	}
+
+	/**
+	 * 
+	 * https://en.wikipedia.org/wiki/Relative_strength_index
+	 * 
+	 * Use close price for now instead of adj close
+	 * 
+	 * @param p
+	 * @param offset
+	 * @param prices
+	 * @return
+	 */
+	public static double rsiUsingEma(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		List<HistoricalQuote> upPeriods = new ArrayList<>();
+		List<HistoricalQuote> downPeriods = new ArrayList<>();
+		for (int i = 0; i < prices.size() - 1; ++i) {
+			upPeriods.add(new HistoricalGainQuote(prices.get(i), prices.get(i + 1)));
+			downPeriods.add(new HistoricalLossQuote(prices.get(i), prices.get(i + 1)));
+		}
+
+		double rs = ema(p, offset, upPeriods) / ema(p, offset, downPeriods);
+		return 100.0 - 100.0 / (1.0 + rs);
+
+	}
+
+	/**
+	 * 
+	 * https://en.wikipedia.org/wiki/Relative_strength_index
+	 * 
+	 * Use close price for now instead of adj close
+	 * 
+	 * @param p
+	 * @param offset
+	 * @param prices
+	 * @return
+	 */
+	public static double rsiUsingWilders(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		// Build a list of gains and losses for each day and use that to
+		// calculate a moving average.
+		List<HistoricalQuote> upPeriods = new ArrayList<>();
+		List<HistoricalQuote> downPeriods = new ArrayList<>();
+		for (int i = 0; i < prices.size() - 1; ++i) {
+			upPeriods.add(new HistoricalGainQuote(prices.get(i), prices.get(i + 1)));
+			downPeriods.add(new HistoricalLossQuote(prices.get(i), prices.get(i + 1)));
+		}
+
+		double rs = wildersMovingAverage(p, offset, upPeriods) / wildersMovingAverage(p, offset, downPeriods);
+		return 100.0 - 100.0 / (1.0 + rs);
+
+	}
+
+	public static double stdev(int p, List<HistoricalQuote> prices) {
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double[] closes = new double[prices.size()];
+		for (int i = 0; i < prices.size(); ++i) {
+			closes[i] = prices.get(i).getClose();
+		}
+
+		StandardDeviation sd = new StandardDeviation();
+		return sd.evaluate(closes);
+	}
+
+	// http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
+	public static double[] bollingerbands(int p, int offset, List<HistoricalQuote> prices) {
 		
+		//TODO @jiayang: do you always calc the mid band w/ sma? 
+
+		double midband = sma(p, offset, prices);
+
+		double upperband = midband + stdev(p, prices) * 2.0;
+
+		double lowerband = midband - stdev(p, prices) * 2.0;
+
+		return (new double[] { upperband, midband, lowerband });
+
 	}
 
+	/**
+	 * Calculate two Simple Moving Averages simultaneously over a single series
+	 * of closing prices.
+	 * 
+	 * @param p1
+	 *            - Period to calculate the average over for result 1
+	 * @param p2
+	 *            - Period to calculate the average over for result 2
+	 * @param prices
+	 *            - Prices to use for calculation
+	 * @return ( c0 + c1 + c2 + ... + cp) / p for every p
+	 */
+	public static SMAPair smaPair(int p1, int p2, int offset, List<HistoricalQuote> prices, SecurityQuote quote) {
 
-		/**
-		 * 
-		 * https://en.wikipedia.org/wiki/Relative_strength_index
-		 * 
-		 * Use close price for now instead of adj close
-		 * 
-		 * @param p
-		 * @param offset
-		 * @param prices
-		 * @return
-		 */
-		public static double rsiUsingEma(int p, int offset, List<HistoricalQuote> prices) {
-
-			if (p < 2) {
-				throw new InvalidPeriodException();
-			}
-
-			if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > prices.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			List<HistoricalQuote> upPeriods = new ArrayList<>();
-			List<HistoricalQuote> downPeriods = new ArrayList<>();
-			for (int i = 0; i < prices.size() - 1; ++i) {
-				upPeriods.add(new HistoricalGainQuote(prices.get(i), prices.get(i + 1)));
-				downPeriods.add(new HistoricalLossQuote(prices.get(i), prices.get(i + 1)));
-			}
-
-			double rs = ema(p, offset, upPeriods) / ema(p, offset, downPeriods);
-			return 100.0 - 100.0 / (1.0 + rs);
-
+		if (p1 < 0 || p2 < 0) {
+			throw new InvalidPeriodException();
 		}
 
-		/**
-		 * 
-		 * https://en.wikipedia.org/wiki/Relative_strength_index
-		 * 
-		 * Use close price for now instead of adj close
-		 * 
-		 * @param p
-		 * @param offset
-		 * @param prices
-		 * @return
-		 */
-		public static double rsiUsingWilders(int p, int offset, List<HistoricalQuote> prices) {
+		int r = p1 > p2 ? p1 : p2;
 
-			if (p < 2) {
-				throw new InvalidPeriodException();
-			}
-
-			if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > prices.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			// Build a list of gains and losses for each day and use that to
-			// calculate a moving average.
-			List<HistoricalQuote> upPeriods = new ArrayList<>();
-			List<HistoricalQuote> downPeriods = new ArrayList<>();
-			for (int i = 0; i < prices.size() - 1; ++i) {
-				upPeriods.add(new HistoricalGainQuote(prices.get(i), prices.get(i + 1)));
-				downPeriods.add(new HistoricalLossQuote(prices.get(i), prices.get(i + 1)));
-			}
-
-			double rs = wildersMovingAverage(p, offset, upPeriods) / wildersMovingAverage(p, offset, downPeriods);
-			return 100.0 - 100.0 / (1.0 + rs);
-
+		if (r > prices.size()) {
+			throw new InsufficientHistoryException();
 		}
 
-		public static double stdev(int p, List<HistoricalQuote> prices) {
-			if (p < 2) {
-				throw new InvalidPeriodException();
-			}
+		double sma1 = 0;
+		double sma2 = 0;
+		int p1o = p1 + offset;
+		int p2o = p2 + offset;
 
-			if (p > prices.size()) {
-				throw new InsufficientHistoryException();
+		double histPrice = 0;
+		for (int i = 0 + offset; i < r + offset; ++i) {
+			histPrice = i == 0 ? quote.getLast() : prices.get(i).getAdjClose();
+			if (i < p1o) {
+				sma1 += histPrice;
 			}
-
-			double[] closes = new double[prices.size()];
-			for (int i = 0; i < prices.size(); ++i) {
-				closes[i] = prices.get(i).getClose();
+			if (i < p2o) {
+				sma2 += histPrice;
 			}
-
-			StandardDeviation sd = new StandardDeviation();
-			return sd.evaluate(closes);
 		}
 
-		// http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
-		public static double[] bollingerbands(int p, int offset, List<HistoricalQuote> prices) {
+		sma1 /= p1;
+		sma2 /= p2;
 
-			double midband = sma(p, offset, prices);
+		return new SMAPair(prices.get(0).getKey().getSymbol(), p1, sma1, p2, sma2);
+	}
 
-			double upperband = midband + stdev(p, prices) * 2.0;
+	/**
+	 * Simple Moving Average
+	 * 
+	 * @param p
+	 *            - Period to calculate the average over
+	 * @param prices
+	 *            - Prices to use for calculation
+	 * @return ( c0 + c1 + c2 + ... + cp) / p
+	 */
+	public static double sma(int p, int offset, List<HistoricalQuote> prices) {
 
-			double lowerband = midband - stdev(p, prices) * 2.0;
-
-			return (new double[] { upperband, midband, lowerband });
-
+		if (p < 0) {
+			throw new InvalidPeriodException();
 		}
 
-		/**
-		 * Calculate two Simple Moving Averages simultaneously over a single series
-		 * of closing prices.
-		 * 
-		 * @param p1
-		 *            - Period to calculate the average over for result 1
-		 * @param p2
-		 *            - Period to calculate the average over for result 2
-		 * @param prices
-		 *            - Prices to use for calculation
-		 * @return ( c0 + c1 + c2 + ... + cp) / p for every p
-		 */
-		public static SMAPair smaPair(int p1, int p2, int offset, List<HistoricalQuote> prices, SecurityQuote quote) {
-
-			if (p1 < 0 || p2 < 0) {
-				throw new InvalidPeriodException();
-			}
-
-			int r = p1 > p2 ? p1 : p2;
-
-			if (r > prices.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			double sma1 = 0;
-			double sma2 = 0;
-			int p1o = p1 + offset;
-			int p2o = p2 + offset;
-
-			double histPrice = 0;
-			for (int i = 0 + offset; i < r + offset; ++i) {
-				histPrice = i == 0 ? quote.getLast() : prices.get(i).getAdjClose();
-				if (i < p1o) {
-					sma1 += histPrice;
-				}
-				if (i < p2o) {
-					sma2 += histPrice;
-				}
-			}
-
-			sma1 /= p1;
-			sma2 /= p2;
-
-			return new SMAPair(prices.get(0).getKey().getSymbol(), p1, sma1, p2, sma2);
+		if (p + offset > prices.size()) {
+			throw new InsufficientHistoryException();
 		}
 
-		/**
-		 * Simple Moving Average
-		 * 
-		 * @param p
-		 *            - Period to calculate the average over
-		 * @param prices
-		 *            - Prices to use for calculation
-		 * @return ( c0 + c1 + c2 + ... + cp) / p
-		 */
-		public static double sma(int p, int offset, List<HistoricalQuote> prices) {
+		double sma1 = 0;
 
-			if (p < 0) {
-				throw new InvalidPeriodException();
-			}
-
-			if (p + offset > prices.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			double sma1 = 0;
-
-			for (int i = offset; i < p + offset; ++i) {
-				sma1 += prices.get(i).getClose();
-			}
-
-			sma1 /= p;
-			return sma1;
+		for (int i = offset; i < p + offset; ++i) {
+			sma1 += prices.get(i).getClose();
 		}
 
-		/**
-		 * Annual Volatility Annual Volatility is defined as standard deviation
-		 * times sqrt(252) standard deviation = sqrt(sum(daily return (i) - average
-		 * daily return)^2/n)
-		 * 
-		 * @param period
-		 * @param prices
-		 * @return volatility = sqrt(sum(daily return (i) - average daily
-		 *         return)^2/n)
-		 */
-		public static double volatility(int period, List<HistoricalQuote> prices) {
+		sma1 /= p;
+		return sma1;
+	}
 
-			if (period < 0) {
-				throw new InvalidPeriodException();
-			}
+	/**
+	 * Annual Volatility Annual Volatility is defined as standard deviation
+	 * times sqrt(252) standard deviation = sqrt(sum(daily return (i) - average
+	 * daily return)^2/n)
+	 * 
+	 * @param period
+	 * @param prices
+	 * @return volatility = sqrt(sum(daily return (i) - average daily
+	 *         return)^2/n)
+	 */
+	public static double volatility(int period, List<HistoricalQuote> prices) {
 
-			if (period > prices.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			double dailyReturn;
-			double price;
-			double previousPrice = prices.get(0).getAdjClose();
-			double averageDailyReturn = 0;
-
-			List<Double> dailyReturns = new ArrayList<>(period);
-
-			for (int i = 1; i < period; ++i) {
-				price = prices.get(i).getAdjClose();
-
-				dailyReturn = price / previousPrice - 1;
-				dailyReturns.add(dailyReturn);
-
-				averageDailyReturn += dailyReturn;
-
-				previousPrice = price;
-			}
-
-			averageDailyReturn /= (period - 1);
-
-			double volatility = 0;
-			for (double dr : dailyReturns) {
-				volatility += Math.pow(dr - averageDailyReturn, 2);
-			}
-
-			return Math.pow(volatility / (period - 2), 0.5) * Math.pow(period, 0.5);
+		if (period < 0) {
+			throw new InvalidPeriodException();
 		}
 
-		public static double standardNormalDistribution(double x) {
-			double top = Math.exp(-0.5 * Math.pow(x, 2));
-			double bottom = Math.sqrt(2 * Math.PI);
-			return top / bottom;
+		if (period > prices.size()) {
+			throw new InsufficientHistoryException();
 		}
 
-		// The Black and Scholes (1973) Stock option formula
+		double dailyReturn;
+		double price;
+		double previousPrice = prices.get(0).getAdjClose();
+		double averageDailyReturn = 0;
 
-		/**
-		 * @param CallPutFlag
-		 *            - char c for call, otherwise put
-		 * @param S
-		 *            - double stock price
-		 * @param X
-		 *            - double strike price
-		 * @param T
-		 *            - double time to maturity in years (1/3 for 4 months)
-		 * @param r
-		 *            - risk free interest rate
-		 * @param v
-		 *            - volatility
-		 * @return option price for call or put
-		 */
-		public static double blackScholes(OptionType optionType, double S, double X, double T, double r, double v) {
-			double d1, d2;
+		List<Double> dailyReturns = new ArrayList<>(period);
 
-			d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));
-			d2 = d1 - v * Math.sqrt(T);
+		for (int i = 1; i < period; ++i) {
+			price = prices.get(i).getAdjClose();
 
-			if (optionType == OptionType.CALL) {
-				return S * cnd(d1) - X * Math.exp(-r * T) * cnd(d2);
+			dailyReturn = price / previousPrice - 1;
+			dailyReturns.add(dailyReturn);
+
+			averageDailyReturn += dailyReturn;
+
+			previousPrice = price;
+		}
+
+		averageDailyReturn /= (period - 1);
+
+		double volatility = 0;
+		for (double dr : dailyReturns) {
+			volatility += Math.pow(dr - averageDailyReturn, 2);
+		}
+
+		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(period, 0.5);
+	}
+
+	public static double standardNormalDistribution(double x) {
+		double top = Math.exp(-0.5 * Math.pow(x, 2));
+		double bottom = Math.sqrt(2 * Math.PI);
+		return top / bottom;
+	}
+
+	// The Black and Scholes (1973) Stock option formula
+
+	/**
+	 * @param CallPutFlag
+	 *            - char c for call, otherwise put
+	 * @param S
+	 *            - double stock price
+	 * @param X
+	 *            - double strike price
+	 * @param T
+	 *            - double time to maturity in years (1/3 for 4 months)
+	 * @param r
+	 *            - risk free interest rate
+	 * @param v
+	 *            - volatility
+	 * @return option price for call or put
+	 */
+	public static double blackScholes(OptionType optionType, double S, double X, double T, double r, double v) {
+		double d1, d2;
+
+		d1 = (Math.log(S / X) + (r + v * v / 2) * T) / (v * Math.sqrt(T));
+		d2 = d1 - v * Math.sqrt(T);
+
+		if (optionType == OptionType.CALL) {
+			return S * cnd(d1) - X * Math.exp(-r * T) * cnd(d2);
+		} else {
+			return X * Math.exp(-r * T) * cnd(-d2) - S * cnd(-d1);
+		}
+	}
+
+	private static final double CND_A_1 = 0.31938153;
+	private static final double CND_A_2 = -0.356563782;
+	private static final double CND_A_3 = 1.781477937;
+	private static final double CND_A_4 = -1.821255978;
+	private static final double CND_A_5 = 1.330274429;
+
+	// The cumulative normal distribution function
+	public static double cnd(double X) {
+		double L, K, w;
+
+		L = Math.abs(X);
+		K = 1.0 / (1.0 + 0.2316419 * L);
+		w = 1.0 - 1.0 / Math.sqrt(2.0 * Math.PI) * Math.exp(-L * L / 2) * (CND_A_1 * K + CND_A_2 * K * K
+				+ CND_A_3 * Math.pow(K, 3) + CND_A_4 * Math.pow(K, 4) + CND_A_5 * Math.pow(K, 5));
+
+		if (X < 0.0) {
+			w = 1.0 - w;
+		}
+		return w;
+	}
+
+	/**
+	 * this is using iterative approach (eg.bisection method) to find the IV, t
+	 * 
+	 * @param X
+	 *            - strike
+	 * @param S
+	 *            - spot
+	 * @param T
+	 *            - time to maturity
+	 * @param callOptionPrice
+	 *            - call option price (current at the money)
+	 * @param r
+	 *            - interest rate
+	 * @return IV
+	 */
+	public static double impliedVolatility(OptionType option, double X, double S, double T, double callOptionPrice,
+			double r) {
+		double cpTest = 0;
+		double v = 500.0;
+
+		double upper = v;
+		double lower = 0;
+		double range = Math.abs(lower - upper);
+
+		while (true) {
+
+			cpTest = blackScholes(option, S, X, T, r, v);
+
+			if (cpTest > callOptionPrice) {
+				// Implied Volatility - IV has to go down
+				upper = v;
+				v = (lower + upper) / 2;
 			} else {
-				return X * Math.exp(-r * T) * cnd(-d2) - S * cnd(-d1);
+				// Implied Volatility - IV has to go up
+				lower = v;
+				v = (lower + upper) / 2;
 			}
+			range = Math.abs(lower - upper);
+			if (range < 0.001)
+				break;
 		}
-
-		private static double CND_A_1 = 0.31938153;
-		private static double CND_A_2 = -0.356563782;
-		private static double CND_A_3 = 1.781477937;
-		private static double CND_A_4 = -1.821255978;
-		private static double CND_A_5 = 1.330274429;
-
-		// The cumulative normal distribution function
-		public static double cnd(double X) {
-			double L, K, w;
-
-			L = Math.abs(X);
-			K = 1.0 / (1.0 + 0.2316419 * L);
-			w = 1.0 - 1.0 / Math.sqrt(2.0 * Math.PI) * Math.exp(-L * L / 2) * (CND_A_1 * K + CND_A_2 * K * K
-					+ CND_A_3 * Math.pow(K, 3) + CND_A_4 * Math.pow(K, 4) + CND_A_5 * Math.pow(K, 5));
-
-			if (X < 0.0) {
-				w = 1.0 - w;
-			}
-			return w;
-		}
-
-		/**
-		 * this is using iterative approach (eg.bisection method) to find the IV, t
-		 * 
-		 * @param X
-		 *            - strike
-		 * @param S
-		 *            - spot
-		 * @param T
-		 *            - time to maturity
-		 * @param callOptionPrice
-		 *            - call option price (current at the money)
-		 * @param r
-		 *            - interest rate
-		 * @return IV
-		 */
-		public static double impliedVolatility(OptionType option, double X, double S, double T, double callOptionPrice,
-				double r) {
-			double cpTest = 0;
-			double v = 500.0;
-
-			double upper = v;
-			double lower = 0;
-			double range = Math.abs(lower - upper);
-
-			while (true) {
-
-				cpTest = blackScholes(option, S, X, T, r, v);
-
-				if (cpTest > callOptionPrice) {
-					// Implied Volatility - IV has to go down
-					upper = v;
-					v = (lower + upper) / 2;
-				} else {
-					// Implied Volatility - IV has to go up
-					lower = v;
-					v = (lower + upper) / 2;
-				}
-				range = Math.abs(lower - upper);
-				if (range < 0.001)
-					break;
-			}
-			return v;
-		}
-
-		public static double beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {
-
-			double dailyReturn;
-			double dailyReturn_bmk;
-
-			double price;
-			double price_bmk;
-			double previousPrice = prices.get(0).getAdjClose();
-			double previousPrice_bmk = prices_bmk.get(0).getAdjClose();
-			double averageDailyReturn = 0;
-			double averageDailyReturn_bmk = 0;
-
-			List<Double> dailyReturns = new ArrayList<>(period);
-			List<Double> dailyReturns_bmk = new ArrayList<>(period);
-
-			for (int i = 1; i < period; ++i) {
-				price = prices.get(i).getAdjClose();
-
-				price_bmk = prices_bmk.get(i).getAdjClose();
-
-				dailyReturn = price / previousPrice - 1;
-				dailyReturn_bmk = price_bmk / previousPrice_bmk - 1;
-
-				dailyReturns.add(dailyReturn);
-				dailyReturns_bmk.add(dailyReturn_bmk);
-
-				averageDailyReturn += dailyReturn;
-				averageDailyReturn_bmk += dailyReturn_bmk;
-
-				previousPrice = price;
-				previousPrice_bmk = price_bmk;
-
-			}
-
-			averageDailyReturn /= (period - 1);
-			averageDailyReturn_bmk /= (period - 1);
-
-			double volatility_bmk = 0;
-			for (double dr_bmk : dailyReturns_bmk) {
-				volatility_bmk += Math.pow(dr_bmk - averageDailyReturn_bmk, 2);
-			}
-
-			volatility_bmk = volatility_bmk / (period - 1);
-
-			double covariance = 0;
-			for (int i = 0; i < period - 1; i++) {
-
-				covariance = Math.pow((dailyReturns.get(i).doubleValue() - averageDailyReturn)
-						* (dailyReturns_bmk.get(i).doubleValue() - averageDailyReturn_bmk), 2);
-			}
-
-			covariance = covariance / (period - 1);
-
-			return covariance / volatility_bmk;
-		}
-
-		public static double percentIn52Week(SecurityQuoteContainer sqc) {
-			return (sqc.getSecurityQuote().getLast() - sqc.getFundamentalQuote().get_52WeekLow())
-					/ (sqc.getFundamentalQuote().get_52WeekHigh() - sqc.getFundamentalQuote().get_52WeekLow());
-		}
-
-		public static double volumeAverage(List<HistoricalQuote> historicalQuotes, int p, int offset) {
-
-			if (p < 0) {
-				throw new InvalidPeriodException();
-			}
-
-			if (p + offset > historicalQuotes.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			long volume = 0;
-
-			for (int i = offset; i < p + offset; ++i) {
-				volume += historicalQuotes.get(i).getVolume();
-			}
-
-			return ((double) volume) / p;
-		}
-
-		public static double momentum(int p, int offset, List<HistoricalQuote> hq) {
-
-			if (p < 0) {
-				throw new InvalidPeriodException();
-			}
-
-			if (p + offset > hq.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			return hq.get(0 + offset).getAdjClose() - hq.get(p + offset - 1).getAdjClose();
-		}
-
-		public static List<Pair<LocalDate, Double>> momentumCurve(int p, List<HistoricalQuote> hq) {
-
-			// P is expected to be at least 2
-
-			if (p < 0) {
-				throw new InvalidPeriodException();
-			}
-
-			if (p > hq.size()) {
-				throw new InsufficientHistoryException();
-			}
-
-			List<Pair<LocalDate, Double>> curve = new ArrayList<>(hq.size() - p);
-
-			for (int i = hq.size() - p - 1; i >= 0; --i) {
-				curve.add(new Pair<LocalDate, Double>(hq.get(i).getHistoricalDate(),
-						hq.get(i).getAdjClose() - hq.get(i + p - 1).getAdjClose()));
-			}
-
-			return curve;
-		}
-
+		return v;
 	}
+
+	public static double beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {
+
+		double dailyReturn;
+		double dailyReturn_bmk;
+
+		double price;
+		double price_bmk;
+		double previousPrice = prices.get(0).getAdjClose();
+		double previousPrice_bmk = prices_bmk.get(0).getAdjClose();
+		double averageDailyReturn = 0;
+		double averageDailyReturn_bmk = 0;
+
+		List<Double> dailyReturns = new ArrayList<>(period);
+		List<Double> dailyReturns_bmk = new ArrayList<>(period);
+
+		for (int i = 1; i < period; ++i) {
+			price = prices.get(i).getAdjClose();
+
+			price_bmk = prices_bmk.get(i).getAdjClose();
+
+			dailyReturn = price / previousPrice - 1;
+			dailyReturn_bmk = price_bmk / previousPrice_bmk - 1;
+
+			dailyReturns.add(dailyReturn);
+			dailyReturns_bmk.add(dailyReturn_bmk);
+
+			averageDailyReturn += dailyReturn;
+			averageDailyReturn_bmk += dailyReturn_bmk;
+
+			previousPrice = price;
+			previousPrice_bmk = price_bmk;
+
+		}
+
+		averageDailyReturn /= (period - 1);
+		averageDailyReturn_bmk /= (period - 1);
+
+		double volatility_bmk = 0;
+		for (double dr_bmk : dailyReturns_bmk) {
+			volatility_bmk += Math.pow(dr_bmk - averageDailyReturn_bmk, 2);
+		}
+
+		volatility_bmk = volatility_bmk / (period - 1);
+
+		double covariance = 0;
+		for (int i = 0; i < period - 1; i++) {
+
+			covariance = Math.pow((dailyReturns.get(i).doubleValue() - averageDailyReturn)
+					* (dailyReturns_bmk.get(i).doubleValue() - averageDailyReturn_bmk), 2);
+		}
+
+		covariance = covariance / (period - 1);
+
+		return covariance / volatility_bmk;
+	}
+
+	public static double percentIn52Week(SecurityQuoteContainer sqc) {
+		return (sqc.getSecurityQuote().getLast() - sqc.getFundamentalQuote().get_52WeekLow())
+				/ (sqc.getFundamentalQuote().get_52WeekHigh() - sqc.getFundamentalQuote().get_52WeekLow());
+	}
+
+	public static double volumeAverage(List<HistoricalQuote> historicalQuotes, int p, int offset) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > historicalQuotes.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		long volume = 0;
+
+		for (int i = offset; i < p + offset; ++i) {
+			volume += historicalQuotes.get(i).getVolume();
+		}
+
+		return ((double) volume) / p;
+	}
+
+	public static double momentum(int p, int offset, List<HistoricalQuote> hq) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > hq.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		return hq.get(0 + offset).getAdjClose() - hq.get(p + offset - 1).getAdjClose();
+	}
+
+	public static List<Pair<LocalDate, Double>> momentumCurve(int p, List<HistoricalQuote> hq) {
+
+		// P is expected to be at least 2
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p > hq.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		List<Pair<LocalDate, Double>> curve = new ArrayList<>(hq.size() - p);
+
+		for (int i = hq.size() - p - 1; i >= 0; --i) {
+			curve.add(new Pair<LocalDate, Double>(hq.get(i).getHistoricalDate(),
+					hq.get(i).getAdjClose() - hq.get(i + p - 1).getAdjClose()));
+		}
+
+		return curve;
+	}
+
+}
