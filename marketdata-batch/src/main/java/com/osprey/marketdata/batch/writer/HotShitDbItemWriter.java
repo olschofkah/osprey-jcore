@@ -7,10 +7,10 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.osprey.screen.ScreenSuccessSecurity;
+import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
 
-public class HotShitDbItemWriter implements ItemWriter<ScreenSuccessSecurity> {
+public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
 
 	final static Logger logger = LogManager.getLogger(HotShitDbItemWriter.class);
 	
@@ -18,7 +18,7 @@ public class HotShitDbItemWriter implements ItemWriter<ScreenSuccessSecurity> {
 	private IHotShitRepository repo;
 
 	@Override
-	public void write(final List<? extends ScreenSuccessSecurity> items) throws Exception {
+	public void write(final List<? extends HotListItem> items) throws Exception {
 
 		logger.info("Persisting {} hotlist items ... ", () -> items.size());
 

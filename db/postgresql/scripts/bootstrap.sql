@@ -212,7 +212,7 @@ CREATE TABLE "oc_security_ohlc_hist" (
 
 CREATE TABLE "tha_hot_shit" (
 	"symbol" VARCHAR(10) NOT NULL,
-	"date" DATE NOT NULL,
+	"report_date" DATE NOT NULL,
 	"timestamp" timestamptz NOT NULL,
 	"payload" jsonb NOT NULL, -- screen, strategy
 	CONSTRAINT tha_hot_shit_pk PRIMARY KEY ("symbol","date")

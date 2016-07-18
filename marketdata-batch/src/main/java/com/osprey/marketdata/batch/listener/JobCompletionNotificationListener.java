@@ -16,7 +16,7 @@ import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.integration.slack.SlackClient;
-import com.osprey.screen.ScreenSuccessSecurity;
+import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
 
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
@@ -42,10 +42,10 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			logger.info("Work Complete");
 
-			List<ScreenSuccessSecurity> hotItems = repo.findForDate(LocalDate.now());
+			List<HotListItem> hotItems = repo.findForDate(LocalDate.now());
 
 			Map<String, List<String>> reportMap = new HashMap<>();
-			for (ScreenSuccessSecurity hotItem : hotItems) {
+			for (HotListItem hotItem : hotItems) {
 				for (String string : hotItem.getNamedScreenSets()) {
 					if (!reportMap.containsKey(string)) {
 						reportMap.put(string, new ArrayList<>());

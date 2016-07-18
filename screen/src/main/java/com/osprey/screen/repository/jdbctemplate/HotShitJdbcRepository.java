@@ -18,7 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.osprey.screen.ScreenSuccessSecurity;
+import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
 
 // @Repository
@@ -31,18 +31,18 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 	}
 
 	@Override
-	public List<ScreenSuccessSecurity> findForDate(LocalDate dt) {
+	public List<HotListItem> findForDate(LocalDate dt) {
 		final Date today = Date.valueOf(dt);
 
 		List<String> result = jdbc.queryForList("select payload from tha_hot_shit where date = ?", String.class, today);
 
 		// TODO switch to spring managed objectreader / objectwriter for performance. 
 		ObjectMapper om = new ObjectMapper();
-		List<ScreenSuccessSecurity> hotItems = new ArrayList<>(result.size());
+		List<HotListItem> hotItems = new ArrayList<>(result.size());
 		for (String o : result) {
-			ScreenSuccessSecurity hotItem = null;
+			HotListItem hotItem = null;
 			try {
-				hotItem = om.readValue(o, ScreenSuccessSecurity.class);
+				hotItem = om.readValue(o, HotListItem.class);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -58,7 +58,7 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 	}
 
 	@Override
-	public void persistThaHotShit(List<? extends ScreenSuccessSecurity> items) {
+	public void persistThaHotShit(List<? extends HotListItem> items) {
 		final ObjectMapper om = new ObjectMapper();
 
 		final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
@@ -68,7 +68,7 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {
-				ScreenSuccessSecurity sec = items.get(i);
+				HotListItem sec = items.get(i);
 
 				ps.setString(1, sec.getKey().getSymbol());
 				ps.setDate(2, today);

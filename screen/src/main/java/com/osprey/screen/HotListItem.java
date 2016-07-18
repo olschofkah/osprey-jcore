@@ -9,17 +9,17 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.osprey.securitymaster.SecurityKey;
 import com.osprey.trade.option.OptionStrategy;
 
-public class ScreenSuccessSecurity {
+public class HotListItem {
 
 	private SecurityKey key;
 	private List<OptionStrategy> strategies = new ArrayList<>();
 	private List<String> namedScreenSets = new ArrayList<>();
 
-	public ScreenSuccessSecurity() {
+	public HotListItem() {
 		// for ObjectMapping Only
 	}
 
-	public ScreenSuccessSecurity(SecurityKey s) {
+	public HotListItem(SecurityKey s) {
 		this.key = s;
 	}
 

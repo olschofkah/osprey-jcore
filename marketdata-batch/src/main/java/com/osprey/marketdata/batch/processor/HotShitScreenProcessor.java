@@ -19,11 +19,11 @@ import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.ScreenCriteriaGenerator;
 import com.osprey.screen.ScreenPlanFactory;
 import com.osprey.screen.ScreenStrategyEntry;
-import com.osprey.screen.ScreenSuccessSecurity;
+import com.osprey.screen.HotListItem;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
-public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContainer, ScreenSuccessSecurity> {
+public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContainer, HotListItem> {
 
 	final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
 
@@ -31,7 +31,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 	private String screenJsonFile;
 
 	@Override
-	public ScreenSuccessSecurity process(SecurityQuoteContainer item) throws Exception {
+	public HotListItem process(SecurityQuoteContainer item) throws Exception {
 
 		logger.info("Performing tha hot shit on {} ", () -> item.getKey().getSymbol());
 
@@ -46,7 +46,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 
-		ScreenSuccessSecurity result = null;
+		HotListItem result = null;
 		for (ScreenStrategyEntry entry : entries) {
 
 			// Convert the criteria generators into criteria.
@@ -65,7 +65,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 						new Object[] { item.getKey().getSymbol(), LocalDate.now() });
 
 				if (result == null) {
-					result = new ScreenSuccessSecurity(item.getKey());
+					result = new HotListItem(item.getKey());
 				}
 				result.addScreen(entry.getScreenName());
 				result.addAllStrategies(entry.getStrategies());

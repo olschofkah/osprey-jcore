@@ -3,13 +3,13 @@ package com.osprey.screen.repository;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.osprey.screen.ScreenSuccessSecurity;
+import com.osprey.screen.HotListItem;
 
 public interface IHotShitRepository {
 
-	List<ScreenSuccessSecurity> findForDate(LocalDate dt);
+	List<HotListItem> findForDate(LocalDate dt);
 
 	void deleteHotShitForDate(LocalDate dt);
 
-	void persistThaHotShit(List<? extends ScreenSuccessSecurity> lst);
+	void persistThaHotShit(List<? extends HotListItem> lst);
 }

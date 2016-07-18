@@ -50,7 +50,7 @@ import com.osprey.marketdata.batch.writer.QuoteContainerItemWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.exception.InsufficientHistoryException;
-import com.osprey.screen.ScreenSuccessSecurity;
+import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
 import com.osprey.screen.repository.jdbctemplate.HotShitJdbcRepository;
 import com.osprey.securitymaster.Security;
@@ -309,7 +309,7 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step hotListFilterAndPersist() {
 		return stepBuilderFactory.get("hotListFilter")
-				.<SecurityQuoteContainer, ScreenSuccessSecurity>chunk(100)
+				.<SecurityQuoteContainer, HotListItem>chunk(100)
 				.faultTolerant()
 				.skip(InsufficientHistoryException.class)
 				.skipLimit(256)
