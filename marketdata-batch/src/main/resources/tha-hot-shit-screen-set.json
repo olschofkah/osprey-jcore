@@ -48,6 +48,15 @@
     ]
 },
 {
+    "screenName":"Watchlist: Earnings Movers**TEST**",
+    "strategies":[],
+	"screenCriteria": [
+        {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":10,"relationalOperator":"_LE"}},
+        {"criteriaBucket":{"type":"VOLATILITY","period":60,"volatilityComparison":0.75,"relationalOperator":"_GE"}}
+    ]
+},
+{
     "screenName":"Bull: EMA Cross",
     "strategies":[],
 	"screenCriteria": [
@@ -82,7 +91,8 @@
         {"criteriaBucket":{"type":"EMA","period1":10,"period2":50,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"PRICE_CHANGE","period":20,"percentChange":0.03,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"PRICE_CHANGE","period":60,"percentChange":0.03,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"PRICE_CHANGE","period":120,"percentChange":0.03,"relationalOperator":"_GT"}}
+        {"criteriaBucket":{"type":"PRICE_CHANGE","period":120,"percentChange":0.03,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"MOMENTUM_X","period1":2,"range":2,"crossoverPoint":0,"direction":"FROM_BELOW_TO_ABOVE"}}
         
     ]
 },
@@ -96,7 +106,8 @@
         {"criteriaBucket":{"type":"PRICE_CHANGE","period":20,"percentChange":-0.03,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"PRICE_CHANGE","period":60,"percentChange":-0.03,"relationalOperator":"_LT"}},
         {"criteriaBucket":{"type":"PRICE_CHANGE","period":120,"percentChange":-0.03,"relationalOperator":"_LT"}},
-        {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":35,"relationalOperator":"_GT"}}
+        {"criteriaBucket":{"type":"RSI","period":14,"rsiComparison":35,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"MOMENTUM_X","period1":2,"range":2,"crossoverPoint":0,"direction":"FROM_ABOVE_TO_BELOW"}}
     ]
 },
 {
