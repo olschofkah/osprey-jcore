@@ -245,12 +245,13 @@ public final class OspreyQuantMath {
 		double aveGain = 0.0;
 		double aveLoss = 0.0;
 		for (int i = offset; i < p + offset; ++i) {
-			double changeTypicalPrice = 1/3* (prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow() - prices.get(i).getClose() - prices.get(i).getHigh() - prices.get(i).getLow());
+			double changeTypicalPrice = 1/3 * (prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow()) - 1/3 * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
+			double changeRawMoneyFlow = 1/3* prices.get(i+1).getVolume()*(prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow()) - 1/3 * prices.get(i).getVolume() * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
 
 			if (changeTypicalPrice >= 0) {
-				aveGain += changeTypicalPrice;
+				aveGain += changeRawMoneyFlow;
 			} else {
-				aveLoss += changeTypicalPrice * -1;
+				aveLoss += changeRawMoneyFlow * -1;
 			}
 		}
 
