@@ -223,6 +223,41 @@ public final class OspreyQuantMath {
 
 	}
 
+
+	/* http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:money_flow_index_mfi
+	 * 1. Typical Price = (High + Low + Close)/3
+	 * 2. Raw Money Flow = Typical Price x Volume
+	 * 3. Money Flow Ratio = (14-period Positive Money Flow)/(14-period Negative Money Flow)
+	 * 4. Money Flow Index = 100 - 100/(1 + Money Flow Ratio)
+	 * 
+	 * 
+	 */
+	public static double moneyFlowIndex(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double aveGain = 0.0;
+		double aveLoss = 0.0;
+		for (int i = offset; i < p + offset; ++i) {
+			double changeTypicalPrice = 1/3* (prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow() - prices.get(i).getClose() - prices.get(i).getHigh() - prices.get(i).getLow());
+
+			if (changeTypicalPrice >= 0) {
+				aveGain += changeTypicalPrice;
+			} else {
+				aveLoss += changeTypicalPrice * -1;
+			}
+		}
+
+		double moneyFlowRatio = (aveGain) / (aveLoss);
+		return 100.0 - 100.0 / (1.0 + moneyFlowRatio);
+
+	}
 	/**
 	 * 
 	 * https://en.wikipedia.org/wiki/Relative_strength_index
@@ -640,7 +675,7 @@ public final class OspreyQuantMath {
 	}
 
 	public static List<Pair<LocalDate, Double>> momentumCurve(int p, List<HistoricalQuote> hq) {
-		
+
 		// P is expected to be at least 2
 
 		if (p < 0) {
