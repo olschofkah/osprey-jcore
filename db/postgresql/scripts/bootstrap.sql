@@ -31,18 +31,16 @@ CREATE TABLE "oc_exchange" (
 );
 
 
-
-CREATE TABLE "oc_security_ext_stat_log" (
+CREATE TABLE "oc_security_fundamental" (
 	"symbol" VARCHAR(10) NOT NULL,
-	"timestamp" timestamptz NOT NULL,
 	"date" DATE NOT NULL,
-	"52_week_high" float8,
-	"52_week_low" float8,
-	"50_day_average" float8,
-	"200_day_average" float8,
+	"last_update_ts" timestamptz NOT NULL,
+	"_52_week_high" float8,
+	"_52_week_low" float8,
+	"_50_day_average" float8,
+	"_200_day_average" float8,
 	"average_volume" int8,
-	"regular_market_volume" int8,
-	"10_day_avg_volume" int8,
+	"_10_day_avg_volume" int8,
 	"market_cap" int8,
 	"beta" float8,
 	"return_on_assets" float8,
@@ -50,14 +48,14 @@ CREATE TABLE "oc_security_ext_stat_log" (
 	"forward_pe" float8,
 	"trailing_pe" float8,
 	"profit_margins" float8,
-	"float8_shares" float8,
+	"float_shares" float8,
 	"shares_outstanding" float8,
 	"shares_short" float8,
 	"shares_short_prior_month" float8,
 	"held_pct_insiders" float8,
 	"held_pct_institutions" float8,
 	"short_ratio" float8,
-	"short_percent_of_float8" float8,
+	"short_percent_of_float" float8,
 	"book_value" float8,
 	"price_to_book" float8,
 	"earnings_qtr_growth" float8,
@@ -92,7 +90,12 @@ CREATE TABLE "oc_security_ext_stat_log" (
 	"revenue_avg" float8,
 	"revenue_low" float8,
 	"revenue_high" float8,
-	CONSTRAINT oc_security_ext_stat_log_pk PRIMARY KEY ("symbol","timestamp")
+	"div_rate" float8,
+	"div_yield" float8,
+	"revenue_qtr_growth" float8,
+	"total_assets" float8,
+	"yield" float8,
+	CONSTRAINT oc_security_ext_stat_log_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE
 );
@@ -112,7 +115,7 @@ CREATE TABLE "oc_security_quote" (
 	"close" float8,
 	"high" float8,
 	"low" float8,
-	"data_currency_cd" char(2) NOT NULL,
+	"data_currency" varchar(50) NOT NULL,
 	"open_interest" int8,
 	CONSTRAINT oc_security_quote_pk PRIMARY KEY ("symbol","timestamp")
 ) WITH (
