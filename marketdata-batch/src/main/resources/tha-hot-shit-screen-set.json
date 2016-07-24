@@ -41,26 +41,17 @@
     "screenName":"Watchlist: Earnings Movers",
     "strategies":[],
 	"screenCriteria": [
-        {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"PRICE","price":15,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":10,"relationalOperator":"_LE"}},
         {"criteriaBucket":{"type":"BETA","betaComparison":2,"relationalOperator":"_GE"}},
         {"criteriaBucket":{"type":"VOLATILITY","period":252,"volatilityComparison":0.5,"relationalOperator":"_GE"}}
     ]
 },
 {
-    "screenName":"Watchlist: Earnings Movers**TEST**",
-    "strategies":[],
-	"screenCriteria": [
-        {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
-        {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":10,"relationalOperator":"_LE"}},
-        {"criteriaBucket":{"type":"VOLATILITY","period":60,"volatilityComparison":0.75,"relationalOperator":"_GE"}}
-    ]
-},
-{
     "screenName":"Watchlist: Earnings Movers**CONTROL VOL**",
     "strategies":[],
 	"screenCriteria": [
-        {"criteriaBucket":{"type":"PRICE","price":5,"relationalOperator":"_GT"}},
+        {"criteriaBucket":{"type":"PRICE","price":10,"relationalOperator":"_GT"}},
         {"criteriaBucket":{"type":"EARNINGS_ANNOUNCEMENT","daysAway":10,"relationalOperator":"_LE"}},
         {"criteriaBucket":{"type":"VOLATILITY","period":252,"volatilityComparison":0.75,"relationalOperator":"_GE"}}
     ]
