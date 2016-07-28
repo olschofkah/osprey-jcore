@@ -115,7 +115,7 @@ CREATE TABLE "oc_security_quote" (
 	"close" float8,
 	"high" float8,
 	"low" float8,
-	"data_currency" varchar(50) NOT NULL,
+	"data_currency" varchar(50) NULL,
 	"open_interest" int8,
 	CONSTRAINT oc_security_quote_pk PRIMARY KEY ("symbol","timestamp")
 ) WITH (
