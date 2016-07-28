@@ -32,7 +32,7 @@ import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCri
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
-import com.osprey.screen.criteria.RsiCriteria;
+import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
@@ -118,7 +118,7 @@ public class LiveMarketDataScreenTest {
 
 		VolumeAverageCriteria c17 = new VolumeAverageCriteria(1000000, 5, RelationalOperator._GE);
 
-		RsiCriteria c18 = new RsiCriteria(252, 50, RelationalOperator._GE);
+		RelativeStrengthIndexCriteria c18 = new RelativeStrengthIndexCriteria(252, 5, 50, RelationalOperator._GE);
 
 		ExponentialMovingAverageVsCurrentPriceCriteria c19 = new ExponentialMovingAverageVsCurrentPriceCriteria(15,
 				RelationalOperator._GE);

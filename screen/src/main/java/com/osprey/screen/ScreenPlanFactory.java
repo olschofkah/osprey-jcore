@@ -21,7 +21,7 @@ import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCri
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
-import com.osprey.screen.criteria.RsiCriteria;
+import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
@@ -42,7 +42,7 @@ import com.osprey.screen.screens.MovingAverageConverganceDiverganceCrossoverScre
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.PriceGapScreen;
 import com.osprey.screen.screens.PricePercentageChangeScreen;
-import com.osprey.screen.screens.RsiScreen;
+import com.osprey.screen.screens.RelativeStrengthIndexScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
@@ -155,7 +155,7 @@ public class ScreenPlanFactory {
 		case ROE:
 			return null;
 		case RSI:
-			return new RsiScreen((RsiCriteria) criteria);
+			return new RelativeStrengthIndexScreen((RelativeStrengthIndexCriteria) criteria);
 		case SECTOR:
 			return null;
 		case SMA:

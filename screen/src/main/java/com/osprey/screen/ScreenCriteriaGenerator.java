@@ -19,7 +19,7 @@ import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCri
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
-import com.osprey.screen.criteria.RsiCriteria;
+import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
@@ -114,7 +114,7 @@ public class ScreenCriteriaGenerator {
 		case ROE:
 			break;
 		case RSI:
-			result = objectMapper.convertValue(getCriteriaBucket(), RsiCriteria.class);
+			result = objectMapper.convertValue(getCriteriaBucket(), RelativeStrengthIndexCriteria.class);
 			break;
 		case SECTOR:
 			break;
