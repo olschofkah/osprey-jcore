@@ -1,6 +1,5 @@
 package com.osprey.marketdata.batch.processor;
 
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,12 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.HotListItem;
 import com.osprey.screen.ScreenCriteriaGenerator;
 import com.osprey.screen.ScreenPlanFactory;
@@ -28,23 +22,14 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContainer, HotListItem> {
 
 	final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
-
-	@Value("${hot.shit.screen.set.json}")
-	private String screenJsonFile;
-
+	
 	@Autowired
-	@Qualifier("om1")
-	private ObjectMapper om;
+	private HotShitScreenProvidor screenProvidor;
 
 	@Override
 	public HotListItem process(SecurityQuoteContainer item) throws Exception {
 
 		logger.info("Performing tha hot shit on {} ", () -> item.getKey().getSymbol());
-
-		InputStream in = getClass().getClassLoader().getResourceAsStream(screenJsonFile);
-		List<ScreenStrategyEntry> entries = om.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-				.readValue(in, new TypeReference<List<ScreenStrategyEntry>>() {
-				});
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>(2);
 		securities.add(item);
@@ -52,7 +37,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 
 		HotListItem result = null;
-		for (ScreenStrategyEntry entry : entries) {
+		for (ScreenStrategyEntry entry : screenProvidor.getScreens()) {
 
 			// Convert the criteria generators into criteria.
 			List<IScreenCriteria> criteria = new ArrayList<>(entry.getScreenCriteria().size());

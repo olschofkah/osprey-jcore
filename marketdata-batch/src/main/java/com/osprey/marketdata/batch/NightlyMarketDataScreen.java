@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
+import com.osprey.marketdata.batch.processor.HotShitScreenProvidor;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
 import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
@@ -150,6 +151,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public SecurityMasterItemReader initialScreenReader() {
 		return new SecurityMasterItemReader();
+	}
+	
+	@Bean
+	public HotShitScreenProvidor hotShitScreenProvidor(){
+		return new HotShitScreenProvidor();
 	}
 	
 	@Bean
