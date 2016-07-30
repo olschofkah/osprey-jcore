@@ -35,6 +35,7 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
@@ -52,7 +53,10 @@ import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 import com.osprey.screen.repository.jdbctemplate.HotShitJdbcRepository;
+import com.osprey.screen.repository.jdbctemplate.OspreyJSONObjectJdbcRepository;
+import com.osprey.screen.service.BlackListService;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
@@ -76,6 +80,10 @@ public class NightlyMarketDataScreen {
 	@Autowired
 	private DataSource dataSource;
 
+	// A queue to temporarily hold securities to quote and pull history for.
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>(); // #1
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue = new ConcurrentLinkedQueue<>(); // #2
+	
 	@Bean
 	public DataSource postgresDataSource() {
 		return DataSourceBuilder.create()
@@ -87,16 +95,18 @@ public class NightlyMarketDataScreen {
 
 		// TODO EXTRACT TO CONFIG !!!
 	}
+	
+	@Bean
+	public ObjectMapper om1(){
+		return new ObjectMapper();
+	}
 
 	@Bean
 	public SlackClient slackClient() {
 		return new SlackClient();
 	}
 
-	// A queue to temporarily hold securities to quote and pull history for.
-	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>(); // #1
-	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue = new ConcurrentLinkedQueue<>(); // #2
-
+	
 	@Bean
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -123,10 +133,15 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
+	public IOspreyJSONObjectRepository ospreyJSONObjectRepository() {
+		return new OspreyJSONObjectJdbcRepository(dataSource);
+	}
+
+	@Bean
 	public IHotShitRepository hotShitRepository() {
 		return new HotShitJdbcRepository(dataSource);
 	}
-	
+
 	@Bean
 	public ISecurityMasterRepository securityMasterRepository(){
 		return new SecurityMasterJdbcRepository(dataSource);
@@ -135,6 +150,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public SecurityMasterItemReader initialScreenReader() {
 		return new SecurityMasterItemReader();
+	}
+	
+	@Bean
+	public BlackListService blackListService(){
+		return new BlackListService();
 	}
 
 	@Bean

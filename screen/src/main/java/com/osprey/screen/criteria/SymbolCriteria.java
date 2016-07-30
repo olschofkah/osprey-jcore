@@ -32,4 +32,8 @@ public class SymbolCriteria implements IScreenCriteria {
 		return contains;
 	}
 
+	public void setSymbols(Set<String> symbols) {
+		this.symbols = symbols;
+	}
+
 }

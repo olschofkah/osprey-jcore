@@ -10,16 +10,18 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.osprey.screen.SimpleScreenExecutor;
+import com.osprey.screen.HotListItem;
 import com.osprey.screen.ScreenCriteriaGenerator;
 import com.osprey.screen.ScreenPlanFactory;
 import com.osprey.screen.ScreenStrategyEntry;
-import com.osprey.screen.HotListItem;
+import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
@@ -30,14 +32,17 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 	@Value("${hot.shit.screen.set.json}")
 	private String screenJsonFile;
 
+	@Autowired
+	@Qualifier("om1")
+	private ObjectMapper om;
+
 	@Override
 	public HotListItem process(SecurityQuoteContainer item) throws Exception {
 
 		logger.info("Performing tha hot shit on {} ", () -> item.getKey().getSymbol());
 
 		InputStream in = getClass().getClassLoader().getResourceAsStream(screenJsonFile);
-		List<ScreenStrategyEntry> entries = new ObjectMapper()
-				.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
+		List<ScreenStrategyEntry> entries = om.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
 				.readValue(in, new TypeReference<List<ScreenStrategyEntry>>() {
 				});
 

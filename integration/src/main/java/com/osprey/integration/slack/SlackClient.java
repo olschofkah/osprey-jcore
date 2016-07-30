@@ -3,6 +3,7 @@ package com.osprey.integration.slack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,16 @@ public class SlackClient {
 
 	@Autowired
 	private RestTemplate http;
-
+	
 	@Autowired
-	private ObjectMapper mapper;
+	@Qualifier("om1")
+	private ObjectMapper om;
 
 	public void postMessage(Object message) {
 
 		String payload = null;
 		try {
-			payload = mapper.writeValueAsString(new SlackRequest(user, message));
+			payload = om.writeValueAsString(new SlackRequest(user, message));
 		} catch (RestClientException | JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

@@ -223,6 +223,17 @@ CREATE TABLE "tha_hot_shit" (
   OIDS=FALSE
 );
 
+
+CREATE TABLE "oc_map" (
+	"obj_key" VARCHAR(10) NOT NULL,
+	"timestamp" timestamptz NOT NULL,
+	"obj_value" json NOT NULL,
+	CONSTRAINT oc_map_pk PRIMARY KEY ("obj_key")
+) WITH (
+  OIDS=FALSE
+);
+
+
 CREATE TABLE "oc_trigger" (
 	"symbol" VARCHAR(10) NOT NULL,
 	"timestamp" timestamptz NOT NULL,

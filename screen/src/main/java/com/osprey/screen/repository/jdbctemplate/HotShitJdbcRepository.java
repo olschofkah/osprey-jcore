@@ -13,6 +13,8 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.postgresql.util.PGobject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -26,6 +28,10 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 
 	private JdbcTemplate jdbc;
 
+	@Autowired
+	@Qualifier("om1")
+	private ObjectMapper om;
+
 	public HotShitJdbcRepository(DataSource ds) {
 		jdbc = new JdbcTemplate(ds);
 	}
@@ -36,8 +42,6 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 
 		List<String> result = jdbc.queryForList("select payload from tha_hot_shit where date = ?", String.class, today);
 
-		// TODO switch to spring managed objectreader / objectwriter for performance. 
-		ObjectMapper om = new ObjectMapper();
 		List<HotListItem> hotItems = new ArrayList<>(result.size());
 		for (String o : result) {
 			HotListItem hotItem = null;
@@ -59,7 +63,6 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 
 	@Override
 	public void persistThaHotShit(List<? extends HotListItem> items) {
-		final ObjectMapper om = new ObjectMapper();
 
 		final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 		final Date today = Date.valueOf(LocalDate.now());
