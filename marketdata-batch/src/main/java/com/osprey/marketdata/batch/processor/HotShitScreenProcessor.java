@@ -36,6 +36,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 
+		LocalDate today = LocalDate.now();
 		HotListItem result = null;
 		for (ScreenStrategyEntry entry : screenProvidor.getScreens()) {
 
@@ -59,6 +60,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 				}
 				result.addScreen(entry.getScreenName());
 				result.addAllStrategies(entry.getStrategies());
+				result.setReportDate(today);
 			}
 		}
 

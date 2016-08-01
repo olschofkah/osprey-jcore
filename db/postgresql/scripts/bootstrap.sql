@@ -218,6 +218,7 @@ CREATE TABLE "tha_hot_shit" (
 	"report_date" DATE NOT NULL,
 	"timestamp" timestamptz NOT NULL,
 	"payload" jsonb NOT NULL, -- screen, strategy
+	"deleted" boolean NOT NULL default FALSE,
 	CONSTRAINT tha_hot_shit_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE
@@ -227,8 +228,22 @@ CREATE TABLE "tha_hot_shit" (
 CREATE TABLE "oc_map" (
 	"obj_key" VARCHAR(10) NOT NULL,
 	"timestamp" timestamptz NOT NULL,
-	"obj_value" json NOT NULL,
+	"obj_value" json,
 	CONSTRAINT oc_map_pk PRIMARY KEY ("obj_key")
+) WITH (
+  OIDS=FALSE
+);
+
+insert into oc_map values ('black-list', clock_timestamp(), null);
+insert into oc_map values ('models', clock_timestamp(), null);
+
+CREATE TABLE "oc_security_comment" (
+	"id"  SERIAL,
+	"symbol" VARCHAR(10) NOT NULL,
+	"timestamp" timestamptz NOT NULL,
+	"comment" varchar(1024) NOT NULL, 
+	"deleted" boolean NOT NULL default FALSE,
+	CONSTRAINT oc_security_comment_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
 );
