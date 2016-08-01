@@ -1,5 +1,6 @@
 package com.osprey.marketdata.batch.processor;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,7 +23,7 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContainer, HotListItem> {
 
 	final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
-	
+
 	@Autowired
 	private HotShitScreenProvidor screenProvidor;
 
@@ -36,7 +37,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 
-		LocalDate today = LocalDate.now();
+		Date today = Date.valueOf(LocalDate.now());
 		HotListItem result = null;
 		for (ScreenStrategyEntry entry : screenProvidor.getScreens()) {
 

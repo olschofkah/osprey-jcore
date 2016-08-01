@@ -1,5 +1,6 @@
 package com.osprey.screen;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import com.osprey.trade.option.OptionStrategy;
 public class HotListItem {
 
 	private SecurityKey key;
-	private LocalDate reportDate;
+	private Date reportDate;
 	private List<OptionStrategy> strategies = new ArrayList<>();
 	private List<String> namedScreenSets = new ArrayList<>();
 
@@ -69,11 +70,11 @@ public class HotListItem {
 		this.key = key;
 	}
 
-	public LocalDate getReportDate() {
+	public Date getReportDate() {
 		return reportDate;
 	}
 
-	public void setReportDate(LocalDate reportDate) {
+	public void setReportDate(Date reportDate) {
 		this.reportDate = reportDate;
 	}
 }
