@@ -36,6 +36,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ospreynod
 ALTER DEFAULT PRIVILEGES IN SCHEMA public
    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO ospreynodeusr;
    
+   GRANT USAGE, SELECT ON SEQUENCE oc_security_comment_id_seq TO ospreynodeusr;
+   
    
 CREATE TABLE "session" (
   	"sid" varchar NOT NULL COLLATE "default",

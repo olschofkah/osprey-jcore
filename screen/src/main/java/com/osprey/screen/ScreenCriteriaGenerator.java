@@ -16,6 +16,7 @@ import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
+import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
@@ -85,6 +86,10 @@ public class ScreenCriteriaGenerator {
 		case MACD:
 			result = objectMapper.convertValue(getCriteriaBucket(),
 					MovingAverageConverganceDiverganceCrossoverCriteria.class);
+			break;
+		case MACD_DIVERGANCE:
+			result = objectMapper.convertValue(getCriteriaBucket(),
+					MovingAverageConverganceDiverganceDiverganceCriteria.class);
 			break;
 		case MARKET_CAP:
 			break;
