@@ -14,12 +14,8 @@ import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
 import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
-import com.osprey.math.OspreyQuantMath;
-import com.osprey.math.exception.InsufficientHistoryException;
-import com.osprey.securitymaster.EnhancedSecurity;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
-import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
 
@@ -56,8 +52,8 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 		List<HistoricalQuote> historicals = historicalQuoteService.quoteHistorical(item.getKey(), overOneYearAgo, today,
 				QuoteDataFrequency.DAY);
 		item.setHistoricalQuotes(historicals);
-
-		addEnhancedQuote(item);
+		
+		// TODO Consider adding calculated values here to store on the security master. 
 
 		return item;
 	}
@@ -68,28 +64,6 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 			Thread.sleep(5); // TODO make config
 		}
 		throttleCapacity.getAndDecrement();
-	}
-
-	private void addEnhancedQuote(SecurityQuoteContainer qc) {
-
-		EnhancedSecurity es = new EnhancedSecurity(qc.getKey());
-		List<HistoricalQuote> historicalQuotes = qc.getHistoricalQuotes();
-
-		try {
-			double volatility = OspreyQuantMath.volatility(
-					Math.min(historicalQuotes.size(), OspreyConstants.MARKET_DAYS_IN_YEAR), historicalQuotes);
-
-			double ema12 = OspreyQuantMath.ema(12, 0, historicalQuotes);
-
-			// TODO Determine & Add more calculations.
-
-			es.setVolatility360(volatility);
-			es.setEma12(ema12);
-
-		} catch (InsufficientHistoryException e) {
-			logger.error("Insufficient historical prices to calculate stats on {}, size avaialble {} ",
-					new Object[] { qc.getKey().getSymbol(), historicalQuotes.size() });
-		}
 	}
 
 }

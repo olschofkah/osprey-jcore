@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomUtils;
 
-import com.osprey.securitymaster.EnhancedSecurity;
 import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
@@ -46,11 +45,6 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 		
 	}
 
-	public void persist(EnhancedSecurity fq) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void persist(SecurityUpcomingEvents fq) {
 		// TODO Auto-generated method stub
 		
@@ -87,6 +81,11 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 	}
 
 	public Security findSecurity(SecurityKey key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<SecurityEvent> findSecurityEvents(SecurityKey key) {
 		// TODO Auto-generated method stub
 		return null;
 	}

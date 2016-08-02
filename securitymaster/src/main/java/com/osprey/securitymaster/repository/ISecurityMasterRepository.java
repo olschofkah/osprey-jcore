@@ -3,7 +3,6 @@ package com.osprey.securitymaster.repository;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.osprey.securitymaster.EnhancedSecurity;
 import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
@@ -25,7 +24,6 @@ public interface ISecurityMasterRepository {
 
 	public void persist(FundamentalQuote fq);
 
-	public void persist(EnhancedSecurity fq);
 
 	public void persist(SecurityUpcomingEvents fq);
 
@@ -40,5 +38,7 @@ public interface ISecurityMasterRepository {
 	public List<Security> findSecurities();
 
 	Security findSecurity(SecurityKey key);
+
+	List<SecurityEvent> findSecurityEvents(SecurityKey key);
 
 }

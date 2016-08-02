@@ -13,7 +13,6 @@ public class SecurityQuoteContainer {
 	private SecurityQuote securityQuote;
 	private List<HistoricalQuote> historicalQuotes;
 	private FundamentalQuote fundamentalQuote;
-	private EnhancedSecurity enhancedSecurity;
 
 	private List<SecurityEvent> events;
 	private SecurityUpcomingEvents upcomingEvents;
@@ -63,14 +62,6 @@ public class SecurityQuoteContainer {
 
 	public void setFundamentalQuote(FundamentalQuote fundamentalQuote) {
 		this.fundamentalQuote = fundamentalQuote;
-	}
-
-	public EnhancedSecurity getEnhancedSecurity() {
-		return enhancedSecurity;
-	}
-
-	public void setEnhancedSecurity(EnhancedSecurity enhancedSecurity) {
-		this.enhancedSecurity = enhancedSecurity;
 	}
 
 	public SecurityKey getKey() {
@@ -127,10 +118,6 @@ public class SecurityQuoteContainer {
 
 		if (security != null) {
 			security.setTimestamp(now);
-		}
-
-		if (enhancedSecurity != null) {
-			enhancedSecurity.setTimestamp(now);
 		}
 
 		if (securityQuote != null) {

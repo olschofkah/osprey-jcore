@@ -152,7 +152,7 @@ CREATE TABLE "oc_security_next_events" (
 CREATE TABLE "oc_security_event" (
 	"symbol" VARCHAR(10) NOT NULL,
 	"date" DATE NOT NULL,
-	"event_type_cd" char(1) NOT NULL,
+	"event_type_cd" char(2) NOT NULL,
 	"amt" float8 NOT NULL,
 	"timestamp" timestamptz NOT NULL,
 	CONSTRAINT oc_security_event_pk PRIMARY KEY ("symbol","date","event_type_cd")
@@ -169,31 +169,6 @@ CREATE TABLE "oc_secrity_event_type" (
 ) WITH (
   OIDS=FALSE
 );
-
-
-
-CREATE TABLE "oc_security_int_stat_log" (
-	"symbol" VARCHAR(10) NOT NULL,
-	"timestamp" timestamptz NOT NULL,
-	"volatility_30" float8,
-	"volatility_90" float8,
-	"volatility_360" float8,
-	"ema_4" float8,
-	"ema_9" float8,
-	"ema_12" float8,
-	"ema_15" float8,
-	"ema_26" float8,
-	"ema_50" float8,
-	"ema_200" float8,
-	"beta_30" float8,
-	"beta_90" float8,
-	"beta_360" float8,
-	"alpha_for_ema" float8,
-	CONSTRAINT oc_security_int_stat_log_pk PRIMARY KEY ("symbol","timestamp")
-) WITH (
-  OIDS=FALSE
-);
-
 
 
 CREATE TABLE "oc_security_ohlc_hist" (
