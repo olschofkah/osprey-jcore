@@ -15,11 +15,13 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.osprey.marketdata.feed.ISecurityMasterService;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDatatFeedConnectionException;
+import com.osprey.marketdata.service.MarketDataLoadDateService;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.constants.Exchange;
 import com.osprey.securitymaster.constants.InstrumentType;
@@ -49,6 +51,9 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 	@Value("${zacks.optionable.symbols}")
 	private String optionableList;
 
+	@Autowired
+	private MarketDataLoadDateService marketDataLoadDateService;
+
 	@Override
 	public Set<Security> fetchSecurityMaster() throws MarketDataIOException {
 		Set<Security> securities = new HashSet<>();
@@ -60,6 +65,8 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 		securities.addAll(parseExternalListedSecurity(lines));
 
 		filterNonOptionables(securities);
+
+		marketDataLoadDateService.recordLoadDate(ZonedDateTime.now());
 
 		return securities;
 	}

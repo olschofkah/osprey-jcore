@@ -7,14 +7,19 @@ public class SecurityKey {
 
 	private String symbol;
 	private String cusip;
-	
-	public SecurityKey(){
+
+	public SecurityKey() {
 		// for ObjectMapping Only
 	}
 
 	public SecurityKey(String symbol, String cusip) {
 		this.symbol = symbol;
 		this.cusip = cusip;
+	}
+
+	public SecurityKey(SecurityKey key) {
+		this.symbol = key.symbol;
+		this.cusip = key.cusip;
 	}
 
 	public String getSymbol() {

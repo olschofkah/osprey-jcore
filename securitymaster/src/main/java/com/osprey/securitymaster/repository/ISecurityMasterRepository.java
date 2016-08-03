@@ -41,4 +41,6 @@ public interface ISecurityMasterRepository {
 
 	List<SecurityEvent> findSecurityEvents(SecurityKey key);
 
+	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key);
+
 }

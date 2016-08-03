@@ -597,6 +597,44 @@ public final class OspreyQuantMath {
 		}
 		return v;
 	}
+	
+	/* http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:money_flow_index_mfi
+	 * 1. Typical Price = (High + Low + Close)/3
+	 * 2. Raw Money Flow = Typical Price x Volume
+	 * 3. Money Flow Ratio = (14-period Positive Money Flow)/(14-period Negative Money Flow)
+	 * 4. Money Flow Index = 100 - 100/(1 + Money Flow Ratio)
+	 * 
+	 * 
+	 */
+	public static double moneyFlowIndex(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		// TODO clean this up. 
+		
+		double aveGain = 0.0;
+		double aveLoss = 0.0;
+		for (int i = offset; i < p + offset; ++i) {
+			double changeTypicalPrice = 1/3 * (prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow()) - 1/3 * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
+			double changeRawMoneyFlow = 1/3* prices.get(i+1).getVolume()*(prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow()) - 1/3 * prices.get(i).getVolume() * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
+
+			if (changeTypicalPrice >= 0) {
+				aveGain += changeRawMoneyFlow;
+			} else {
+				aveLoss += changeRawMoneyFlow * -1;
+			}
+		}
+
+		double moneyFlowRatio = (aveGain) / (aveLoss);
+		return 100.0 - 100.0 / (1.0 + moneyFlowRatio);
+
+	}
 
 	public static double beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {
 

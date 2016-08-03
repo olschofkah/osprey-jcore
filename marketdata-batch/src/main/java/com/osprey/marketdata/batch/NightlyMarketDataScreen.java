@@ -2,6 +2,7 @@ package com.osprey.marketdata.batch;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,7 +44,10 @@ import com.osprey.marketdata.batch.processor.HotShitScreenProvidor;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
 import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
+import com.osprey.marketdata.batch.reader.QuoteItemReader;
 import com.osprey.marketdata.batch.reader.SecurityMasterItemReader;
+import com.osprey.marketdata.batch.tasklet.MarketDataLoadDecider;
+import com.osprey.marketdata.batch.tasklet.NoOpTasklet;
 import com.osprey.marketdata.batch.tasklet.PurgePreviousRunHotlistTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorShutdownTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
@@ -51,6 +55,7 @@ import com.osprey.marketdata.batch.writer.HotShitDbItemWriter;
 import com.osprey.marketdata.batch.writer.QuoteContainerItemWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
+import com.osprey.marketdata.service.MarketDataLoadDateService;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
@@ -117,6 +122,11 @@ public class NightlyMarketDataScreen {
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		return executor;
 	}
+	
+	@Bean
+	public ExecutorService executorService() {
+		return Executors.newFixedThreadPool(8, threadFactory()); // TODO extract thread count
+	}
 
 	@Bean
 	public ThreadFactory threadFactory() {
@@ -147,10 +157,19 @@ public class NightlyMarketDataScreen {
 	public ISecurityMasterRepository securityMasterRepository(){
 		return new SecurityMasterJdbcRepository(dataSource);
 	}
+	
+	@Bean
+	public MarketDataLoadDateService marketDataLoadDateService(){
+		return new MarketDataLoadDateService();
+	}
 
 	@Bean
 	public SecurityMasterItemReader initialScreenReader() {
 		return new SecurityMasterItemReader();
+	}
+	
+	@Bean QuoteItemReader quoteItemReader(){
+		return new QuoteItemReader();
 	}
 	
 	@Bean
@@ -215,6 +234,11 @@ public class NightlyMarketDataScreen {
 	public PurgePreviousRunHotlistTasklet purgePreviousRunHotlistTasklet() {
 		return new PurgePreviousRunHotlistTasklet();
 	}
+	
+	@Bean
+	public MarketDataLoadDecider marketDataLoadDecider() {
+		return new MarketDataLoadDecider();
+	}
 
 	@Bean
 	public QuoteThrottleDisruptorShutdownTasklet quoteThrottleDisruptorShutdownTasklet() {
@@ -234,6 +258,19 @@ public class NightlyMarketDataScreen {
 			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
 				logger.debug("Queuing securities for further quoting ...");
 				postInitialScreenResultQueue.addAll(items);
+			}
+
+		};
+	}
+	
+	@Bean
+	public ItemWriter<SecurityQuoteContainer> postQuoteQueueWriter() {
+		return new ItemWriter<SecurityQuoteContainer>() {
+
+			@Override
+			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
+				logger.debug("Queuing securities for the hot shit ...");
+				postQuoteQueue.addAll(items);
 			}
 
 		};
@@ -270,18 +307,28 @@ public class NightlyMarketDataScreen {
 	public Job processNightlySecurityMaster() {
 		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
 				.listener(listener())
-				.flow(initialScreen()) // #1 ... this starts it
-				.next(disruptorStartup()) // #2
-				.next(quoteAndCalcAndPersist()) // #3
-				.next(disruptorShutdown()) // #4
-				.next(deletePreviousHotlistForToday()) // #5
-				.next(hotListFilterAndPersist()) // #6
-				.end().build();
+				.flow(noOp()) // 
+				.next(marketDataLoadDecider())
+				.on(MarketDataLoadDecider.DO_FETCH)
+					.to(initialScreen())
+					.next(disruptorStartup())
+					.next(quoteAndCalcAndPersist()) 
+					.next(disruptorShutdown()) 
+					.next(deletePreviousHotlistForToday()) 
+					.next(hotListFilterAndPersist()) 
+				.from(marketDataLoadDecider())
+				.on(MarketDataLoadDecider.DO_LOAD)
+					.to(loadQuotes())
+					.next(deletePreviousHotlistForToday()) 
+					.next(hotListFilterAndPersist()) 
+				.end()
+				.build();
 	}
 
 	@Bean
 	public Step initialScreen() {
 		return stepBuilderFactory.get("preScreen")
+				.allowStartIfComplete(true)
 				.<Security, SecurityQuoteContainer>chunk(250)
 				.faultTolerant()
 				.retryLimit(5)
@@ -292,10 +339,30 @@ public class NightlyMarketDataScreen {
 				.taskExecutor(taskExecutor())
 				.build();
 	}
+	
+	@Bean
+	public Step loadQuotes() {
+		return stepBuilderFactory.get("loadQuotes")
+				.allowStartIfComplete(true)
+				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(250)
+				.reader(quoteItemReader())
+				.writer(postQuoteQueueWriter())
+				.taskExecutor(taskExecutor())
+				.build();
+	}
+	
+	@Bean
+	public Step noOp() {
+		return stepBuilderFactory.get("noop")
+				.allowStartIfComplete(true)
+				.tasklet(new NoOpTasklet())
+				.build();
+	}
 
 	@Bean
 	public Step quoteAndCalcAndPersist() {
 		return stepBuilderFactory.get("quoteAndCalc")
+				.allowStartIfComplete(true)
 				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
 				.reader(postInitialScreenQueueReader())
 				.faultTolerant()
@@ -314,6 +381,7 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step disruptorShutdown() {
 		return stepBuilderFactory.get("disruptorShutdown")
+				.allowStartIfComplete(true)
 				.tasklet(quoteThrottleDisruptorShutdownTasklet())
 				.build();
 	}
@@ -321,6 +389,7 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step disruptorStartup() {
 		return stepBuilderFactory.get("disruptorStartup")
+				.allowStartIfComplete(true)
 				.tasklet(quoteThrottleDisruptorStartupTasklet())
 				.build();
 	}
@@ -328,6 +397,7 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step deletePreviousHotlistForToday() {
 		return stepBuilderFactory.get("hotListDestroyer")
+				.allowStartIfComplete(true)
 				.tasklet(purgePreviousRunHotlistTasklet())
 				.build();
 	}
@@ -335,6 +405,7 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public Step hotListFilterAndPersist() {
 		return stepBuilderFactory.get("hotListFilter")
+				.allowStartIfComplete(true)
 				.<SecurityQuoteContainer, HotListItem>chunk(100)
 				.faultTolerant()
 				.skip(InsufficientHistoryException.class)

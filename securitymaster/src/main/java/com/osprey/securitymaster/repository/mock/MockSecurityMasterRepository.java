@@ -90,4 +90,9 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 		return null;
 	}
 
+	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
