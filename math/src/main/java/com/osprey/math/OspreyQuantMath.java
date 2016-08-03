@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.stat.correlation;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.util.Pair;
 
@@ -269,7 +270,7 @@ public final class OspreyQuantMath {
 		}
 
 		return (stochasticOscillatorK(p, offset + 1, prices) + stochasticOscillatorK(p, offset + 2, prices)
-				+ stochasticOscillatorK(p, offset, prices)) / 3;
+		+ stochasticOscillatorK(p, offset, prices)) / 3;
 
 	}
 
@@ -361,7 +362,7 @@ public final class OspreyQuantMath {
 
 	// http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
 	public static double[] bollingerbands(int p, int offset, List<HistoricalQuote> prices) {
-		
+
 		//TODO @jiayang: do you always calc the mid band w/ sma? 
 
 		double midband = sma(p, offset, prices);
@@ -691,6 +692,95 @@ public final class OspreyQuantMath {
 
 		return covariance / volatility_bmk;
 	}
+
+	public static double Correlation(List<Double> xs, List<Double> ys) {
+		//TODO: check here that arrays are not null, of the same length etc
+
+		double sx = 0.0;
+		double sy = 0.0;
+		double sxx = 0.0;
+		double syy = 0.0;
+		double sxy = 0.0;
+
+		int n = xs.size();
+
+		for(int i = 0; i < n; ++i) {
+			double x = xs.get(i);
+			double y = ys.get(i);
+
+			sx += x;
+			sy += y;
+			sxx += x * x;
+			syy += y * y;
+			sxy += x * y;
+		}
+
+		// covariation
+		double cov = sxy / n - sx * sy / n / n;
+		// standard error of x
+		double sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
+		// standard error of y
+		double sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
+
+		// correlation is just a normalized covariation
+		return cov / sigmax / sigmay;
+	}
+	
+	public static double ACF(int p, int offset, int lag, List<HistoricalQuote> prices) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+		double dailyReturn;
+		double dailyReturnLag;
+		
+		List<Double> dailyReturns = new ArrayList<>(p - lag);
+		List<Double> dailyReturnsLag = new ArrayList<>(p - lag);
+
+
+		for (int i = offset; i < p + offset - lag; ++i) {
+			double price = prices.get(i).getAdjClose();
+			double previousPrice = prices.get(i+1).getAdjClose();
+			
+			double priceLag = prices.get(i+lag).getAdjClose();
+			double previousPriceLag = prices.get(i+1+lag).getAdjClose();
+			
+			
+			dailyReturn = price / previousPrice - 1;
+			dailyReturns.add(dailyReturn);
+			
+			dailyReturnLag = priceLag / previousPriceLag - 1;
+			dailyReturnsLag.add(dailyReturnLag);
+
+		}
+		
+		return Correlation(dailyReturnsLag, dailyReturns);
+		
+
+	}
+	
+	public static double sectorRotationIndicator(int longPeriod, int shortPeriod, int offset, int lag, List<HistoricalQuote> prices) {
+
+		if (shortPeriod < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (longPeriod + offset > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+		
+		
+		return ACF(shortPeriod, offset, lag, prices) / ACF(longPeriod, offset, lag, prices);
+		
+
+	}
+	
+	
+
 
 	public static double percentIn52Week(SecurityQuoteContainer sqc) {
 		return (sqc.getSecurityQuote().getLast() - sqc.getFundamentalQuote().get_52WeekLow())
