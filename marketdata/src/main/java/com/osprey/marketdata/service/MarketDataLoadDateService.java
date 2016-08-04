@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.repository.IOspreyJSONObjectRepository;
-import com.osprey.securitymaster.utils.OspreyUtils;
 
 public class MarketDataLoadDateService {
 

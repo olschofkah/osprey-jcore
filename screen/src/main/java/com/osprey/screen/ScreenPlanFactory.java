@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.NotImplementedException;
 
 import com.osprey.screen.criteria.BetaCriteria;
+import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
@@ -16,6 +17,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverC
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
+import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
@@ -28,8 +30,10 @@ import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.screens.BetaScreen;
+import com.osprey.screen.screens.DollarVolumeScreen;
 import com.osprey.screen.screens.EarningsScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageBandCrossoverScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageCrossoverScreen;
@@ -38,6 +42,7 @@ import com.osprey.screen.screens.ExponentialMovingAverageScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageVsCurrentPriceScreen;
 import com.osprey.screen.screens.IStockScreen;
 import com.osprey.screen.screens.InstrumentTypeScreen;
+import com.osprey.screen.screens.MarketCapScreen;
 import com.osprey.screen.screens.MomentumScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceCrossoverScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceDiverganceScreen;
@@ -50,6 +55,7 @@ import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
 import com.osprey.screen.screens.VolumeAverageComparisonScreen;
 import com.osprey.screen.screens.VolumeAverageScreen;
+import com.osprey.screen.screens.VolumeScreen;
 import com.osprey.screen.screens._52WeekRangePercentageScreen;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
@@ -136,7 +142,7 @@ public class ScreenPlanFactory {
 			return new MovingAverageConverganceDiverganceDiverganceScreen(
 					(MovingAverageConverganceDiverganceDiverganceCriteria) criteria);
 		case MARKET_CAP:
-			return null;
+			return new MarketCapScreen((MarketCapCriteria) criteria);
 		case MOMENTUM_X:
 			return new MomentumScreen((MomentumCriteria) criteria);
 		case NEW_52_WEEK:
@@ -188,6 +194,10 @@ public class ScreenPlanFactory {
 		case EMA_VS_PRICE:
 			return new ExponentialMovingAverageVsCurrentPriceScreen(
 					(ExponentialMovingAverageVsCurrentPriceCriteria) criteria);
+		case DOLLAR_VOLUME:
+			return new DollarVolumeScreen((DollarVolumeCriteria) criteria);
+		case VOLUME:
+			return new VolumeScreen((VolumeCriteria) criteria);
 		default:
 			break;
 

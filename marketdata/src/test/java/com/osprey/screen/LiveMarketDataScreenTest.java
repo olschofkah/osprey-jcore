@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.osprey.marketdata.MarketdataApplication;
@@ -20,6 +22,7 @@ import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.screen.criteria.BetaCriteria;
+import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
@@ -28,6 +31,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverC
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
+import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
@@ -39,6 +43,7 @@ import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.criteria.constants.BandSelection;
 import com.osprey.screen.criteria.constants.CrossDirection;
@@ -51,6 +56,7 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.InstrumentType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles("test")
 @SpringApplicationConfiguration(classes = MarketdataApplication.class)
 public class LiveMarketDataScreenTest {
 
@@ -397,5 +403,49 @@ public class LiveMarketDataScreenTest {
 
 	}
 
+	@Test
+	public void volumeTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "AAPL";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq);
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		IScreenCriteria c1 = new DollarVolumeCriteria(1000000.0,2,RelationalOperator._GE);
+		IScreenCriteria c2 = new VolumeCriteria(1000000.0,2,RelationalOperator._GE);
+		IScreenCriteria c3 = new MarketCapCriteria(1000000,RelationalOperator._GE);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+		criteria.add(c2);
+		criteria.add(c3);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
 
 }

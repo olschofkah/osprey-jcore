@@ -16,9 +16,8 @@ import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooHistoricalUrlBuilder;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteUrlBuilder;
-import com.osprey.securitymaster.repository.ISecurityMasterRepository;
-import com.osprey.securitymaster.repository.jdbctemplate.SecurityMasterJdbcRepository;
-import com.osprey.securitymaster.repository.mock.MockSecurityMasterRepository;
+import com.osprey.marketdata.service.MarketDataLoadDateService;
+import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 
 @Configuration
 @Profile("dev")
@@ -51,6 +50,11 @@ public class MarketDataDevConfiguration {
 	public YahooHistoricalUrlBuilder yahooHistoricalUrlBuilder(String symbol, LocalDate start, LocalDate end,
 			QuoteDataFrequency freq) {
 		return new YahooHistoricalUrlBuilder(symbol, start, end, freq);
+	}
+	
+	@Bean
+	public MarketDataLoadDateService marketDataLoadDateService(){
+		return new MarketDataLoadDateService();
 	}
 
 	@Bean

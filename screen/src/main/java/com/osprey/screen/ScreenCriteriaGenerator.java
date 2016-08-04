@@ -6,6 +6,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.criteria.BetaCriteria;
+import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
@@ -14,6 +15,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverC
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
+import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
@@ -92,6 +94,7 @@ public class ScreenCriteriaGenerator {
 					MovingAverageConverganceDiverganceDiverganceCriteria.class);
 			break;
 		case MARKET_CAP:
+			result = objectMapper.convertValue(getCriteriaBucket(), MarketCapCriteria.class);
 			break;
 		case MOMENTUM_X:
 			result = objectMapper.convertValue(getCriteriaBucket(), MomentumCriteria.class);
@@ -160,6 +163,10 @@ public class ScreenCriteriaGenerator {
 			result = objectMapper.convertValue(getCriteriaBucket(),
 					ExponentialMovingAverageVsCurrentPriceCriteria.class);
 			break;
+		case DOLLAR_VOLUME:
+			result = objectMapper.convertValue(getCriteriaBucket(), DollarVolumeCriteria.class);
+		case VOLUME:
+			result = objectMapper.convertValue(getCriteriaBucket(), VolatilityCriteria.class);
 		default:
 			break;
 
