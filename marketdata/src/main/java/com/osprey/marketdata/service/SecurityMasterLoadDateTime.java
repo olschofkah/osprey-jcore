@@ -1,26 +1,23 @@
 package com.osprey.marketdata.service;
 
-import java.time.ZonedDateTime;
-
 public class SecurityMasterLoadDateTime {
-	
-	private long millsSinceEpoch;
+
+	private String dateString;
 
 	public SecurityMasterLoadDateTime() {
 
 	}
 
-	public SecurityMasterLoadDateTime(ZonedDateTime millsSinceEpoch) {
-		this.millsSinceEpoch = millsSinceEpoch.toInstant().toEpochMilli();
+	public SecurityMasterLoadDateTime(String dateString) {
+		this.setDateString(dateString);
 	}
 
-	public long getMillsSinceEpoch() {
-		return millsSinceEpoch;
+	public String getDateString() {
+		return dateString;
 	}
 
-	public void setMillsSinceEpoch(long millsSinceEpoch) {
-		this.millsSinceEpoch = millsSinceEpoch;
+	public void setDateString(String dateString) {
+		this.dateString = dateString;
 	}
-
 
 }

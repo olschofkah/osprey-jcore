@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,10 +37,8 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 
 	private static final String SELECT_OC_SECURITY = " select symbol, cusip, instrument_cd, lot_size, company_name, country, state, employee_cnt, industry, sector, exchange_cd, currency, last_update_ts, description, previous_close "
 			+ " from oc_security where symbol = ? ";
-
 	private static final String SELECT_OC_SECURITIES = " select symbol, cusip, instrument_cd, lot_size, company_name, country, state, employee_cnt, industry, sector, exchange_cd, currency, last_update_ts, description, previous_close "
 			+ " from oc_security ";
-
 	private static final String UPDATE_OC_SECURITY = "update oc_security "
 			+ " set description = ?, company_name = ?, country = ?, currency = ?, employee_cnt = ?, exchange_cd = ?, industry = ?, instrument_cd = ?, lot_size = ?, sector = ?, state = ?, last_update_ts = clock_timestamp(), previous_close = ?"
 			+ " where symbol = ? ";
@@ -49,13 +46,14 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " (symbol, cusip, instrument_cd, lot_size, company_name, country, state, employee_cnt, industry, sector, exchange_cd, currency, last_update_ts, create_ts, description, previous_close) "
 			+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, clock_timestamp(), clock_timestamp(), ?, ?) ";
 	private static final String EXISTS_OC_SECURITY = "select exists (select 1 from oc_security where symbol = ? )";
+	
 	private static final String SELECT_OHLC_HIST = "select symbol, date, open, high, low, close, adj_close, volume, timestamp "
 			+ " from oc_security_ohlc_hist where symbol = ? and date >= ? and date <= ? "
-			+ " order by date asc ";
+			+ " order by date desc ";
 	private static final String DELETE_OHLC_HIST_FOR_SYMBOL = "delete from oc_security_ohlc_hist where symbol = ?";
-
 	private static final String INSERT_OHLC_HIST = " insert into oc_security_ohlc_hist (symbol, date, open, high, low, close, adj_close, volume, timestamp) "
 			+ " values (?,?,?,?,?,?,?,?,clock_timestamp())";
+	
 	private static final String EXISTS_OC_SECURITY_NEXT_EVENT = "select exists (select 1 from oc_security_next_events where symbol = ? )";
 	private static final String INSERT_OC_SECURITY_NEXT_EVENT = "insert into oc_security_next_events "
 			+ " (symbol, next_earnings_date_est_low, next_earnings_date_est_high, next_div_date, next_ex_div_date, next_revenue, timestamp) "
@@ -466,7 +464,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					}
 				}, key.getSymbol());
 
-		return query.isEmpty() ? null : query.get(0);
+		return query.isEmpty() ? new SecurityUpcomingEvents(new SecurityKey(key)) : query.get(0);
 	}
 
 	private SecurityQuote findSecurityQuote(final SecurityKey key) {
@@ -491,7 +489,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			}
 		}, key.getSymbol());
 
-		return query.isEmpty() ? null : query.get(0);
+		return query.isEmpty() ? new SecurityQuote(new SecurityKey(key)) : query.get(0);
 	}
 
 	private FundamentalQuote findFundamentalQuote(final SecurityKey key) {
@@ -564,7 +562,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			}
 		}, key.getSymbol());
 
-		return query.isEmpty() ? null : query.get(0);
+		return query.isEmpty() ? new FundamentalQuote(new SecurityKey(key), LocalDate.now()) : query.get(0);
 	}
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)

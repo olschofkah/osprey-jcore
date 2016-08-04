@@ -35,21 +35,42 @@ public class OspreyJSONObjectJdbcRepository implements IOspreyJSONObjectReposito
 	@Override
 	public void persist(final String key, final String value) {
 		final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-		
-		jdbc.update("insert into oc_map values (?,?,?)", new PreparedStatementSetter() {
 
-			@Override
-			public void setValues(PreparedStatement ps) throws SQLException {
-				ps.setString(1, key);
-				ps.setTimestamp(2, now);
+		Boolean exists = jdbc.queryForObject("select exists (select 1 from oc_map where obj_key = ?)",
+				Boolean.class, key);
 
-				PGobject json = new PGobject();
-				json.setType("json");
-				json.setValue(value);
+		if (exists) {
+			jdbc.update("update oc_map set obj_value = ?, timestamp = ?  where obj_key = ?",
+					new PreparedStatementSetter() {
 
-				ps.setObject(3, json);
-			}
-		});
+						@Override
+						public void setValues(PreparedStatement ps) throws SQLException {
+
+							PGobject json = new PGobject();
+							json.setType("json");
+							json.setValue(value);
+							ps.setObject(1, json);
+
+							ps.setTimestamp(2, now);
+							ps.setString(3, key);
+						}
+					});
+		} else {
+			jdbc.update("insert into oc_map values (?,?,?)", new PreparedStatementSetter() {
+
+				@Override
+				public void setValues(PreparedStatement ps) throws SQLException {
+					ps.setString(1, key);
+					ps.setTimestamp(2, now);
+
+					PGobject json = new PGobject();
+					json.setType("json");
+					json.setValue(value);
+
+					ps.setObject(3, json);
+				}
+			});
+		}
 
 	}
 

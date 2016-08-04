@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.math3.stat.correlation;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.util.Pair;
 
@@ -783,6 +782,11 @@ public final class OspreyQuantMath {
 
 
 	public static double percentIn52Week(SecurityQuoteContainer sqc) {
+		
+		if(sqc == null || sqc.getSecurityQuote() == null || sqc.getFundamentalQuote() == null){
+			System.out.println(sqc.getKey().getSymbol());
+		}
+		
 		return (sqc.getSecurityQuote().getLast() - sqc.getFundamentalQuote().get_52WeekLow())
 				/ (sqc.getFundamentalQuote().get_52WeekHigh() - sqc.getFundamentalQuote().get_52WeekLow());
 	}

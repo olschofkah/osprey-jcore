@@ -2,6 +2,7 @@ package com.osprey.marketdata.service;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,7 +25,8 @@ public class MarketDataLoadDateService {
 	public void recordLoadDate(final ZonedDateTime today) {
 
 		try {
-			objectRepository.persist(SM_LOAD_DATE_KEY, om.writeValueAsString(new SecurityMasterLoadDateTime(today)));
+			objectRepository.persist(SM_LOAD_DATE_KEY, om
+					.writeValueAsString(new SecurityMasterLoadDateTime(today.format(DateTimeFormatter.ISO_DATE_TIME))));
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
@@ -39,7 +41,7 @@ public class MarketDataLoadDateService {
 
 		try {
 			SecurityMasterLoadDateTime loadDateTime = om.readValue(obj, SecurityMasterLoadDateTime.class);
-			return OspreyUtils.getZonedDateTimeFromEpoch(loadDateTime.getMillsSinceEpoch());
+			return ZonedDateTime.parse(loadDateTime.getDateString(), DateTimeFormatter.ISO_DATE_TIME);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
