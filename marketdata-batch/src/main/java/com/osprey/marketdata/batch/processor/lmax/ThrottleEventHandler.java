@@ -19,7 +19,6 @@ public class ThrottleEventHandler implements EventHandler<ThrottleEvent> {
 
 	@Override
 	public void onEvent(ThrottleEvent event, long sequence, boolean endOfBatch) throws Exception {
-		logger.debug("Adding throttle capacity... currently at {}.", () -> throttleCapacity.get());
 		throttleCapacity.getAndIncrement();
 	}
 

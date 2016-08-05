@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,6 +33,8 @@ import com.osprey.securitymaster.utils.OspreyUtils;
 
 // @Repository
 public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
+	
+	final static Logger logger = LogManager.getLogger(SecurityMasterJdbcRepository.class);
 	
 	private LocalDate DEFAULT_HISTORICAL_LOAD_DATE_MIN = LocalDate.now().minusYears(4);
 	private LocalDate DEFAULT_HISTORICAL_LOAD_DATE_MAX = LocalDate.now();
@@ -72,9 +76,8 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " symbol, timestamp, last, bid, ask, bid_size, ask_size, volume, open, close, high, low, data_currency, open_interest "
 			+ " from oc_security_quote sq where symbol = ? and timestamp = (select max(timestamp) from oc_security_quote isq where isq.symbol=sq.symbol) ";
 	
-	
-	
-	private static final String EXISTS_OC_SECURITY_EVENT = "select exists (select 1 from oc_security_event where symbol = ? and event_type_cd = ? and date = ? )";
+	private static final String DELETE_OC_SECURITY_EVENT = "delete from oc_security_event where symbol = ? and date >= ?";
+	//private static final String EXISTS_OC_SECURITY_EVENT = "select exists (select 1 from oc_security_event where symbol = ? and event_type_cd = ? and date = ? )";
 	private static final String INSERT_OC_SECURITY_EVENT = " insert into oc_security_event "
 			+ " (symbol, date, event_type_cd, amt, timestamp) values (?, ?, ?, ?, clock_timestamp()) ";
 
@@ -568,16 +571,34 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public void persist(SecurityQuoteContainer sqc) {
 
-		persist(sqc.getFundamentalQuote());
 		persist(sqc.getSecurity());
+		persist(sqc.getFundamentalQuote());
 		persist(sqc.getSecurityQuote());
 		persist(sqc.getUpcomingEvents());
 
+		deleteEvents(sqc.getEvents());
 		persistEvents(sqc.getEvents());
 
 		deleteHistoricals(sqc.getKey());
 		persistHistoricals(sqc.getHistoricalQuotes());
 
+	}
+
+	public void deleteEvents(List<SecurityEvent> events) {
+
+		if (events != null) {
+			
+			LocalDate dt = null;
+			for (SecurityEvent event : events) {
+				if (dt == null || dt.isAfter(event.getDate())) {
+					dt = event.getDate();
+				}
+			}
+
+			if (dt != null) {
+				jdbc.update(DELETE_OC_SECURITY_EVENT, events.get(0).getKey().getSymbol(), Date.valueOf(dt));
+			}
+		}
 	}
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
@@ -608,25 +629,24 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	}
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
-	public void persistEvents(List<SecurityEvent> events) {
-
-		// Not batching since I do not know which ones would already exist ...
-		// could improve the speed here if required by batching the insert and
-		// determining what to be in the batch if required.
+	public void persistEvents(final List<SecurityEvent> events) {
 
 		if (events != null) {
-			for (SecurityEvent event : events) {
-				boolean exists = jdbc.queryForObject(EXISTS_OC_SECURITY_EVENT,
-						new Object[] { event.getKey().getSymbol(), event.getEvent().getCode(), event.getDate() },
-						Boolean.class);
+			jdbc.batchUpdate(INSERT_OC_SECURITY_EVENT, new BatchPreparedStatementSetter() {
 
-				if (!exists) {
-					jdbc.update(INSERT_OC_SECURITY_EVENT, event.getKey().getSymbol(), event.getDate(),
-							event.getEvent().getCode(), event.getAmount());
+				public int getBatchSize() {
+					return events.size();
 				}
-			}
-		}
 
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					SecurityEvent se = events.get(i);
+					ps.setString(1, se.getKey().getSymbol());
+					ps.setDate(2, Date.valueOf(se.getDate()));
+					ps.setString(3, se.getEvent().getCode());
+					ps.setDouble(4, se.getAmount());
+				}
+			});
+		}
 	}
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)

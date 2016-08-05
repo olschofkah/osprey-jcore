@@ -18,7 +18,6 @@ public class ThrottleEventProducer {
 		long sequence = ringBuffer.next();
 		try {
 			ThrottleEvent event = ringBuffer.get(sequence);
-			logger.debug("Adding throttle event number {}.", sequence);
 			event.throttle();
 		} finally {
 			ringBuffer.publish(sequence);

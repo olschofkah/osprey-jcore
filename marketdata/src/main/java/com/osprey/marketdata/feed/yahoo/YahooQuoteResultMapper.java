@@ -2,8 +2,11 @@ package com.osprey.marketdata.feed.yahoo;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,12 +30,11 @@ import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.SecurityUpcomingEvents;
 import com.osprey.securitymaster.constants.SecurityEventType;
-import com.osprey.securitymaster.utils.OspreyUtils;
 
 public class YahooQuoteResultMapper {
 
 	final static Logger logger = LogManager.getLogger(YahooQuoteResultMapper.class);
-	
+
 	private static final int MAX_LONG_DESC_SIZE = 2043;
 
 	public static SecurityQuoteContainer map(Result result, SecurityQuoteContainer sqc) {
@@ -241,8 +243,8 @@ public class YahooQuoteResultMapper {
 			events = sqc.getUpcomingEvents();
 		}
 
-		if (sd.getExDividendDate() != null && sd.getExDividendDate().getRaw() != null) {
-			events.setNextExDivDate(OspreyUtils.getLocalDateFromEpoch(sd.getExDividendDate().getRaw()));
+		if (sd.getExDividendDate() != null && sd.getExDividendDate().getFmt() != null) {
+			events.setNextExDivDate(LocalDate.parse(sd.getExDividendDate().getFmt(), DateTimeFormatter.ISO_LOCAL_DATE));
 		}
 
 		if (sd.getFiftyDayAverage() != null && sd.getFiftyDayAverage().getRaw() != null) {
@@ -373,13 +375,7 @@ public class YahooQuoteResultMapper {
 
 	private static void mapEarnings(Earnings_ earnings, SecurityQuoteContainer sqc) {
 
-		List<SecurityEvent> events;
-		if (sqc.getEvents() == null) {
-			events = new ArrayList<SecurityEvent>();
-			sqc.setEvents(events);
-		} else {
-			events = sqc.getEvents();
-		}
+		Set<SecurityEvent> events = new HashSet<>();
 
 		ZonedDateTime now = ZonedDateTime.now();
 
@@ -395,6 +391,14 @@ public class YahooQuoteResultMapper {
 		for (Quarterly_ quarterly : earnings.getFinancialsChart().getQuarterly()) {
 			events.add(new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), SecurityEventType.REVENUE,
 					quarterly.getRevenue() == null ? 0.0 : quarterly.getRevenue().getRaw(), now));
+		}
+
+		if (sqc.getEvents() == null) {
+			List<SecurityEvent> newEvents = new ArrayList<>();
+			newEvents.addAll(events);
+			sqc.setEvents(newEvents);
+		} else {
+			sqc.getEvents().addAll(events);
 		}
 
 	}
@@ -543,25 +547,29 @@ public class YahooQuoteResultMapper {
 			events = sqc.getUpcomingEvents();
 		}
 
-		if (calendarEvents.getDividendDate() != null && calendarEvents.getDividendDate().getRaw() != null) {
-			events.setNextDivDate(OspreyUtils.getLocalDateFromEpoch(calendarEvents.getDividendDate().getRaw()));
+		if (calendarEvents.getDividendDate() != null && calendarEvents.getDividendDate().getFmt() != null) {
+			events.setNextDivDate(
+					LocalDate.parse(calendarEvents.getDividendDate().getFmt(), DateTimeFormatter.ISO_LOCAL_DATE));
 		}
 
-		if (calendarEvents.getExDividendDate() != null && calendarEvents.getExDividendDate().getRaw() != null) {
-			events.setNextExDivDate(OspreyUtils.getLocalDateFromEpoch(calendarEvents.getExDividendDate().getRaw()));
+		if (calendarEvents.getExDividendDate() != null && calendarEvents.getExDividendDate().getFmt() != null) {
+			events.setNextExDivDate(
+					LocalDate.parse(calendarEvents.getExDividendDate().getFmt(), DateTimeFormatter.ISO_LOCAL_DATE));
 		}
 
 		if (calendarEvents.getEarnings() != null) {
 
 			if (calendarEvents.getEarnings().getEarningsDate().size() > 0
-					&& calendarEvents.getEarnings().getEarningsDate().get(0).getRaw() != null) {
-				events.setNextEarningsDateEstLow(OspreyUtils
-						.getLocalDateFromEpoch(calendarEvents.getEarnings().getEarningsDate().get(0).getRaw()));
+					&& calendarEvents.getEarnings().getEarningsDate().get(0).getFmt() != null) {
+				events.setNextEarningsDateEstLow(
+						LocalDate.parse(calendarEvents.getEarnings().getEarningsDate().get(0).getFmt(),
+								DateTimeFormatter.ISO_LOCAL_DATE));
 
 				if (calendarEvents.getEarnings().getEarningsDate().size() > 1
-						&& calendarEvents.getEarnings().getEarningsDate().get(1).getRaw() != null) {
-					events.setNextEarningsDateEstHigh(OspreyUtils
-							.getLocalDateFromEpoch(calendarEvents.getEarnings().getEarningsDate().get(1).getRaw()));
+						&& calendarEvents.getEarnings().getEarningsDate().get(1).getFmt() != null) {
+					events.setNextEarningsDateEstHigh(
+							LocalDate.parse(calendarEvents.getEarnings().getEarningsDate().get(1).getFmt(),
+									DateTimeFormatter.ISO_LOCAL_DATE));
 				}
 
 			}

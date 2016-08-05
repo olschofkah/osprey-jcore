@@ -363,7 +363,7 @@ public class NightlyMarketDataScreen {
 	public Step quoteAndCalcAndPersist() {
 		return stepBuilderFactory.get("quoteAndCalc")
 				.allowStartIfComplete(true)
-				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(1)
+				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(8)
 				.reader(postInitialScreenQueueReader())
 				.faultTolerant()
 				.backOffPolicy(exponentialBackOffPolicy())
@@ -375,6 +375,8 @@ public class NightlyMarketDataScreen {
 				.processor(quoteProcessor())
 				.writer(quoteContainerItemWriter())
 				.transactionManager(txnManager)
+				.taskExecutor(taskExecutor())
+				.throttleLimit(4)
 				.build();
 	}
 
