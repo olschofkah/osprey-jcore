@@ -72,6 +72,9 @@ public class FundamentalQuote {
 	private double yield;
 	private double dividendRate;
 	private double dividendYield;
+	
+	// Calculated Values
+	private double volatility;
 
 	public FundamentalQuote(String symbol, LocalDate dt, ZonedDateTime timestamp) {
 		this(new SecurityKey(symbol, null), dt, timestamp);
@@ -622,6 +625,14 @@ public class FundamentalQuote {
 
 	public void setRevenueQtrGrowth(double revenueQtrGrowth) {
 		this.revenueQtrGrowth = revenueQtrGrowth;
+	}
+
+	public double getVolatility() {
+		return volatility;
+	}
+
+	public void setVolatility(double volatility) {
+		this.volatility = volatility;
 	}
 
 }

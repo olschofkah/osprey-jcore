@@ -148,9 +148,10 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" total_revenue , " +
 			" trailing_eps , " +
 			" trailing_pe , " +
-			" yield ) " +
-			" values " +
-			" (?,?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
+			" yield , "
+			+ " volatility ) "
+			+ " values " 
+			+ " (?,?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
 
 	
 	private static final String UPDATE_OC_FUNDAMENTAL = "update oc_security_fundamental set " +
@@ -214,7 +215,8 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" total_revenue = ?, " +
 			" trailing_eps = ?, " +
 			" trailing_pe = ?, " +
-			" yield = ? " +
+			" yield = ?, " +
+			" volatility = ? " +
 			" where symbol = ? and date = ? ";
 	private static final String SELECT_OC_FUNDAMENTAL = "select " +
 			" symbol , " +
@@ -279,7 +281,8 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " total_revenue , "
 			+ " trailing_eps , "
 			+ " trailing_pe , "
-			+ " yield "
+			+ " yield , "
+			+ " volatility "
 			+ " from oc_security_fundamental ocsf where symbol = ? and date = "
 			+ " ( select max(date) from oc_security_fundamental ocsfi where ocsfi.symbol = ocsf.symbol ) ";
 
@@ -366,7 +369,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRevenueLow(), fq.getRevenuePerShare(), fq.getRevenueQtrGrowth(), fq.getSharesOutstanding(),
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
-					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(),
+					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), fq.getVolatility(), 
 					fq.getKey().getSymbol(), fq.getDate());
 
 		} else {
@@ -386,7 +389,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRevenueLow(), fq.getRevenuePerShare(), fq.getRevenueQtrGrowth(), fq.getSharesOutstanding(),
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
-					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield());
+					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), fq.getVolatility());
 		}
 
 	}
@@ -495,7 +498,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 		return query.isEmpty() ? new SecurityQuote(new SecurityKey(key)) : query.get(0);
 	}
 
-	private FundamentalQuote findFundamentalQuote(final SecurityKey key) {
+	public FundamentalQuote findFundamentalQuote(final SecurityKey key) {
 		List<FundamentalQuote> query = jdbc.query(SELECT_OC_FUNDAMENTAL, new RowMapper<FundamentalQuote>() {
 
 			public FundamentalQuote mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -561,6 +564,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 				fq.setTrailingEps(rs.getDouble("trailing_eps"));
 				fq.setTrailingPe(rs.getDouble("trailing_pe"));
 				fq.setYield(rs.getDouble("yield"));
+				fq.setVolatility(rs.getDouble("volatility"));
 				return fq;
 			}
 		}, key.getSymbol());

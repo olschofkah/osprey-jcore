@@ -95,6 +95,7 @@ CREATE TABLE "oc_security_fundamental" (
 	"revenue_qtr_growth" float8,
 	"total_assets" float8,
 	"yield" float8,
+	"volatility" float8,
 	CONSTRAINT oc_security_ext_stat_log_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE

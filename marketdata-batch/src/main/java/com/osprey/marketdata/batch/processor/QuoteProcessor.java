@@ -14,6 +14,8 @@ import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
 import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
+import com.osprey.math.OspreyQuantMath;
+import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
@@ -52,10 +54,23 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 		List<HistoricalQuote> historicals = historicalQuoteService.quoteHistorical(item.getKey(), overOneYearAgo, today,
 				QuoteDataFrequency.DAY);
 		item.setHistoricalQuotes(historicals);
-		
-		// TODO Consider adding calculated values here to store on the security master. 
+
+		populateCalcs(item);
 
 		return item;
+	}
+
+	private void populateCalcs(SecurityQuoteContainer sqc) {
+
+		FundamentalQuote fundamentalQuote = sqc.getFundamentalQuote();
+
+		// Calculate vol
+		int volPeriod = sqc.getHistoricalQuotes().size() < 252 ? sqc.getHistoricalQuotes().size() : 252;
+		if (volPeriod > 1) {
+			double volatility = OspreyQuantMath.volatility(volPeriod, sqc.getHistoricalQuotes());
+			fundamentalQuote.setVolatility(volatility);
+		}
+
 	}
 
 	private void checkThrottle() throws InterruptedException {
