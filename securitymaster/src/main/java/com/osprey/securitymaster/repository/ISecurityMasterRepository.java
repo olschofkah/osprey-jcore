@@ -24,7 +24,6 @@ public interface ISecurityMasterRepository {
 
 	public void persist(FundamentalQuote fq);
 
-
 	public void persist(SecurityUpcomingEvents fq);
 
 	public void persistEvents(List<SecurityEvent> events);
@@ -42,5 +41,7 @@ public interface ISecurityMasterRepository {
 	List<SecurityEvent> findSecurityEvents(SecurityKey key);
 
 	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key);
+
+	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key, LocalDate minDate, LocalDate maxDate);
 
 }

@@ -1,7 +1,9 @@
 package com.osprey.screen;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.math3.util.Pair;
 import org.junit.Assert;
@@ -22,17 +24,14 @@ import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.InstrumentType;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MarketdataApplication.class)
 public class LiveMarketDataCalcTest {
-	
 
 	@Autowired
 	private YahooQuoteClient yahooQuoteClient;
 	@Autowired
 	private YahooHistoricalQuoteClient yahooHistoricalQuoteClient;
-	
 
 	@Test
 	public void volatilityCalcTest1() throws Exception {
@@ -47,17 +46,16 @@ public class LiveMarketDataCalcTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
 		double volatility = OspreyQuantMath.volatility(252, sqc.getHistoricalQuotes());
-		
+
 		System.out.println(volatility);
 	}
-	
-	
+
 	@Test
 	public void emaCalcTest1() throws Exception {
 
@@ -71,24 +69,23 @@ public class LiveMarketDataCalcTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
-		
+
 		long currentTimeMillis = System.currentTimeMillis();
 		double ema5 = OspreyQuantMath.ema(12, 0, hist);
 		System.out.println(System.currentTimeMillis() - currentTimeMillis);
 
-		//		
-//		System.out.println(ema1 + " close:" + hist.get(4));
-//		System.out.println(ema2 + " close:" + hist.get(3));
-//		System.out.println(ema3 + " close:" + hist.get(2));
-//		System.out.println(ema4 + " close:" + hist.get(1));
+		//
+		// System.out.println(ema1 + " close:" + hist.get(4));
+		// System.out.println(ema2 + " close:" + hist.get(3));
+		// System.out.println(ema3 + " close:" + hist.get(2));
+		// System.out.println(ema4 + " close:" + hist.get(1));
 		System.out.println(ema5 + " close:" + hist.get(0));
 	}
-	
-	
+
 	@Test
 	public void rsiCalcTest1() throws Exception {
 
@@ -102,23 +99,24 @@ public class LiveMarketDataCalcTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
-		
+
 		System.out.println(OspreyQuantMath.rsiUsingSma(14, 0, hist));
 		System.out.println(OspreyQuantMath.rsiUsingEma(14, 0, hist));
 		System.out.println(OspreyQuantMath.rsiUsingWilders(14, 0, hist));
-		System.out.println(OspreyQuantMath.wildersMovingAverage(14,0	, hist));
+		System.out.println(OspreyQuantMath.wildersMovingAverage(14, 0, hist));
 	}
-	
+
 	@Test
-	public void momentumCurveTest1() throws Exception{
-		
+	public void momentumCurveTest1() throws Exception {
+
 		// Determine the range of historical data to pull from yahoo
 		LocalDate end = LocalDate.now(); // today
-		LocalDate start = end.minusYears(3).minusDays(10); // 3 years & 10 days ago
+		LocalDate start = end.minusYears(3).minusDays(10); // 3 years & 10 days
+															// ago
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY; // Frequency, daily
 
 		// Define the symbol
@@ -130,24 +128,21 @@ public class LiveMarketDataCalcTest {
 
 		// Pull the fundamental and current quote from live yahoo for QQQ
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		
-		// Pull the historical quotes for the previously defined range from yahoo for QQQ
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
-		
-		
-		
+
+		// Pull the historical quotes for the previously defined range from
+		// yahoo for QQQ
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
+
 		// set some data
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
-		
-		
+
 		List<Pair<LocalDate, Double>> momentumCurve = OspreyQuantMath.momentumCurve(2, hist);
-		
+
 		System.out.println(momentumCurve);
-		
+
 		Assert.assertTrue(750 < momentumCurve.size());
 	}
-	
 
 }

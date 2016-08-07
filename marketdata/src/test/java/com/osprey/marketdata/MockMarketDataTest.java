@@ -1,6 +1,7 @@
 package com.osprey.marketdata;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -128,7 +129,7 @@ public class MockMarketDataTest {
 		LocalDate end = start.minusDays(252);
 
 		for (Security s : securityMaster) {
-			List<HistoricalQuote> hist = mockMarketData.quoteHistorical(s.getKey(), start, end, null);
+			List<HistoricalQuote> hist = new ArrayList<>(mockMarketData.quoteHistorical(s.getKey(), start, end, null));
 
 			Assert.assertEquals(252, hist.size());
 

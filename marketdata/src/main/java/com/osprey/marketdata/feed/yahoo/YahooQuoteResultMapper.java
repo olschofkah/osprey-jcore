@@ -393,14 +393,12 @@ public class YahooQuoteResultMapper {
 					quarterly.getRevenue() == null ? 0.0 : quarterly.getRevenue().getRaw(), now));
 		}
 
-		if (sqc.getEvents() == null) {
-			List<SecurityEvent> newEvents = new ArrayList<>();
-			newEvents.addAll(events);
-			sqc.setEvents(newEvents);
-		} else {
-			sqc.getEvents().addAll(events);
+		if (sqc.getEvents() != null) {
+			sqc.getEvents().clear();
 		}
-
+		
+		List<SecurityEvent> newEvents = new ArrayList<>(events);
+		sqc.setEvents(newEvents);
 	}
 
 	private static LocalDate parseEventDate(String date) {

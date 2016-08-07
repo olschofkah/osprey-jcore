@@ -47,7 +47,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 		}
 
 		LocalDate today = LocalDate.now();
-		LocalDate overOneYearAgo = today.minusYears(1).minusWeeks(1);
+		LocalDate overOneYearAgo = today.minusYears(3);
 
 		checkThrottle();
 

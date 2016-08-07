@@ -1,5 +1,6 @@
 package com.osprey.marketdata.batch.reader;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -55,7 +56,8 @@ public class QuoteItemReader implements ItemReader<SecurityQuoteContainer> {
 							@Override
 							public SecurityQuoteContainer call() throws Exception {
 								logger.info("loading {} from the db ... ", () -> s.getKey().getSymbol());
-								return repo.findSecurityQuoteContainer(s.getKey());
+								return repo.findSecurityQuoteContainer(s.getKey(), LocalDate.now().minusYears(3),
+										LocalDate.now());
 							}
 						};
 

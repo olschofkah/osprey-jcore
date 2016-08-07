@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,13 +51,23 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
 
 	private List<HistoricalQuote> parse(String symbol, List<String> lines) {
 
-		List<HistoricalQuote> history = new ArrayList<>(lines.size());
+		Set<HistoricalQuote> history = new HashSet<>(lines.size());
 		ZonedDateTime ts = ZonedDateTime.now();
 		for (int i = 1; i < lines.size(); ++i) {
 			history.add(parse(symbol, lines.get(i), ts));
 		}
 
-		return history;
+		List<HistoricalQuote> sortedHistory = new ArrayList<>(history);
+		Collections.sort(sortedHistory, new Comparator<HistoricalQuote>() {
+
+			@Override
+			public int compare(HistoricalQuote o1, HistoricalQuote o2) {
+				// most recent date first. 
+				return o2.getHistoricalDate().compareTo(o1.getHistoricalDate());
+			}
+		});
+
+		return sortedHistory;
 	}
 
 	private HistoricalQuote parse(String symbol, String line, ZonedDateTime ts) {

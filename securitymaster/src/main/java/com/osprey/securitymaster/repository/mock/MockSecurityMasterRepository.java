@@ -95,4 +95,10 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 		return null;
 	}
 
+	@Override
+	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key, LocalDate minDate, LocalDate maxDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

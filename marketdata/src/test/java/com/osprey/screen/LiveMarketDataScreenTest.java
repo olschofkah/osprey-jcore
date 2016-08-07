@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -80,8 +79,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -187,8 +186,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -209,8 +208,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -253,8 +252,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -334,8 +333,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -375,8 +374,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -416,8 +415,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 

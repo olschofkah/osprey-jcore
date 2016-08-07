@@ -111,30 +111,30 @@ public class YahooQuoteTest {
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
 		long n0 = System.currentTimeMillis();
-		List<HistoricalQuote> hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("AAPL", null), start,
-				end, freq);
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("AAPL", null), start,
+				end, freq));
 		long n1 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("GOOGL", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("GOOGL", null), start, end, freq));
 		long n2 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("QQQ", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("QQQ", null), start, end, freq));
 		long n3 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("FB", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("FB", null), start, end, freq));
 		long n4 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("BRK-A", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("BRK-A", null), start, end, freq));
 		long n5 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("WMT", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("WMT", null), start, end, freq));
 		long n6 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("MCK", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("MCK", null), start, end, freq));
 		long n7 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("QQQ", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("QQQ", null), start, end, freq));
 		long n8 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("SPY", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("SPY", null), start, end, freq));
 		long n9 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("XBI", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("XBI", null), start, end, freq));
 		long n10 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("UWTI", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("UWTI", null), start, end, freq));
 		long n11 = System.currentTimeMillis();
-		hist = yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("USO", null), start, end, freq);
+		hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey("USO", null), start, end, freq));
 		long n12 = System.currentTimeMillis();
 
 		Assert.assertTrue(hist.size() < 262 && hist.size() > 252);

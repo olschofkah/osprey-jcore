@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -427,12 +428,16 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	}
 
 	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key) {
+		return findSecurityQuoteContainer(key, DEFAULT_HISTORICAL_LOAD_DATE_MIN, DEFAULT_HISTORICAL_LOAD_DATE_MAX);
+	}
+	
+	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key, LocalDate minDate, LocalDate maxDate) {
 		SecurityQuoteContainer sqc = new SecurityQuoteContainer(new SecurityKey(key));
 
 		sqc.setEvents(findSecurityEvents(sqc.getKey()));
 		sqc.setFundamentalQuote(findFundamentalQuote(sqc.getKey()));
 		sqc.setHistoricalQuotes(
-				findHistoricals(sqc.getKey(), DEFAULT_HISTORICAL_LOAD_DATE_MIN, DEFAULT_HISTORICAL_LOAD_DATE_MAX));
+				findHistoricals(sqc.getKey(), minDate, maxDate));
 		sqc.setSecurity(findSecurity(sqc.getKey()));
 		sqc.setSecurityQuote(findSecurityQuote(sqc.getKey()));
 		sqc.setUpcomingEvents(findUpcomingEvents(sqc.getKey()));
@@ -636,6 +641,11 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	public void persistEvents(final List<SecurityEvent> events) {
 
 		if (events != null) {
+			
+			if(events.size() != new HashSet<>(events).size()){
+				throw new RuntimeException("Unexpected Dupliate Events " + events);
+			}
+			
 			jdbc.batchUpdate(INSERT_OC_SECURITY_EVENT, new BatchPreparedStatementSetter() {
 
 				public int getBatchSize() {
