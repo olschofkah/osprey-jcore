@@ -12,6 +12,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +30,8 @@ import com.osprey.screen.repository.IHotShitRepository;
 
 // @Repository
 public class HotShitJdbcRepository implements IHotShitRepository {
+	
+	final static Logger logger = LogManager.getLogger(HotShitJdbcRepository.class);
 
 	private JdbcTemplate jdbc;
 

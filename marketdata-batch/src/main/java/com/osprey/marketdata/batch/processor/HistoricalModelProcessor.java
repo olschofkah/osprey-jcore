@@ -3,9 +3,11 @@ package com.osprey.marketdata.batch.processor;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +24,7 @@ import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.repository.IHotShitRepository;
 import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
@@ -52,11 +55,9 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 		// Copy constructor to use for re-setting the hist back to where it was.
 		List<HistoricalQuote> origHistQuoteList = new ArrayList<>(item.getHistoricalQuotes());
 
-		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
-		SimpleScreenExecutor executor = new SimpleScreenExecutor();
-
-		HotListItem result = null;
 		List<HotListItem> hotListItems = new ArrayList<>();
+		HotListItem hotListItem;
+		Map<SecurityKey, HotListItem> itemMap;
 		HistoricalQuote histQuote;
 
 		LocalDate firstDate = null;
@@ -65,19 +66,26 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 		Iterator<HistoricalQuote> iterator = item.getHistoricalQuotes().iterator();
 		iterator.next();
 
+		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
+		SimpleScreenExecutor executor;
+
 		for (int i = 0; i < NUMBER_OF_HIST_PERIODS && item.getHistoricalQuotes().size() > 1; ++i) {
 
 			// remove one day of OHLC data to calculate models back a day as if
 			// it's the current day.
 			iterator.remove();
 			histQuote = iterator.next();
+
 			lastDate = histQuote.getHistoricalDate();
 			if (firstDate == null) {
 				firstDate = lastDate;
 			}
 
-			for (ScreenStrategyEntry entry : screenProvidor.getScreens()) {
+			itemMap = new HashMap<>();
 
+			for (ScreenStrategyEntry entry : screenProvidor.getScreens()) {
+				executor = new SimpleScreenExecutor();
+				
 				try {
 
 					// Convert the criteria generators into criteria.
@@ -91,12 +99,15 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 					if (executor.getResultSet().contains(item.getKey())) {
 
-						if (result == null) {
-							result = new HotListItem(item.getKey());
+						if (!itemMap.containsKey(item.getKey())) {
+							hotListItem = new HotListItem(item.getKey());
+							hotListItems.add(hotListItem);
+							hotListItem.setReportDate(Date.valueOf(lastDate));
+							itemMap.put(item.getKey(), hotListItem);
 						}
-						result.addScreen(entry.getScreenName());
-						result.addAllStrategies(entry.getStrategies());
-						result.setReportDate(Date.valueOf(lastDate));
+						hotListItem = itemMap.get(item.getKey());
+						hotListItem.addScreen(entry.getScreenName());
+						hotListItem.addAllStrategies(entry.getStrategies());
 					}
 
 				} catch (InsufficientHistoryException e) {
