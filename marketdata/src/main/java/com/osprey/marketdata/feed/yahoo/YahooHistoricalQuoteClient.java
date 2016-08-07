@@ -33,8 +33,6 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
 	@Autowired
 	private ApplicationContext appCtx;
 
-	// TODO add symbology translator at the quote level
-
 	@Override
 	public List<HistoricalQuote> quoteHistorical(SecurityKey s, LocalDate start, LocalDate end,
 			QuoteDataFrequency frequency) throws MarketDataNotAvailableException, MarketDataIOException {
@@ -51,6 +49,7 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
 
 	private List<HistoricalQuote> parse(String symbol, List<String> lines) {
 
+		// Use a set to clean the data.
 		Set<HistoricalQuote> history = new HashSet<>(lines.size());
 		ZonedDateTime ts = ZonedDateTime.now();
 		for (int i = 1; i < lines.size(); ++i) {
@@ -62,7 +61,7 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
 
 			@Override
 			public int compare(HistoricalQuote o1, HistoricalQuote o2) {
-				// most recent date first. 
+				// most recent date first.
 				return o2.getHistoricalDate().compareTo(o1.getHistoricalDate());
 			}
 		});

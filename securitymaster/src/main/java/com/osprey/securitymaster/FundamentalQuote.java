@@ -75,6 +75,13 @@ public class FundamentalQuote {
 	
 	// Calculated Values
 	private double volatility;
+	private double _8DayEma;
+	private double _10DayEma;
+	private double _15DayEma;
+	private double _20DayEma;
+	private double _50DayEma;
+	private double _100DayEma;
+	private double _200DayEma;
 
 	public FundamentalQuote(String symbol, LocalDate dt, ZonedDateTime timestamp) {
 		this(new SecurityKey(symbol, null), dt, timestamp);
@@ -633,6 +640,62 @@ public class FundamentalQuote {
 
 	public void setVolatility(double volatility) {
 		this.volatility = volatility;
+	}
+
+	public double get_200DayEma() {
+		return _200DayEma;
+	}
+
+	public void set_200DayEma(double _200DayEma) {
+		this._200DayEma = _200DayEma;
+	}
+
+	public double get_10DayEma() {
+		return _10DayEma;
+	}
+
+	public void set_10DayEma(double _10DayEma) {
+		this._10DayEma = _10DayEma;
+	}
+
+	public double get_20DayEma() {
+		return _20DayEma;
+	}
+
+	public void set_20DayEma(double _20DayEma) {
+		this._20DayEma = _20DayEma;
+	}
+
+	public double get_50DayEma() {
+		return _50DayEma;
+	}
+
+	public void set_50DayEma(double _50DayEma) {
+		this._50DayEma = _50DayEma;
+	}
+
+	public double get_100DayEma() {
+		return _100DayEma;
+	}
+
+	public void set_100DayEma(double _100DayEma) {
+		this._100DayEma = _100DayEma;
+	}
+
+	public double get_8DayEma() {
+		return _8DayEma;
+	}
+
+	public void set_8DayEma(double _8DayEma) {
+		this._8DayEma = _8DayEma;
+	}
+
+	public double get_15DayEma() {
+		return _15DayEma;
+	}
+
+	public void set_15DayEma(double _15DayEma) {
+		this._15DayEma = _15DayEma;
 	}
 
 }

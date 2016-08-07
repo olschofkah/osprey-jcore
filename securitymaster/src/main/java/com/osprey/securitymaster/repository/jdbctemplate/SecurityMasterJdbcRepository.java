@@ -150,9 +150,16 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" trailing_eps , " +
 			" trailing_pe , " +
 			" yield , "
+			+ "_8_day_ema , "
+			+ "_10_day_ema , "
+			+ "_15_day_ema , "
+			+ "_20_day_ema , "
+			+ "_50_day_ema , "
+			+ "_100_day_ema , "
+			+ "_200_day_ema , "
 			+ " volatility ) "
 			+ " values " 
-			+ " (?,?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
+			+ " (?,?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
 
 	
 	private static final String UPDATE_OC_FUNDAMENTAL = "update oc_security_fundamental set " +
@@ -217,6 +224,13 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" trailing_eps = ?, " +
 			" trailing_pe = ?, " +
 			" yield = ?, " +
+			" _8_day_ema = ?, " +
+			" _10_day_ema = ?, " +
+			" _15_day_ema = ?, " +
+			" _20_day_ema = ?, " +
+			" _50_day_ema = ?, " +
+			" _100_day_ema = ?, " +
+			" _200_day_ema = ?, " +
 			" volatility = ? " +
 			" where symbol = ? and date = ? ";
 	private static final String SELECT_OC_FUNDAMENTAL = "select " +
@@ -283,6 +297,13 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " trailing_eps , "
 			+ " trailing_pe , "
 			+ " yield , "
+			+ " _8_day_ema , "
+			+ " _10_day_ema , "
+			+ " _15_day_ema , "
+			+ " _20_day_ema , "
+			+ " _50_day_ema , "
+			+ " _100_day_ema , "
+			+ " _200_day_ema , "
 			+ " volatility "
 			+ " from oc_security_fundamental ocsf where symbol = ? and date = "
 			+ " ( select max(date) from oc_security_fundamental ocsfi where ocsfi.symbol = ocsf.symbol ) ";
@@ -370,7 +391,9 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRevenueLow(), fq.getRevenuePerShare(), fq.getRevenueQtrGrowth(), fq.getSharesOutstanding(),
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
-					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), fq.getVolatility(), 
+					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), 
+					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
+					fq.getVolatility(), 
 					fq.getKey().getSymbol(), fq.getDate());
 
 		} else {
@@ -390,7 +413,9 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRevenueLow(), fq.getRevenuePerShare(), fq.getRevenueQtrGrowth(), fq.getSharesOutstanding(),
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
-					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), fq.getVolatility());
+					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), 
+					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
+					fq.getVolatility());
 		}
 
 	}
@@ -569,7 +594,16 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 				fq.setTrailingEps(rs.getDouble("trailing_eps"));
 				fq.setTrailingPe(rs.getDouble("trailing_pe"));
 				fq.setYield(rs.getDouble("yield"));
+
+				fq.set_10DayEma(rs.getDouble("_8_day_ema"));
+				fq.set_10DayEma(rs.getDouble("_10_day_ema"));
+				fq.set_10DayEma(rs.getDouble("_15_day_ema"));
+				fq.set_20DayEma(rs.getDouble("_20_day_ema"));
+				fq.set_50DayEma(rs.getDouble("_50_day_ema"));
+				fq.set_100DayEma(rs.getDouble("_100_day_ema"));
+				fq.set_200DayEma(rs.getDouble("_200_day_ema"));
 				fq.setVolatility(rs.getDouble("volatility"));
+				
 				return fq;
 			}
 		}, key.getSymbol());

@@ -96,6 +96,13 @@ CREATE TABLE "oc_security_fundamental" (
 	"total_assets" float8,
 	"yield" float8,
 	"volatility" float8,
+	"_8_day_ema" float8,
+	"_10_day_ema" float8,
+	"_15_day_ema" float8,
+	"_20_day_ema" float8,
+	"_50_day_ema" float8,
+	"_100_day_ema" float8,
+	"_200_day_ema" float8,
 	CONSTRAINT oc_security_ext_stat_log_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE

@@ -15,6 +15,7 @@ import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.math.OspreyQuantMath;
+import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
@@ -69,6 +70,48 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 		if (volPeriod > 1) {
 			double volatility = OspreyQuantMath.volatility(volPeriod, sqc.getHistoricalQuotes());
 			fundamentalQuote.setVolatility(volatility);
+		}
+		
+		try {
+			double _8Ema = OspreyQuantMath.ema(8, 0, sqc.getHistoricalQuotes());
+			fundamentalQuote.set_8DayEma(_8Ema);
+		} catch (InsufficientHistoryException e) { // eat it
+		}
+		
+		try {
+			double _10Ema = OspreyQuantMath.ema(10, 0, sqc.getHistoricalQuotes());
+			fundamentalQuote.set_10DayEma(_10Ema);
+		} catch (InsufficientHistoryException e) { // eat it
+		}
+
+		try {
+			double _15Ema = OspreyQuantMath.ema(15, 0, sqc.getHistoricalQuotes());
+			fundamentalQuote.set_15DayEma(_15Ema);
+		} catch (InsufficientHistoryException e) { // eat it
+		}
+		
+		try {
+			double _20Ema = OspreyQuantMath.ema(20, 0, sqc.getHistoricalQuotes());
+			fundamentalQuote.set_20DayEma(_20Ema);
+		} catch (InsufficientHistoryException e) { // eat it
+		}
+
+		try {
+			double _50Ema = OspreyQuantMath.ema(50, 0, sqc.getHistoricalQuotes());
+			fundamentalQuote.set_50DayEma(_50Ema);
+		} catch (InsufficientHistoryException e) { // eat it
+		}
+
+		try {
+			double _100Ema = OspreyQuantMath.ema(100, 0, sqc.getHistoricalQuotes());
+			fundamentalQuote.set_100DayEma(_100Ema);
+		} catch (InsufficientHistoryException e) { // eat it
+		}
+
+		try {
+			double _200Ema = OspreyQuantMath.ema(200, 0, sqc.getHistoricalQuotes());
+			fundamentalQuote.set_200DayEma(_200Ema);
+		} catch (InsufficientHistoryException e) { // eat it
 		}
 
 	}
