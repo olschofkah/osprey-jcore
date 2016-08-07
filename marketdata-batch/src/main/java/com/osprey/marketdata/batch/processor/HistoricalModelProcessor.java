@@ -38,14 +38,14 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 	private IHotShitRepository repo;
 
 	private static int NUMBER_OF_HIST_PERIODS = 252; // TODO extract to config
+	private static boolean HIST_ENABLED = false;
 
 	@Override
 	public SecurityQuoteContainer process(SecurityQuoteContainer item) throws Exception {
 
 		logger.info("Performing Historical Model runs on {} ", () -> item.getKey().getSymbol());
 
-		if (item.getHistoricalQuotes().isEmpty()) {
-			// If the history is empty ... just skip forward.
+		if (!HIST_ENABLED || item.getHistoricalQuotes().isEmpty()) {
 			return item;
 		}
 
