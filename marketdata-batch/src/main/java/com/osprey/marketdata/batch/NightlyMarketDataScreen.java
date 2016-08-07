@@ -39,6 +39,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
+import com.osprey.marketdata.batch.processor.HistoricalModelProcessor;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
 import com.osprey.marketdata.batch.processor.HotShitScreenProvidor;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
@@ -87,8 +88,10 @@ public class NightlyMarketDataScreen {
 	private DataSource dataSource;
 
 	// A queue to temporarily hold securities to quote and pull history for.
-	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>(); // #1
-	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue = new ConcurrentLinkedQueue<>(); // #2
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>();  
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue = new ConcurrentLinkedQueue<>(); 
+	
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> historicalModelQueue = new ConcurrentLinkedQueue<>(); // #2
 	
 	@Bean
 	public DataSource postgresDataSource() {
@@ -117,7 +120,7 @@ public class NightlyMarketDataScreen {
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(4);// TODO extract
-		executor.setMaxPoolSize(8); // TODO extract
+		executor.setMaxPoolSize(16); // TODO extract
 		executor.setThreadFactory(threadFactory());
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		return executor;
@@ -214,7 +217,24 @@ public class NightlyMarketDataScreen {
 
 		};
 	}
+	
 
+	@Bean
+	public ItemReader<SecurityQuoteContainer> historicalQuoteQueueReader() {
+		return new ItemReader<SecurityQuoteContainer>() {
+
+			@Override
+			public SecurityQuoteContainer read()
+					throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+
+				return historicalModelQueue.poll();
+			}
+
+		};
+	}
+
+	
+	
 	@Bean
 	public InitialScreenProcessor initialScreenProcessor() {
 		return new InitialScreenProcessor();
@@ -228,6 +248,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public HotShitScreenProcessor hotShitScreenProcessor() {
 		return new HotShitScreenProcessor();
+	}
+	
+	@Bean
+	public HistoricalModelProcessor historicalModelProcessor(){
+		return new HistoricalModelProcessor();
 	}
 
 	@Bean
@@ -263,14 +288,27 @@ public class NightlyMarketDataScreen {
 		};
 	}
 	
+
 	@Bean
-	public ItemWriter<SecurityQuoteContainer> postQuoteQueueWriter() {
+	public ItemWriter<SecurityQuoteContainer> postHistoricalModelItemWriter() {
+		return new ItemWriter<SecurityQuoteContainer>() {
+
+			@Override
+			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
+				postQuoteQueue.addAll(items);
+			}
+
+		};
+	}
+	
+	@Bean
+	public ItemWriter<SecurityQuoteContainer> postQuoteLoadQueueWriter() {
 		return new ItemWriter<SecurityQuoteContainer>() {
 
 			@Override
 			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
 				logger.debug("Queuing securities for the hot shit ...");
-				postQuoteQueue.addAll(items);
+				historicalModelQueue.addAll(items);
 			}
 
 		};
@@ -305,7 +343,8 @@ public class NightlyMarketDataScreen {
 	@Bean
 	@Scope("prototype")
 	public Job processNightlySecurityMaster() {
-		return jobBuilderFactory.get("nightlySecurityMasterProcess").incrementer(new RunIdIncrementer())
+		return jobBuilderFactory.get("nightlySecurityMasterProcess")
+				.incrementer(new RunIdIncrementer())
 				.listener(listener())
 				.flow(noOp()) // 
 				.next(marketDataLoadDecider())
@@ -319,6 +358,7 @@ public class NightlyMarketDataScreen {
 				.from(marketDataLoadDecider())
 				.on(MarketDataLoadDecider.DO_LOAD)
 					.to(loadQuotes())
+					.next(historicalModelRuns())
 					.next(deletePreviousHotlistForToday()) 
 					.next(hotListFilterAndPersist()) 
 				.end()
@@ -346,7 +386,7 @@ public class NightlyMarketDataScreen {
 				.allowStartIfComplete(true)
 				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(250)
 				.reader(quoteItemReader())
-				.writer(postQuoteQueueWriter())
+				.writer(postQuoteLoadQueueWriter())
 				.taskExecutor(taskExecutor())
 				.build();
 	}
@@ -411,10 +451,26 @@ public class NightlyMarketDataScreen {
 				.<SecurityQuoteContainer, HotListItem>chunk(100)
 				.faultTolerant()
 				.skip(InsufficientHistoryException.class)
-				.skipLimit(256)
+				.skipLimit(512)
 				.reader(postQuoteQueueReader())
 				.processor(hotShitScreenProcessor())
 				.writer(hotShitDbItemWriter())
+				.taskExecutor(taskExecutor())
+				.build();
+	}
+	
+
+	@Bean
+	public Step historicalModelRuns() {
+		return stepBuilderFactory.get("historicalModelRuns")
+				.allowStartIfComplete(true)
+				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(100)
+				.faultTolerant()
+				.skip(InsufficientHistoryException.class)
+				.skipLimit(512)
+				.reader(historicalQuoteQueueReader())
+				.processor(historicalModelProcessor())
+				.writer(postHistoricalModelItemWriter())
 				.taskExecutor(taskExecutor())
 				.build();
 	}

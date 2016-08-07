@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,14 +61,19 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 
 	@Override
 	public void deleteHotShitForDate(LocalDate dt) {
-		jdbc.update("delete from tha_hot_shit where date = ?", Date.valueOf(dt));
+		jdbc.update("delete from tha_hot_shit where date = ? ", Date.valueOf(dt));
+	}
+
+	@Override
+	public void deleteHotShitForDatesAndSymbol(String symbol, LocalDate earliestDate, LocalDate latestDate) {
+		jdbc.update("delete from tha_hot_shit where symbol = ? and date >= ? and date <= ?", symbol,
+				Date.valueOf(earliestDate), Date.valueOf(latestDate));
 	}
 
 	@Override
 	public void persistThaHotShit(List<? extends HotListItem> items) {
 
 		final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
-		final Date today = Date.valueOf(LocalDate.now());
 
 		jdbc.batchUpdate("insert into tha_hot_shit values (?,?,?,?)", new BatchPreparedStatementSetter() {
 
@@ -74,7 +82,7 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 				HotListItem sec = items.get(i);
 
 				ps.setString(1, sec.getKey().getSymbol());
-				ps.setDate(2, today);
+				ps.setDate(2, sec.getReportDate());
 				ps.setTimestamp(3, now);
 
 				String secJson = null;
@@ -98,6 +106,16 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 			}
 		});
 
+	}
+
+	@Override
+	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
+	public void deleteAndPersist(String symbol, LocalDate earliestDate, LocalDate latestDate,
+			List<? extends HotListItem> lst) {
+		deleteHotShitForDatesAndSymbol(symbol, earliestDate, latestDate);
+		if (!lst.isEmpty()) {
+			persistThaHotShit(lst);
+		}
 	}
 
 }

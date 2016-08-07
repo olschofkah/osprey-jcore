@@ -11,5 +11,10 @@ public interface IHotShitRepository {
 
 	void deleteHotShitForDate(LocalDate dt);
 
+	void deleteHotShitForDatesAndSymbol(String symbol, LocalDate earliestDate, LocalDate latestDate);
+
+	void deleteAndPersist(String symbol, LocalDate earliestDate, LocalDate latestDate, List<? extends HotListItem> lst);
+
 	void persistThaHotShit(List<? extends HotListItem> lst);
+
 }

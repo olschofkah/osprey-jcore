@@ -1,5 +1,6 @@
 package com.osprey.marketdata.batch.writer;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +14,7 @@ import com.osprey.screen.repository.IHotShitRepository;
 public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
 
 	final static Logger logger = LogManager.getLogger(HotShitDbItemWriter.class);
-	
+
 	@Autowired
 	private IHotShitRepository repo;
 
@@ -26,8 +27,10 @@ public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
 			return;
 		}
 		
-		repo.persistThaHotShit(items);
+		HotListItem itemZero = items.get(0);
+		LocalDate lDate = itemZero.getReportDate().toLocalDate();
 
+		repo.deleteAndPersist(itemZero.getKey().getSymbol(), lDate, lDate, items);
 	}
 
 }
