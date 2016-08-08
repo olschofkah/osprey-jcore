@@ -14,6 +14,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
+import com.osprey.screen.criteria.IndustryCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
@@ -23,11 +24,13 @@ import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
 import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
+import com.osprey.screen.criteria.SectorCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.criteria.constants.ScreenType;
 
@@ -125,6 +128,10 @@ public class ScreenCriteriaGenerator {
 			result = objectMapper.convertValue(getCriteriaBucket(), RelativeStrengthIndexCriteria.class);
 			break;
 		case SECTOR:
+			result = objectMapper.convertValue(getCriteriaBucket(), SectorCriteria.class);
+			break;
+		case INDUSTRY:
+			result = objectMapper.convertValue(getCriteriaBucket(), IndustryCriteria.class);
 			break;
 		case SMA:
 			result = objectMapper.convertValue(getCriteriaBucket(), SimpleMovingAverageCriteria.class);
@@ -165,8 +172,10 @@ public class ScreenCriteriaGenerator {
 			break;
 		case DOLLAR_VOLUME:
 			result = objectMapper.convertValue(getCriteriaBucket(), DollarVolumeCriteria.class);
+			break;
 		case VOLUME:
-			result = objectMapper.convertValue(getCriteriaBucket(), VolatilityCriteria.class);
+			result = objectMapper.convertValue(getCriteriaBucket(), VolumeCriteria.class);
+			break;
 		default:
 			break;
 

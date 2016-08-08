@@ -2,6 +2,7 @@ package com.osprey.screen.screens;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.securitymaster.HistoricalQuote;
@@ -23,8 +24,17 @@ public class DollarVolumeScreen implements IStockScreen {
 
 		double dollarVolume;
 		HistoricalQuote historicalQuote;
-		for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
-			historicalQuote = sqc.getHistoricalQuotes().get(offset);
+		
+		List<HistoricalQuote> historicalQuotes = sqc.getHistoricalQuotes();
+		
+		// Override the range if we do not have the history for it. 
+		int range = criteria.getRange();
+		if(historicalQuotes.size() < range){
+			range = historicalQuotes.size();
+		}
+		
+		for (int offset = range - 1; offset >= 0 ; --offset) {
+			historicalQuote = historicalQuotes.get(offset);
 			dollarVolume = historicalQuote.getVolume() * historicalQuote.getAdjClose();
 
 			switch (criteria.getRelationalOperator()) {

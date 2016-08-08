@@ -16,6 +16,7 @@ import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCurrentPriceCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
 import com.osprey.screen.criteria.IScreenCriteria;
+import com.osprey.screen.criteria.IndustryCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
@@ -25,6 +26,7 @@ import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
 import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
+import com.osprey.screen.criteria.SectorCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
@@ -41,6 +43,7 @@ import com.osprey.screen.screens.ExponentialMovingAverageCurrentPriceCrossoverSc
 import com.osprey.screen.screens.ExponentialMovingAverageScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageVsCurrentPriceScreen;
 import com.osprey.screen.screens.IStockScreen;
+import com.osprey.screen.screens.IndustryScreen;
 import com.osprey.screen.screens.InstrumentTypeScreen;
 import com.osprey.screen.screens.MarketCapScreen;
 import com.osprey.screen.screens.MomentumScreen;
@@ -50,6 +53,7 @@ import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.PriceGapScreen;
 import com.osprey.screen.screens.PricePercentageChangeScreen;
 import com.osprey.screen.screens.RelativeStrengthIndexScreen;
+import com.osprey.screen.screens.SectorScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
@@ -168,7 +172,9 @@ public class ScreenPlanFactory {
 		case RSI:
 			return new RelativeStrengthIndexScreen((RelativeStrengthIndexCriteria) criteria);
 		case SECTOR:
-			return null;
+			return new SectorScreen((SectorCriteria) criteria);
+		case INDUSTRY:
+			return new IndustryScreen((IndustryCriteria) criteria);
 		case SMA:
 			return new SimpleMovingAverageScreen((SimpleMovingAverageCriteria) criteria);
 		case STOCHASTICS_X:

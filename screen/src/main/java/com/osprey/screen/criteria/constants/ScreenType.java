@@ -6,6 +6,7 @@ public enum ScreenType {
 	EXCHANGE,
 	INDEX,
 	SECTOR,
+	INDUSTRY,
 	ADR,
 	MARKET_CAP,
 	BETA,
