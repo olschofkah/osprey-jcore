@@ -454,7 +454,7 @@ public class LiveMarketDataScreenTest {
 		LocalDate start = end.minusYears(1).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "SPY";
+		String symbol = "XSD";
 
 		Security security = new Security(new SecurityKey(symbol, null));
 		security.setInstrumentType(InstrumentType.STOCK);
@@ -465,7 +465,7 @@ public class LiveMarketDataScreenTest {
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-		double sectorRI = OspreyQuantMath.sectorRotationIndicator(60, 21, 0, 1, hist);
+		double sectorRI = OspreyQuantMath.rotationIndicator(60, 20, 0, 1, hist);
 		double acfLong = OspreyQuantMath.acf(60, 0, 1, hist);
 		double acfShort = OspreyQuantMath.acf(20, 0, 1, hist);
 

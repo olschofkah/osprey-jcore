@@ -150,6 +150,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" trailing_eps , " +
 			" trailing_pe , " +
 			" yield , "
+			+ "rotation_indicator , "
 			+ "_8_day_ema , "
 			+ "_10_day_ema , "
 			+ "_15_day_ema , "
@@ -224,6 +225,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" trailing_eps = ?, " +
 			" trailing_pe = ?, " +
 			" yield = ?, " +
+			" rotation_indicator = ?, " +
 			" _8_day_ema = ?, " +
 			" _10_day_ema = ?, " +
 			" _15_day_ema = ?, " +
@@ -297,6 +299,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " trailing_eps , "
 			+ " trailing_pe , "
 			+ " yield , "
+			+ " rotation_indicator , "
 			+ " _8_day_ema , "
 			+ " _10_day_ema , "
 			+ " _15_day_ema , "
@@ -392,6 +395,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
 					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), 
+					fq.getRotationIndicator(),
 					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
 					fq.getVolatility(), 
 					fq.getKey().getSymbol(), fq.getDate());
@@ -414,6 +418,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
 					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), 
+					fq.getRotationIndicator(),
 					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
 					fq.getVolatility());
 		}
@@ -595,6 +600,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 				fq.setTrailingPe(rs.getDouble("trailing_pe"));
 				fq.setYield(rs.getDouble("yield"));
 
+				fq.setRotationIndicator(rs.getDouble("rotation_indicator"));
 				fq.set_10DayEma(rs.getDouble("_8_day_ema"));
 				fq.set_10DayEma(rs.getDouble("_10_day_ema"));
 				fq.set_10DayEma(rs.getDouble("_15_day_ema"));

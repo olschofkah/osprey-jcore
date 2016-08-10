@@ -58,6 +58,7 @@ public enum ScreenType {
 	RATE_OF_CHANGE,
 	DMI,
 	ADX, 
-	EMA_VS_PRICE
+	EMA_VS_PRICE,
+	ROTATION_INDICATOR
 	
 }

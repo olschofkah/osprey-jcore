@@ -24,6 +24,7 @@ import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
 import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
+import com.osprey.screen.criteria.RotationIndicatorCriteria;
 import com.osprey.screen.criteria.SectorCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
@@ -68,6 +69,9 @@ public class ScreenCriteriaGenerator {
 			break;
 		case EARNINGS_ANNOUNCEMENT:
 			result = objectMapper.convertValue(getCriteriaBucket(), EarningsCriteria.class);
+			break;
+		case ROTATION_INDICATOR:
+			result = objectMapper.convertValue(getCriteriaBucket(), RotationIndicatorCriteria.class);
 			break;
 		case EARNINGS_SUPRISE:
 			break;

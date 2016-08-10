@@ -752,7 +752,7 @@ public final class OspreyQuantMath {
 
 	}
 
-	public static double sectorRotationIndicator(int longPeriod, int shortPeriod, int offset, int lag,
+	public static double rotationIndicator(int longPeriod, int shortPeriod, int offset, int lag,
 			List<HistoricalQuote> prices) {
 
 		if (shortPeriod < 0) {
