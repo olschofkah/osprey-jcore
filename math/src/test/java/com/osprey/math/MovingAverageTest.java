@@ -67,7 +67,7 @@ public class MovingAverageTest {
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 		
 
-		double[] bands = OspreyQuantMath.bollingerbands(10, 0, closingPrices);
+		double[] bands = OspreyQuantMath.bollingerBands(10, 0, closingPrices);
 
 		Assert.assertEquals(27.2, bands[1], DOUBLE_TEST_DELTA);
 		Assert.assertEquals(15.514545, bands[2], DOUBLE_TEST_DELTA);
@@ -118,22 +118,7 @@ public class MovingAverageTest {
 
 		Assert.assertEquals(0, ema_default_smooth, DOUBLE_TEST_DELTA);
 	}
-	
-	// 12 day ema (31.012363486) - 26 day ema (36.194239) = 5.181875 
-	public void testMACD() throws Exception {
 
-		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
-		SecurityQuote quote = new SecurityQuote(TEST_TICKER_1);
-		quote.setLast(closingPrices.get(0).getAdjClose());
-
-		int long_len = 26;
-		int short_len = 12;
-		
-
-		double MACD = OspreyQuantMath.MACD(long_len, short_len, closingPrices, quote);
-		
-		Assert.assertEquals(5.1818755, MACD, DOUBLE_TEST_DELTA);
-	}
 
 	private List<HistoricalQuote> generateHistoricalPrices() {
 		LocalDate now = LocalDate.now();

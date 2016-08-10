@@ -466,8 +466,8 @@ public class LiveMarketDataScreenTest {
 		sqc.setSecurity(security);
 
 		double sectorRI = OspreyQuantMath.sectorRotationIndicator(60, 21, 0, 1, hist);
-		double acfLong = OspreyQuantMath.ACF(60, 0, 1, hist);
-		double acfShort = OspreyQuantMath.ACF(20, 0, 1, hist);
+		double acfLong = OspreyQuantMath.acf(60, 0, 1, hist);
+		double acfShort = OspreyQuantMath.acf(20, 0, 1, hist);
 
 		System.out.println(sectorRI);
 		System.out.println(acfLong);

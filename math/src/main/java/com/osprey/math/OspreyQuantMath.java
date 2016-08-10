@@ -12,6 +12,7 @@ import org.apache.commons.math3.util.Pair;
 
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
+import com.osprey.math.exception.MathException;
 import com.osprey.math.result.SMAPair;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuote;
@@ -66,25 +67,6 @@ public final class OspreyQuantMath {
 		}
 
 		return ma;
-	}
-
-	/**
-	 * MACD = ema (short len) - ema (long len)
-	 * 
-	 * @param long_len
-	 * @param short_len
-	 * @param prices
-	 * @return
-	 */
-	public static double MACD(int long_len, int short_len, List<HistoricalQuote> prices, SecurityQuote quote) {
-
-		// TODO needs a bit more work.
-
-		double ema_long = OspreyQuantMath.ema(long_len, 0, prices);
-		double ema_short = OspreyQuantMath.ema(short_len, 0, prices);
-
-		return ema_short - ema_long;
-
 	}
 
 	public static Map<String, List<Double>> macdCurves(int p0, int p1, int pS, List<HistoricalQuote> prices) {
@@ -269,7 +251,7 @@ public final class OspreyQuantMath {
 		}
 
 		return (stochasticOscillatorK(p, offset + 1, prices) + stochasticOscillatorK(p, offset + 2, prices)
-		+ stochasticOscillatorK(p, offset, prices)) / 3;
+				+ stochasticOscillatorK(p, offset, prices)) / 3;
 
 	}
 
@@ -360,9 +342,9 @@ public final class OspreyQuantMath {
 	}
 
 	// http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
-	public static double[] bollingerbands(int p, int offset, List<HistoricalQuote> prices) {
+	public static double[] bollingerBands(int p, int offset, List<HistoricalQuote> prices) {
 
-		//TODO @jiayang: do you always calc the mid band w/ sma? 
+		// TODO @jiayang: do you always calc the mid band w/ sma?
 
 		double midband = sma(p, offset, prices);
 
@@ -597,12 +579,13 @@ public final class OspreyQuantMath {
 		}
 		return v;
 	}
-	
-	/* http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:money_flow_index_mfi
-	 * 1. Typical Price = (High + Low + Close)/3
-	 * 2. Raw Money Flow = Typical Price x Volume
-	 * 3. Money Flow Ratio = (14-period Positive Money Flow)/(14-period Negative Money Flow)
-	 * 4. Money Flow Index = 100 - 100/(1 + Money Flow Ratio)
+
+	/*
+	 * http://stockcharts.com/school/doku.php?id=chart_school:
+	 * technical_indicators:money_flow_index_mfi 1. Typical Price = (High + Low
+	 * + Close)/3 2. Raw Money Flow = Typical Price x Volume 3. Money Flow Ratio
+	 * = (14-period Positive Money Flow)/(14-period Negative Money Flow) 4.
+	 * Money Flow Index = 100 - 100/(1 + Money Flow Ratio)
 	 * 
 	 * 
 	 */
@@ -616,13 +599,18 @@ public final class OspreyQuantMath {
 			throw new InsufficientHistoryException();
 		}
 
-		// TODO clean this up. 
-		
+		// TODO clean this up.
+
 		double aveGain = 0.0;
 		double aveLoss = 0.0;
 		for (int i = offset; i < p + offset; ++i) {
-			double changeTypicalPrice = 1/3 * (prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow()) - 1/3 * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
-			double changeRawMoneyFlow = 1/3* prices.get(i+1).getVolume()*(prices.get(i+1).getClose() + prices.get(i+1).getHigh() + prices.get(i+1).getLow()) - 1/3 * prices.get(i).getVolume() * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
+			double changeTypicalPrice = 1 / 3
+					* (prices.get(i + 1).getClose() + prices.get(i + 1).getHigh() + prices.get(i + 1).getLow())
+					- 1 / 3 * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
+			double changeRawMoneyFlow = 1 / 3 * prices.get(i + 1).getVolume()
+					* (prices.get(i + 1).getClose() + prices.get(i + 1).getHigh() + prices.get(i + 1).getLow())
+					- 1 / 3 * prices.get(i).getVolume()
+							* (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
 
 			if (changeTypicalPrice >= 0) {
 				aveGain += changeRawMoneyFlow;
@@ -692,8 +680,12 @@ public final class OspreyQuantMath {
 		return covariance / volatility_bmk;
 	}
 
-	public static double Correlation(List<Double> xs, List<Double> ys) {
-		//TODO: check here that arrays are not null, of the same length etc
+	public static double correlation(double[] xs, double[] ys) {
+
+		if (xs.length != ys.length) {
+			throw new MathException(
+					"Arrays not of equal length for the correlation calc ... " + xs.length + " " + ys.length);
+		}
 
 		double sx = 0.0;
 		double sy = 0.0;
@@ -701,11 +693,11 @@ public final class OspreyQuantMath {
 		double syy = 0.0;
 		double sxy = 0.0;
 
-		int n = xs.size();
+		int n = xs.length;
 
-		for(int i = 0; i < n; ++i) {
-			double x = xs.get(i);
-			double y = ys.get(i);
+		for (int i = 0; i < n; ++i) {
+			double x = xs[i];
+			double y = ys[i];
 
 			sx += x;
 			sy += y;
@@ -717,15 +709,15 @@ public final class OspreyQuantMath {
 		// covariation
 		double cov = sxy / n - sx * sy / n / n;
 		// standard error of x
-		double sigmax = Math.sqrt(sxx / n -  sx * sx / n / n);
+		double sigmax = Math.sqrt(sxx / n - sx * sx / n / n);
 		// standard error of y
-		double sigmay = Math.sqrt(syy / n -  sy * sy / n / n);
+		double sigmay = Math.sqrt(syy / n - sy * sy / n / n);
 
 		// correlation is just a normalized covariation
 		return cov / sigmax / sigmay;
 	}
-	
-	public static double ACF(int p, int offset, int lag, List<HistoricalQuote> prices) {
+
+	public static double acf(int p, int offset, int lag, List<HistoricalQuote> prices) {
 
 		if (p < 0) {
 			throw new InvalidPeriodException();
@@ -736,33 +728,32 @@ public final class OspreyQuantMath {
 		}
 		double dailyReturn;
 		double dailyReturnLag;
-		
-		List<Double> dailyReturns = new ArrayList<>(p - lag);
-		List<Double> dailyReturnsLag = new ArrayList<>(p - lag);
 
+		double[] dailyReturns = new double[p - lag];
+		double[] dailyReturnsLag = new double[p - lag];
 
+		int ii = 0;
 		for (int i = offset; i < p + offset - lag; ++i) {
 			double price = prices.get(i).getAdjClose();
-			double previousPrice = prices.get(i+1).getAdjClose();
-			
-			double priceLag = prices.get(i+lag).getAdjClose();
-			double previousPriceLag = prices.get(i+1+lag).getAdjClose();
-			
-			
-			dailyReturn = price / previousPrice - 1;
-			dailyReturns.add(dailyReturn);
-			
-			dailyReturnLag = priceLag / previousPriceLag - 1;
-			dailyReturnsLag.add(dailyReturnLag);
+			double previousPrice = prices.get(i + 1).getAdjClose();
 
+			double priceLag = prices.get(i + lag).getAdjClose();
+			double previousPriceLag = prices.get(i + 1 + lag).getAdjClose();
+
+			dailyReturn = price / previousPrice - 1;
+			dailyReturns[ii] = dailyReturn;
+
+			dailyReturnLag = priceLag / previousPriceLag - 1;
+			dailyReturnsLag[ii] = dailyReturnLag;
+			++ii;
 		}
-		
-		return Correlation(dailyReturnsLag, dailyReturns);
-		
+
+		return correlation(dailyReturnsLag, dailyReturns);
 
 	}
-	
-	public static double sectorRotationIndicator(int longPeriod, int shortPeriod, int offset, int lag, List<HistoricalQuote> prices) {
+
+	public static double sectorRotationIndicator(int longPeriod, int shortPeriod, int offset, int lag,
+			List<HistoricalQuote> prices) {
 
 		if (shortPeriod < 0) {
 			throw new InvalidPeriodException();
@@ -771,15 +762,10 @@ public final class OspreyQuantMath {
 		if (longPeriod + offset > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
-		
-		
-		return ACF(shortPeriod, offset, lag, prices) / ACF(longPeriod, offset, lag, prices);
-		
+
+		return acf(shortPeriod, offset, lag, prices) / acf(longPeriod, offset, lag, prices);
 
 	}
-	
-	
-
 
 	public static double percentIn52Week(SecurityQuoteContainer sqc) {
 		return (sqc.getSecurityQuote().getLast() - sqc.getFundamentalQuote().get_52WeekLow())
