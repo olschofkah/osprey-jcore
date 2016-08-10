@@ -446,5 +446,32 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
+	
+	@Test
+	public void sectorRotation() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "SPY";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		double sectorRI = OspreyQuantMath.sectorRotationIndicator(60, 21, 0, 1, hist);
+		double acfLong = OspreyQuantMath.ACF(60, 0, 1, hist);
+		double acfShort = OspreyQuantMath.ACF(20, 0, 1, hist);
+
+		System.out.println(sectorRI);
+		System.out.println(acfLong);
+		System.out.println(acfShort);
+	}
 
 }
