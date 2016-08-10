@@ -42,6 +42,7 @@ import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeAverageDeltaCriteria;
 import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.criteria.constants.BandSelection;
@@ -380,6 +381,47 @@ public class LiveMarketDataScreenTest {
 		sqc.setSecurity(security);
 
 		IScreenCriteria c1 = new MovingAverageConverganceDiverganceDiverganceCriteria(12, 26, 9, 40, -0.5, RelationalOperator._LE);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
+	
+	@Test
+	public void volumeDeltaTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "NFLX";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		IScreenCriteria c1 = new VolumeAverageDeltaCriteria(0.03, 1, 2, RelationalOperator._LT);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);

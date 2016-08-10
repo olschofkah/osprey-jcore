@@ -38,7 +38,6 @@ public enum ScreenType {
 	VOLUME_AVG,
 	VOLUME_COMPARISON,
 	BLOCK_TRADE_VOL,
-	TODAY_VOL_VS_AVG,
 	ON_BALANCE_VOL,
 	
 	// Technicals
@@ -59,6 +58,7 @@ public enum ScreenType {
 	DMI,
 	ADX, 
 	EMA_VS_PRICE,
-	ROTATION_INDICATOR
+	ROTATION_INDICATOR, 
+	VOLUME_AVG_DELTA
 	
 }

@@ -33,6 +33,7 @@ import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeAverageDeltaCriteria;
 import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.screens.BetaScreen;
@@ -60,6 +61,7 @@ import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
 import com.osprey.screen.screens.VolumeAverageComparisonScreen;
+import com.osprey.screen.screens.VolumeAverageDeltaScreen;
 import com.osprey.screen.screens.VolumeAverageScreen;
 import com.osprey.screen.screens.VolumeScreen;
 import com.osprey.screen.screens._52WeekRangePercentageScreen;
@@ -183,12 +185,12 @@ public class ScreenPlanFactory {
 			return new SimpleMovingAverageScreen((SimpleMovingAverageCriteria) criteria);
 		case STOCHASTICS_X:
 			return null;
-		case TODAY_VOL_VS_AVG:
-			return null;
 		case VOLATILITY:
 			return new VolatilityScreen((VolatilityCriteria) criteria);
 		case VOLUME_AVG:
 			return new VolumeAverageScreen((VolumeAverageCriteria) criteria);
+		case VOLUME_AVG_DELTA:
+			return new VolumeAverageDeltaScreen((VolumeAverageDeltaCriteria) criteria);
 		case EMA_PCT_BANDS:
 			return new ExponentialMovingAverageBandCrossoverScreen(
 					(ExponentialMovingAverageBandCrossoverCriteria) criteria);

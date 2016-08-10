@@ -31,6 +31,7 @@ import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeAverageDeltaCriteria;
 import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.criteria.constants.ScreenType;
@@ -142,13 +143,14 @@ public class ScreenCriteriaGenerator {
 			break;
 		case STOCHASTICS_X:
 			break;
-		case TODAY_VOL_VS_AVG:
-			break;
 		case VOLATILITY:
 			result = objectMapper.convertValue(getCriteriaBucket(), VolatilityCriteria.class);
 			break;
 		case VOLUME_AVG:
 			result = objectMapper.convertValue(getCriteriaBucket(), VolumeAverageCriteria.class);
+			break;
+		case VOLUME_AVG_DELTA:
+			result = objectMapper.convertValue(getCriteriaBucket(), VolumeAverageDeltaCriteria.class);
 			break;
 		case EMA_X:
 			result = objectMapper.convertValue(getCriteriaBucket(), ExponentialMovingAverageCrossoverCriteria.class);
