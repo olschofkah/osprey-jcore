@@ -54,10 +54,15 @@ import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.InstrumentType;
 
+
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles("test")
 @SpringApplicationConfiguration(classes = MarketdataApplication.class)
 public class LiveMarketDataScreenTest {
+	
+	private static double DOUBLE_TEST_DELTA = 0.00001;
+
 
 	@Autowired
 	private YahooQuoteClient yahooQuoteClient;
@@ -465,13 +470,12 @@ public class LiveMarketDataScreenTest {
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-		double sectorRI = OspreyQuantMath.sectorRotationIndicator(60, 21, 0, 1, hist);
-		double acfLong = OspreyQuantMath.ACF(60, 0, 1, hist);
-		double acfShort = OspreyQuantMath.ACF(20, 0, 1, hist);
+		double sectorRI = OspreyQuantMath.sectorRotationIndicator(60, 20, 0, 1, hist);
+		//double acfLong = OspreyQuantMath.ACF(60, 0, 1, hist);
+		//double acfShort = OspreyQuantMath.ACF(20, 0, 1, hist);
 
-		System.out.println(sectorRI);
-		System.out.println(acfLong);
-		System.out.println(acfShort);
+		
+		Assert.assertEquals(-5.5565565, sectorRI, DOUBLE_TEST_DELTA);
 	}
 
 }

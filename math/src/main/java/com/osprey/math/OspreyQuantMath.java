@@ -773,7 +773,7 @@ public final class OspreyQuantMath {
 		}
 		
 		
-		return ACF(shortPeriod, offset, lag, prices) / ACF(longPeriod, offset, lag, prices);
+		return ACF(shortPeriod+1, offset, lag, prices) / ACF(longPeriod+1, offset, lag, prices);
 		
 
 	}
