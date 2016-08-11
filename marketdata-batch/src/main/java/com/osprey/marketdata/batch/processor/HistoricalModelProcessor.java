@@ -24,8 +24,11 @@ import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.repository.IHotShitRepository;
 import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityEvent;
 import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
+import com.osprey.securitymaster.SecurityUpcomingEvents;
+import com.osprey.securitymaster.constants.SecurityEventType;
 
 public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
 
@@ -68,6 +71,8 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 		SimpleScreenExecutor executor;
+		
+		item.sortEventsDescending();
 
 		for (int i = 0; i < NUMBER_OF_HIST_PERIODS && item.getHistoricalQuotes().size() > 1; ++i) {
 
@@ -81,11 +86,13 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 				firstDate = lastDate;
 			}
 
+			populateHistoricalEvents(item, histQuote.getHistoricalDate());
+
 			itemMap = new HashMap<>();
 
 			for (ScreenStrategyEntry entry : screenProvidor.getScreens()) {
 				executor = new SimpleScreenExecutor();
-				
+
 				try {
 
 					// Convert the criteria generators into criteria.
@@ -124,6 +131,47 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 		item.setHistoricalQuotes(origHistQuoteList);
 		return item;
+	}
+
+	private void populateHistoricalEvents(SecurityQuoteContainer item, LocalDate historicalDate) {
+		SecurityUpcomingEvents upcomingEvents = item.getUpcomingEvents();
+
+		boolean earningsSet = false;
+		boolean revenueSet = false;
+		boolean divSet = false;
+		boolean exDivSet = false;
+
+		// this is pre-sorted
+		for (SecurityEvent event : item.getEvents()) {
+			if (!earningsSet
+					&& event.getEvent() == SecurityEventType.EARNINGS_ACT
+					&& !historicalDate.isAfter(event.getDate())) {
+				upcomingEvents.setNextEarningsDateEstLow(event.getDate());
+				upcomingEvents.setNextEarningsDateEstHigh(event.getDate());
+				earningsSet = true;
+			}
+
+			if (!revenueSet 
+					&& event.getEvent() == SecurityEventType.REVENUE
+					&& !historicalDate.isAfter(event.getDate())) {
+				upcomingEvents.setNextRevenue(event.getDate());
+				earningsSet = true;
+			}
+
+			if (!exDivSet 
+					&& event.getEvent() == SecurityEventType.EX_DIV 
+					&& !historicalDate.isAfter(event.getDate())) {
+				upcomingEvents.setNextExDivDate(event.getDate());
+				exDivSet = true;
+			}
+
+			if (!divSet 
+					&& event.getEvent() == SecurityEventType.DIV 
+					&& !historicalDate.isAfter(event.getDate())) {
+				upcomingEvents.setNextDivDate(event.getDate());
+				divSet = true;
+			}
+		}
 	}
 
 }

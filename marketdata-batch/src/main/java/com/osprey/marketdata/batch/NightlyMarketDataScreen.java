@@ -43,6 +43,7 @@ import com.osprey.marketdata.batch.processor.HistoricalModelProcessor;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
 import com.osprey.marketdata.batch.processor.HotShitScreenProvidor;
 import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
+import com.osprey.marketdata.batch.processor.InitialScreenService;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
 import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
 import com.osprey.marketdata.batch.reader.QuoteItemReader;
@@ -157,12 +158,12 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public ISecurityMasterRepository securityMasterRepository(){
+	public ISecurityMasterRepository securityMasterRepository() {
 		return new SecurityMasterJdbcRepository(dataSource);
 	}
-	
+
 	@Bean
-	public MarketDataLoadDateService marketDataLoadDateService(){
+	public MarketDataLoadDateService marketDataLoadDateService() {
 		return new MarketDataLoadDateService();
 	}
 
@@ -170,19 +171,25 @@ public class NightlyMarketDataScreen {
 	public SecurityMasterItemReader initialScreenReader() {
 		return new SecurityMasterItemReader();
 	}
-	
-	@Bean QuoteItemReader quoteItemReader(){
+
+	@Bean
+	QuoteItemReader quoteItemReader() {
 		return new QuoteItemReader();
 	}
-	
+
 	@Bean
-	public HotShitScreenProvidor hotShitScreenProvidor(){
+	public HotShitScreenProvidor hotShitScreenProvidor() {
 		return new HotShitScreenProvidor();
 	}
-	
+
 	@Bean
-	public BlackListService blackListService(){
+	public BlackListService blackListService() {
 		return new BlackListService();
+	}
+
+	@Bean
+	public InitialScreenService initialScreenService() {
+		return new InitialScreenService();
 	}
 
 	@Bean
