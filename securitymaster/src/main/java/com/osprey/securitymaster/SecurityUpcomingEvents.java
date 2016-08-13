@@ -26,6 +26,16 @@ public class SecurityUpcomingEvents {
 		this.key = key;
 	}
 
+	public SecurityUpcomingEvents(SecurityUpcomingEvents ue) {
+		this.key = new SecurityKey(ue.key);
+		this.timestamp = ue.timestamp;
+		this.nextEarningsDateEstHigh = ue.nextEarningsDateEstHigh;
+		this.nextEarningsDateEstLow = ue.nextEarningsDateEstLow;
+		this.nextDivDate = ue.nextDivDate;
+		this.nextExDivDate = ue.nextExDivDate;
+		this.nextRevenue = ue.nextRevenue;
+	}
+
 	public ZonedDateTime getTimestamp() {
 		return timestamp;
 	}

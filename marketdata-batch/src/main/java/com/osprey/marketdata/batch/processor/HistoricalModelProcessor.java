@@ -55,8 +55,11 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 		Set<SecurityQuoteContainer> securities = new HashSet<>(2);
 		securities.add(item);
 
-		// Copy constructor to use for re-setting the hist back to where it was.
+		// Copy to use for re-setting the hist back to where it was.
 		List<HistoricalQuote> origHistQuoteList = new ArrayList<>(item.getHistoricalQuotes());
+		
+		SecurityUpcomingEvents origUpcomingEvents = item.getUpcomingEvents();
+		item.setUpcomingEvents(new SecurityUpcomingEvents(origUpcomingEvents));
 
 		List<HotListItem> hotListItems = new ArrayList<>();
 		HotListItem hotListItem;
@@ -130,6 +133,8 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 		}
 
 		item.setHistoricalQuotes(origHistQuoteList);
+		item.setUpcomingEvents(origUpcomingEvents);
+		
 		return item;
 	}
 
