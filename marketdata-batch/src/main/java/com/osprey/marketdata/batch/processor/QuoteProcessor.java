@@ -1,6 +1,9 @@
 package com.osprey.marketdata.batch.processor;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,6 +21,7 @@ import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.securitymaster.FundamentalQuote;
 import com.osprey.securitymaster.HistoricalQuote;
+import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
@@ -34,16 +38,16 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 	private IHistoricalQuoteSerice historicalQuoteService;
 
 	@Override
-	public SecurityQuoteContainer process(SecurityQuoteContainer item) throws Exception {
+	public SecurityQuoteContainer process(SecurityQuoteContainer sqc) throws Exception {
 
-		logger.info("Quoting {} ", () -> item.getKey().getSymbol());
+		logger.info("Quoting {} ", () -> sqc.getKey().getSymbol());
 
 		checkThrottle();
 
 		try {
-			fundamentalQuoteService.quoteUltra(item);
+			fundamentalQuoteService.quoteUltra(sqc);
 		} catch (MarketDataNotAvailableException e) {
-			logger.warn("Failed to quote {} | Message {}", new Object[] { item.getKey().getSymbol(), e.getMessage() });
+			logger.warn("Failed to quote {} | Message {}", new Object[] { sqc.getKey().getSymbol(), e.getMessage() });
 			return null;
 		}
 
@@ -52,13 +56,48 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 
 		checkThrottle();
 
-		List<HistoricalQuote> historicals = historicalQuoteService.quoteHistorical(item.getKey(), overOneYearAgo, today,
+		List<HistoricalQuote> historicals = historicalQuoteService.quoteHistorical(sqc.getKey(), overOneYearAgo, today,
 				QuoteDataFrequency.DAY);
-		item.setHistoricalQuotes(historicals);
+		sqc.setHistoricalQuotes(historicals);
 
-		populateCalcs(item);
+		populateCurrentQuoteInHist(sqc);
+		populateCalcs(sqc);
 
-		return item;
+		return sqc;
+	}
+
+	private void populateCurrentQuoteInHist(SecurityQuoteContainer sqc) {
+
+		if (!sqc.getHistoricalQuotes().isEmpty()) {
+
+			LocalDate firstHistDate = sqc.getHistoricalQuotes().get(0).getHistoricalDate();
+
+			LocalDateTime now = LocalDateTime.now();
+			LocalDate today = now.toLocalDate();
+			LocalDateTime _930AmEst = LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), 9,
+					30, 0, 0);
+
+			// NOTE: Doesn't quite work for market holidays ... but will correct
+			// itself the next day.
+			if (firstHistDate.isBefore(today) && firstHistDate.getDayOfWeek() != DayOfWeek.SATURDAY
+					&& firstHistDate.getDayOfWeek() != DayOfWeek.SUNDAY && now.isAfter(_930AmEst)) {
+
+				SecurityQuote quote = sqc.getSecurityQuote();
+
+				HistoricalQuote hq = new HistoricalQuote(sqc.getKey().getSymbol(), today);
+				hq.setAdjClose(quote.getLast());
+				hq.setClose(quote.getLast());
+				hq.setHigh(quote.getHigh());
+				hq.setLow(quote.getLow());
+				hq.setOpen(quote.getOpen());
+				hq.setTimestamp(ZonedDateTime.now());
+				hq.setVolume(quote.getVolume());
+
+				// insert the generated hist quote as the first quote.
+				sqc.getHistoricalQuotes().add(0, hq);
+			}
+		}
+
 	}
 
 	private void populateCalcs(SecurityQuoteContainer sqc) {
