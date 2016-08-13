@@ -75,6 +75,7 @@ public class FundamentalQuote {
 	
 	// Calculated Values
 	private double volatility;
+	private double rotationIndicator;
 	private double _8DayEma;
 	private double _10DayEma;
 	private double _15DayEma;
@@ -696,6 +697,14 @@ public class FundamentalQuote {
 
 	public void set_15DayEma(double _15DayEma) {
 		this._15DayEma = _15DayEma;
+	}
+
+	public double getRotationIndicator() {
+		return rotationIndicator;
+	}
+
+	public void setRotationIndicator(double rotationIndicator) {
+		this.rotationIndicator = rotationIndicator;
 	}
 
 }

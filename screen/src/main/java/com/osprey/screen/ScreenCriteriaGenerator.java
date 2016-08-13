@@ -24,12 +24,14 @@ import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
 import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
+import com.osprey.screen.criteria.RotationIndicatorCriteria;
 import com.osprey.screen.criteria.SectorCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeAverageDeltaCriteria;
 import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.criteria.constants.ScreenType;
@@ -68,6 +70,9 @@ public class ScreenCriteriaGenerator {
 			break;
 		case EARNINGS_ANNOUNCEMENT:
 			result = objectMapper.convertValue(getCriteriaBucket(), EarningsCriteria.class);
+			break;
+		case ROTATION_INDICATOR:
+			result = objectMapper.convertValue(getCriteriaBucket(), RotationIndicatorCriteria.class);
 			break;
 		case EARNINGS_SUPRISE:
 			break;
@@ -138,13 +143,14 @@ public class ScreenCriteriaGenerator {
 			break;
 		case STOCHASTICS_X:
 			break;
-		case TODAY_VOL_VS_AVG:
-			break;
 		case VOLATILITY:
 			result = objectMapper.convertValue(getCriteriaBucket(), VolatilityCriteria.class);
 			break;
 		case VOLUME_AVG:
 			result = objectMapper.convertValue(getCriteriaBucket(), VolumeAverageCriteria.class);
+			break;
+		case VOLUME_AVG_DELTA:
+			result = objectMapper.convertValue(getCriteriaBucket(), VolumeAverageDeltaCriteria.class);
 			break;
 		case EMA_X:
 			result = objectMapper.convertValue(getCriteriaBucket(), ExponentialMovingAverageCrossoverCriteria.class);

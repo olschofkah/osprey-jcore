@@ -71,13 +71,19 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 			double volatility = OspreyQuantMath.volatility(volPeriod, sqc.getHistoricalQuotes());
 			fundamentalQuote.setVolatility(volatility);
 		}
-		
+
+		try {
+			double rotationIndicator = OspreyQuantMath.rotationIndicator(60, 21, 0, 1, sqc.getHistoricalQuotes());
+			fundamentalQuote.setRotationIndicator(rotationIndicator);
+		} catch (InsufficientHistoryException e) { // eat it
+		}
+
 		try {
 			double _8Ema = OspreyQuantMath.ema(8, 0, sqc.getHistoricalQuotes());
 			fundamentalQuote.set_8DayEma(_8Ema);
 		} catch (InsufficientHistoryException e) { // eat it
 		}
-		
+
 		try {
 			double _10Ema = OspreyQuantMath.ema(10, 0, sqc.getHistoricalQuotes());
 			fundamentalQuote.set_10DayEma(_10Ema);
@@ -89,7 +95,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 			fundamentalQuote.set_15DayEma(_15Ema);
 		} catch (InsufficientHistoryException e) { // eat it
 		}
-		
+
 		try {
 			double _20Ema = OspreyQuantMath.ema(20, 0, sqc.getHistoricalQuotes());
 			fundamentalQuote.set_20DayEma(_20Ema);

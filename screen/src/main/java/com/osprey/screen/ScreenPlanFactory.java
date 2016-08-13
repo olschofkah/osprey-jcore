@@ -26,12 +26,14 @@ import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
 import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
+import com.osprey.screen.criteria.RotationIndicatorCriteria;
 import com.osprey.screen.criteria.SectorCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
 import com.osprey.screen.criteria.VolumeAverageCriteria;
+import com.osprey.screen.criteria.VolumeAverageDeltaCriteria;
 import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.screens.BetaScreen;
@@ -53,11 +55,13 @@ import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.PriceGapScreen;
 import com.osprey.screen.screens.PricePercentageChangeScreen;
 import com.osprey.screen.screens.RelativeStrengthIndexScreen;
+import com.osprey.screen.screens.RotationIndicatorScreen;
 import com.osprey.screen.screens.SectorScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
 import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
 import com.osprey.screen.screens.VolumeAverageComparisonScreen;
+import com.osprey.screen.screens.VolumeAverageDeltaScreen;
 import com.osprey.screen.screens.VolumeAverageScreen;
 import com.osprey.screen.screens.VolumeScreen;
 import com.osprey.screen.screens._52WeekRangePercentageScreen;
@@ -121,6 +125,8 @@ public class ScreenPlanFactory {
 			return null;
 		case EARNINGS_ANNOUNCEMENT:
 			return new EarningsScreen((EarningsCriteria) criteria);
+		case ROTATION_INDICATOR:
+			return new RotationIndicatorScreen((RotationIndicatorCriteria) criteria);
 		case EARNINGS_SUPRISE:
 			return null;
 		case EMA:
@@ -179,12 +185,12 @@ public class ScreenPlanFactory {
 			return new SimpleMovingAverageScreen((SimpleMovingAverageCriteria) criteria);
 		case STOCHASTICS_X:
 			return null;
-		case TODAY_VOL_VS_AVG:
-			return null;
 		case VOLATILITY:
 			return new VolatilityScreen((VolatilityCriteria) criteria);
 		case VOLUME_AVG:
 			return new VolumeAverageScreen((VolumeAverageCriteria) criteria);
+		case VOLUME_AVG_DELTA:
+			return new VolumeAverageDeltaScreen((VolumeAverageDeltaCriteria) criteria);
 		case EMA_PCT_BANDS:
 			return new ExponentialMovingAverageBandCrossoverScreen(
 					(ExponentialMovingAverageBandCrossoverCriteria) criteria);

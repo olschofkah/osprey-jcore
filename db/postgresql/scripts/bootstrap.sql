@@ -96,6 +96,7 @@ CREATE TABLE "oc_security_fundamental" (
 	"total_assets" float8,
 	"yield" float8,
 	"volatility" float8,
+	"rotation_indicator" float8,
 	"_8_day_ema" float8,
 	"_10_day_ema" float8,
 	"_15_day_ema" float8,

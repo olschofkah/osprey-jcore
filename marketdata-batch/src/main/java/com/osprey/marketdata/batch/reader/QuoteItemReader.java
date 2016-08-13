@@ -2,7 +2,9 @@ package com.osprey.marketdata.batch.reader;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -18,7 +20,10 @@ import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
+import com.osprey.marketdata.batch.processor.InitialScreenService;
+import com.osprey.math.OspreyJavaMath;
 import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 
@@ -33,6 +38,8 @@ public class QuoteItemReader implements ItemReader<SecurityQuoteContainer> {
 	private ISecurityMasterRepository repo;
 	@Autowired
 	private ExecutorService executor;
+	@Autowired
+	private InitialScreenService initialScreenService;
 
 	@Override
 	public SecurityQuoteContainer read()
@@ -45,7 +52,8 @@ public class QuoteItemReader implements ItemReader<SecurityQuoteContainer> {
 
 					List<Security> securities = repo.findSecurities();
 
-					List<SecurityQuoteContainer> tempList = new ArrayList<>(securities.size());
+					Set<SecurityQuoteContainer> tempList = new HashSet<>(
+							OspreyJavaMath.calcMapInitialSize(securities.size()));
 					List<Future<SecurityQuoteContainer>> theFutures = new ArrayList<>(securities.size());
 
 					Callable<SecurityQuoteContainer> callable;
@@ -68,7 +76,16 @@ public class QuoteItemReader implements ItemReader<SecurityQuoteContainer> {
 						tempList.add(future.get());
 					}
 
-					queue = new ConcurrentLinkedQueue<>(tempList);
+					Set<SecurityKey> filteredSet = initialScreenService.filter(tempList);
+
+					List<SecurityQuoteContainer> finalList = new ArrayList<>();
+					for (SecurityQuoteContainer sqc : tempList) {
+						if (filteredSet.contains(sqc.getKey())) {
+							finalList.add(sqc);
+						}
+					}
+
+					queue = new ConcurrentLinkedQueue<>(finalList);
 				}
 			} finally {
 				lock.unlock();
