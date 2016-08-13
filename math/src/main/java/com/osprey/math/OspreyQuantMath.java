@@ -763,7 +763,7 @@ public final class OspreyQuantMath {
 			throw new InsufficientHistoryException();
 		}
 
-		return acf(shortPeriod, offset, lag, prices) / acf(longPeriod, offset, lag, prices);
+		return acf(shortPeriod + 1, offset, lag, prices) / acf(longPeriod + 1, offset, lag, prices);
 
 	}
 
