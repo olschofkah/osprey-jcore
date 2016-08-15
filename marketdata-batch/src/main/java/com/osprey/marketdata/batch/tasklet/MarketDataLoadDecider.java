@@ -11,6 +11,7 @@ import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.marketdata.service.MarketDataLoadDateService;
+import com.osprey.marketdata.service.MarketScheduleService;
 
 public class MarketDataLoadDecider implements JobExecutionDecider {
 
@@ -18,6 +19,8 @@ public class MarketDataLoadDecider implements JobExecutionDecider {
 
 	@Autowired
 	private MarketDataLoadDateService dtService;
+	@Autowired
+	private MarketScheduleService marketSchedule;
 
 	public static final String DO_FETCH = "DO_FETCH";
 	public static final String DO_LOAD = "DO_LOAD";
@@ -29,7 +32,7 @@ public class MarketDataLoadDecider implements JobExecutionDecider {
 
 		logger.info("Last load date for market data is {} ", () -> lastLoadDate);
 
-		if (lastLoadDate.plusHours(6).isBefore(ZonedDateTime.now())) {
+		if (lastLoadDate.plusHours(3).isBefore(ZonedDateTime.now()) || marketSchedule.isUsEquityMarketsOpen()) {
 			return new FlowExecutionStatus(DO_FETCH);
 		}
 		return new FlowExecutionStatus(DO_LOAD);

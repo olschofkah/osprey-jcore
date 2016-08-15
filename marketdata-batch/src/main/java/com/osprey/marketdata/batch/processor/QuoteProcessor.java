@@ -1,8 +1,6 @@
 package com.osprey.marketdata.batch.processor;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,6 +15,7 @@ import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
 import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
+import com.osprey.marketdata.service.MarketScheduleService;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.securitymaster.FundamentalQuote;
@@ -36,6 +35,8 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 	private IUltraSecurityQuoteService fundamentalQuoteService;
 	@Autowired
 	private IHistoricalQuoteSerice historicalQuoteService;
+	@Autowired
+	private MarketScheduleService marketSchedule;
 
 	@Override
 	public SecurityQuoteContainer process(SecurityQuoteContainer sqc) throws Exception {
@@ -72,16 +73,8 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 
 			LocalDate firstHistDate = sqc.getHistoricalQuotes().get(0).getHistoricalDate();
 
-			LocalDateTime now = LocalDateTime.now();
-			LocalDate today = now.toLocalDate();
-			LocalDateTime _930AmEst = LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), 9,
-					30, 0, 0);
-
-			// NOTE: Doesn't quite work for market holidays ... but will correct
-			// itself the next day.
-			// TODO Change this to a market date service and don't invoke hist model runs mid day. 
-			if (firstHistDate.isBefore(today) && firstHistDate.getDayOfWeek() != DayOfWeek.SATURDAY
-					&& firstHistDate.getDayOfWeek() != DayOfWeek.SUNDAY && now.isAfter(_930AmEst)) {
+			LocalDate today = LocalDate.now(); 
+			if (firstHistDate.isBefore(today) && marketSchedule.hasUsEquityMarketsOpenedToday()) {
 
 				SecurityQuote quote = sqc.getSecurityQuote();
 

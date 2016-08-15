@@ -4,10 +4,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.sql.DataSource;
@@ -61,6 +58,7 @@ import com.osprey.marketdata.batch.writer.QuoteContainerItemWriter;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.marketdata.service.MarketDataLoadDateService;
+import com.osprey.marketdata.service.MarketScheduleService;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
@@ -123,7 +121,7 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(1);// TODO extract
+		executor.setCorePoolSize(10);// TODO extract
 		executor.setMaxPoolSize(16); // TODO extract
 		executor.setThreadFactory(threadFactory());
 		executor.setAllowCoreThreadTimeOut(false);
@@ -150,6 +148,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public AtomicLong throttleCapacity() {
 		return new AtomicLong();
+	}
+	
+	@Bean
+	public MarketScheduleService marketScheduleService(){
+		return new MarketScheduleService();
 	}
 
 	@Bean
