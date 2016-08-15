@@ -6,7 +6,7 @@ MAINTAINER osprey
 ARG app_version
 
 # Access to a local /tmp drive?
-VOLUME /tmp
+# VOLUME /tmp
 
 
 # Pick up the jars to push out to the image
@@ -36,4 +36,4 @@ CMD java -jar ./lib/marketdata-batch.jar
 #CMD sh
 
 # Expose the port for the Batch Server
-# EXPOSE 9001
+EXPOSE 9001

@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.sql.DataSource;
@@ -92,7 +95,7 @@ public class NightlyMarketDataScreen {
 	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>();  
 	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue = new ConcurrentLinkedQueue<>(); 
 	
-	private final ConcurrentLinkedQueue<SecurityQuoteContainer> historicalModelQueue = new ConcurrentLinkedQueue<>(); // #2
+	private final ConcurrentLinkedQueue<SecurityQuoteContainer> historicalModelQueue = new ConcurrentLinkedQueue<>(); 
 	
 	@Bean
 	public DataSource postgresDataSource() {
@@ -120,16 +123,18 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(4);// TODO extract
+		executor.setCorePoolSize(1);// TODO extract
 		executor.setMaxPoolSize(16); // TODO extract
 		executor.setThreadFactory(threadFactory());
+		executor.setAllowCoreThreadTimeOut(false);
+		executor.setKeepAliveSeconds(30);
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		return executor;
 	}
 	
 	@Bean
 	public ExecutorService executorService() {
-		return Executors.newFixedThreadPool(8, threadFactory()); // TODO extract thread count
+		 return ((ThreadPoolTaskExecutor)taskExecutor()).getThreadPoolExecutor();
 	}
 
 	@Bean

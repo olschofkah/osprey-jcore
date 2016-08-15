@@ -79,6 +79,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 
 			// NOTE: Doesn't quite work for market holidays ... but will correct
 			// itself the next day.
+			// TODO Change this to a market date service and don't invoke hist model runs mid day. 
 			if (firstHistDate.isBefore(today) && firstHistDate.getDayOfWeek() != DayOfWeek.SATURDAY
 					&& firstHistDate.getDayOfWeek() != DayOfWeek.SUNDAY && now.isAfter(_930AmEst)) {
 

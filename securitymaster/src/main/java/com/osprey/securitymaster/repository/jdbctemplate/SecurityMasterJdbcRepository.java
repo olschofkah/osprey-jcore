@@ -398,11 +398,11 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRotationIndicator(),
 					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
 					fq.getVolatility(), 
-					fq.getKey().getSymbol(), fq.getDate());
+					fq.getKey().getSymbol(), Date.valueOf(fq.getDate()));
 
 		} else {
 			// insert
-			jdbc.update(INSERT_OC_FUNDAMENTAL, fq.getKey().getSymbol(), fq.getDate(), fq.get_10DayAvgVolume(),
+			jdbc.update(INSERT_OC_FUNDAMENTAL, fq.getKey().getSymbol(), Date.valueOf(fq.getDate()), fq.get_10DayAvgVolume(),
 					fq.get_200DayAverage(), fq.get_50DayAverage(), fq.get_52WeekHigh(), fq.get_52WeekLow(),
 					fq.getAverageVolume(), fq.getBeta(), fq.getBookValue(), fq.getCurrentRatio(), fq.getDebtToEquity(),
 					fq.getDividendRate(), fq.getDividendYield(), fq.getEarningsAvg(), fq.getEarningsGrowth(),

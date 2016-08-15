@@ -54,8 +54,6 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 				}
 			}
 			
-			// TODO sort tickers. 
-			
 			List<String> symbols;
 
 			StringBuilder sb = new StringBuilder();
@@ -88,5 +86,8 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 			logger.info("Work Failed");
 			slack.postMessage("Well fuck, that didn't work...  What would you like me to do?");
 		}
+		
+		// fugly but works ...
+		System.exit(0);
 	}
 }
