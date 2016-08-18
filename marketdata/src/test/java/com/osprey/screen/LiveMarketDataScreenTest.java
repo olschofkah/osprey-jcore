@@ -503,7 +503,7 @@ public class LiveMarketDataScreenTest {
 		LocalDate start = end.minusYears(1).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "NFLX";
+		String symbol = "BOX";
 
 		Security security = new Security(new SecurityKey(symbol, null));
 		security.setInstrumentType(InstrumentType.STOCK);

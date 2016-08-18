@@ -56,7 +56,7 @@ public class SlackClient {
 		private Object text;
 
 		public SlackRequest(String user, Object text) {
-			this.setUsername(user);
+			this.username = user;
 			this.text = text;
 		}
 

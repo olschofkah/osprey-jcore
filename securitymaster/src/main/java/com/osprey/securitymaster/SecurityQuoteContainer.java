@@ -2,7 +2,6 @@ package com.osprey.securitymaster;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -139,13 +138,8 @@ public class SecurityQuoteContainer {
 
 	public void sortEventsDescending() {
 		// sort the events by date ...
-		Collections.sort(events, new Comparator<SecurityEvent>() {
-
-			@Override
-			public int compare(SecurityEvent o1, SecurityEvent o2) {
-				return o2.getDate().compareTo(o1.getDate());
-			}
-
-		});
+		if (events != null) {
+			Collections.sort(events, new SecurityEventsDescendingComparator());
+		}
 	}
 }

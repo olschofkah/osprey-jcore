@@ -227,6 +227,7 @@ CREATE TABLE "oc_security_comment" (
 	"timestamp" timestamptz NOT NULL,
 	"comment" varchar(1024) NOT NULL, 
 	"deleted" boolean NOT NULL default FALSE,
+	"user_id" varchar(32),
 	CONSTRAINT oc_security_comment_pk PRIMARY KEY ("id")
 ) WITH (
   OIDS=FALSE
