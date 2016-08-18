@@ -23,6 +23,8 @@ import com.osprey.math.OspreyQuantMath;
 import com.osprey.screen.criteria.BetaCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
+import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
+import com.osprey.screen.criteria.EarningsVolatilityAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
@@ -475,6 +477,51 @@ public class LiveMarketDataScreenTest {
 		criteria.add(c1);
 		criteria.add(c2);
 		criteria.add(c3);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
+	
+	@Test
+	public void earningsAverageMoveTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "NFLX";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+		
+		sqc.sortEventsDescending();
+
+		IScreenCriteria c1 = new EarningsPercentMoveAverageCriteria(14, 4, 0.06, RelationalOperator._GE);
+		IScreenCriteria c2 = new EarningsVolatilityAverageCriteria(14, 4, 0.07, RelationalOperator._GE);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+		criteria.add(c2);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
 		securities.add(sqc);

@@ -10,6 +10,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import com.osprey.screen.criteria.BetaCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
+import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
+import com.osprey.screen.criteria.EarningsVolatilityAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
@@ -38,7 +40,9 @@ import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.screens.BetaScreen;
 import com.osprey.screen.screens.DollarVolumeScreen;
+import com.osprey.screen.screens.EarningsPercentMoveAverageScreen;
 import com.osprey.screen.screens.EarningsScreen;
+import com.osprey.screen.screens.EarningsVolatilityAverageScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageBandCrossoverScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageCrossoverScreen;
 import com.osprey.screen.screens.ExponentialMovingAverageCurrentPriceCrossoverScreen;
@@ -210,6 +214,10 @@ public class ScreenPlanFactory {
 			return new DollarVolumeScreen((DollarVolumeCriteria) criteria);
 		case VOLUME:
 			return new VolumeScreen((VolumeCriteria) criteria);
+		case EARNINGS_PCT_MOVE:
+			return new EarningsPercentMoveAverageScreen((EarningsPercentMoveAverageCriteria) criteria);
+		case EARNINGS_VOLATILITY:
+			return new EarningsVolatilityAverageScreen((EarningsVolatilityAverageCriteria) criteria);
 		default:
 			break;
 

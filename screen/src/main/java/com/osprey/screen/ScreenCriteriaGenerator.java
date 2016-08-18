@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.criteria.BetaCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
+import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
+import com.osprey.screen.criteria.EarningsVolatilityAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageBandCrossoverCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
 import com.osprey.screen.criteria.ExponentialMovingAverageCrossoverCriteria;
@@ -181,6 +183,12 @@ public class ScreenCriteriaGenerator {
 			break;
 		case VOLUME:
 			result = objectMapper.convertValue(getCriteriaBucket(), VolumeCriteria.class);
+			break;
+		case EARNINGS_PCT_MOVE:
+			result = objectMapper.convertValue(getCriteriaBucket(), EarningsPercentMoveAverageCriteria.class);
+			break;
+		case EARNINGS_VOLATILITY:
+			result = objectMapper.convertValue(getCriteriaBucket(), EarningsVolatilityAverageCriteria.class);
 			break;
 		default:
 			break;

@@ -82,6 +82,7 @@ public class QuoteItemReader implements ItemReader<SecurityQuoteContainer> {
 					for (SecurityQuoteContainer sqc : tempList) {
 						if (filteredSet.contains(sqc.getKey())) {
 							finalList.add(sqc);
+							sqc.sortEventsDescending();
 						}
 					}
 

@@ -64,6 +64,8 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 		populateCurrentQuoteInHist(sqc);
 		populateCalcs(sqc);
 
+		sqc.sortEventsDescending();
+
 		return sqc;
 	}
 
