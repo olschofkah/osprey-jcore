@@ -195,19 +195,25 @@ CREATE TABLE "oc_security_ohlc_hist" (
   OIDS=FALSE
 );
 
-
-
 CREATE TABLE "tha_hot_shit" (
 	"symbol" VARCHAR(10) NOT NULL,
-	"report_date" DATE NOT NULL,
+	"date" DATE NOT NULL,
 	"timestamp" timestamptz NOT NULL,
 	"payload" jsonb NOT NULL, -- screen, strategy
-	"deleted" boolean NOT NULL default FALSE,
 	CONSTRAINT tha_hot_shit_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE
 );
 
+CREATE TABLE "tha_hot_shit_ignore" (
+	"symbol" VARCHAR(10) NOT NULL,
+	"date" DATE NOT NULL,
+	"timestamp" timestamptz NOT NULL,
+	"deleted" boolean NOT NULL default FALSE,
+	CONSTRAINT tha_hot_shit_pk PRIMARY KEY ("symbol","date")
+) WITH (
+  OIDS=FALSE
+);
 
 CREATE TABLE "oc_map" (
 	"obj_key" VARCHAR(10) NOT NULL,
