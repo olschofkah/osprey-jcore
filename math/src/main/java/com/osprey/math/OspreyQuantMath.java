@@ -14,6 +14,7 @@ import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.exception.MathException;
 import com.osprey.math.result.SMAPair;
+import com.osprey.math.result.StochasticOscillatorCurve;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
@@ -205,28 +206,31 @@ public final class OspreyQuantMath {
 
 	}
 
-	/*
-	 * %K = (Current Close - Lowest Low)/(Highest High - Lowest Low) * 100 %D =
-	 * 3-day SMA of %K Lowest Low = lowest low for the look-back period Highest
-	 * High = highest high for the look-back period %K is multiplied by 100 to
-	 * move the decimal point two places
-	 */
+	public static double stochasticOscillatorSlowK(int periodK, int lookBackPeriod, int offset,
+			List<HistoricalQuote> prices) {
+		return stochasticOscillatorFastK(periodK, lookBackPeriod, offset, prices) / periodK;
+	}
 
-	public static double stochasticOscillatorK(int p, int offset, List<HistoricalQuote> prices) {
+	private static double stochasticOscillatorFastK(int periodK, int lookBackPeriod, int offset,
+			List<HistoricalQuote> prices) {
 
-		if (p < 2) {
+		if (periodK == 0) {
+			return 0;
+		}
+
+		if (lookBackPeriod < 2) {
 			throw new InvalidPeriodException();
 		}
 
-		if (p + offset > prices.size()) {
+		if (lookBackPeriod + offset > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
 
 		double maxHigh = 0;
-		double minLow = 0;
+		double minLow = 10000000;
 
 		HistoricalQuote hq;
-		for (int i = offset; i < p + offset; ++i) {
+		for (int i = offset; i < lookBackPeriod + offset; ++i) {
 			hq = prices.get(i);
 			if (maxHigh < hq.getHigh()) {
 				maxHigh = hq.getHigh();
@@ -236,23 +240,62 @@ public final class OspreyQuantMath {
 			}
 		}
 
-		return (prices.get(0).getClose() - minLow) / (maxHigh - minLow) * 100.0;
-
+		double fastPK = ((prices.get(offset).getClose() - minLow) / (maxHigh - minLow) * 100.0);
+		return fastPK + stochasticOscillatorFastK(periodK - 1, lookBackPeriod, offset + 1, prices);
 	}
 
-	public static double stochasticOscillatorD(int p, int offset, List<HistoricalQuote> prices) {
+	public static double stochasticOscillatorSlowD(int periodD, int periodK, int lookBackPeriod, double initialPctK,
+			int offset, List<HistoricalQuote> prices) {
 
-		if (p < 2) {
+		if (periodD < 2) {
 			throw new InvalidPeriodException();
 		}
 
-		if (p + offset > prices.size()) {
+		if (periodD + offset > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
 
-		return (stochasticOscillatorK(p, offset + 1, prices) + stochasticOscillatorK(p, offset + 2, prices)
-				+ stochasticOscillatorK(p, offset, prices)) / 3;
+		double pctK = initialPctK;
+		int cnt = initialPctK == 0.0 ? 0 : 1;
 
+		// SMA of previous days
+		for (; cnt < periodD; ++cnt) {
+			pctK += stochasticOscillatorSlowK(periodK, lookBackPeriod, offset + cnt, prices);
+		}
+
+		if (cnt == 0) {
+			return 0;
+		} else {
+			return pctK / cnt;
+		}
+	}
+
+	public static StochasticOscillatorCurve stochasticOscillatorSmaCurves(int lookBackPeriod, int periodK, int periodD,
+			int length, List<HistoricalQuote> prices) {
+
+		if (periodK > prices.size() || periodD > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		int maxPeriod = periodK > periodD ? periodK : periodD;
+		int adjLength = length > prices.size() - maxPeriod ? prices.size() - maxPeriod : length;
+
+		double[] cK = new double[adjLength];
+		double[] cD = new double[adjLength];
+		LocalDate[] cDate = new LocalDate[adjLength];
+
+		double tmpPctK;
+		double tmpPctD;
+		for (int i = 0; i < adjLength; i++) {
+			tmpPctK = stochasticOscillatorSlowK(periodK, lookBackPeriod, i, prices);
+			tmpPctD = stochasticOscillatorSlowD(periodD, periodK, lookBackPeriod, tmpPctK, i, prices);
+
+			cK[i] = tmpPctK;
+			cD[i] = tmpPctD;
+			cDate[i] = prices.get(i).getHistoricalDate();
+		}
+
+		return new StochasticOscillatorCurve(cK, cD, cDate);
 	}
 
 	/**

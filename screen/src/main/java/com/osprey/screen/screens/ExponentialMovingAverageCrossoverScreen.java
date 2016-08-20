@@ -35,8 +35,6 @@ public class ExponentialMovingAverageCrossoverScreen implements IStockScreen {
 			ema1 = OspreyQuantMath.ema(criteria.getPeriod1(), offset, sqc.getHistoricalQuotes());
 			ema2 = OspreyQuantMath.ema(criteria.getPeriod2(), offset, sqc.getHistoricalQuotes());
 
-			// System.out.println(ema1 + " " + ema2);
-
 			comp = ema1 > ema2 ? 1 : (ema1 < ema2 ? -1 : 0);
 
 			if (previousComp == 2) {

@@ -51,8 +51,6 @@ public class EarningsPercentMoveAverageScreen implements IStockScreen {
 		double b = 0.0;
 		double count = 0;
 
-		System.out.println("");
-
 		boolean trigger;
 		for (HistoricalQuote hq : sqc.getHistoricalQuotes()) {
 			if (hq.getHistoricalDate().isBefore(currentEarningsEvent.getDate().plusDays(daysAfterPlusOne))) {
