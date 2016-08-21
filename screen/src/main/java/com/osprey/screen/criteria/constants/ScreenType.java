@@ -57,6 +57,7 @@ public enum ScreenType {
 	MOMENTUM_X,
 	MACD,
 	MACD_DIVERGANCE,
+	MACD_LEVEL,
 	RATE_OF_CHANGE,
 	DMI,
 	ADX, 

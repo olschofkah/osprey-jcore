@@ -24,6 +24,7 @@ import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
+import com.osprey.screen.criteria.MovingAverageConverganceDiverganceLevelCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
@@ -58,6 +59,7 @@ import com.osprey.screen.screens.MarketCapScreen;
 import com.osprey.screen.screens.MomentumScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceCrossoverScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceDiverganceScreen;
+import com.osprey.screen.screens.MovingAverageConverganceDiverganceLevelScreen;
 import com.osprey.screen.screens.PreviousClosePriceScreen;
 import com.osprey.screen.screens.PriceGapScreen;
 import com.osprey.screen.screens.PricePercentageChangeScreen;
@@ -161,6 +163,9 @@ public class ScreenPlanFactory {
 		case MACD_DIVERGANCE:
 			return new MovingAverageConverganceDiverganceDiverganceScreen(
 					(MovingAverageConverganceDiverganceDiverganceCriteria) criteria);
+		case MACD_LEVEL:
+			return new MovingAverageConverganceDiverganceLevelScreen(
+					(MovingAverageConverganceDiverganceLevelCriteria) criteria);
 		case MARKET_CAP:
 			return new MarketCapScreen((MarketCapCriteria) criteria);
 		case MOMENTUM_X:

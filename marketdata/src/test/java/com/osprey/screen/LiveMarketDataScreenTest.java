@@ -35,6 +35,7 @@ import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
+import com.osprey.screen.criteria.MovingAverageConverganceDiverganceLevelCriteria;
 import com.osprey.screen.criteria.PreviousClosePriceCriteria;
 import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
@@ -412,6 +413,49 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
+	
+
+	@Test
+	public void macdLevelTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "QQQ";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		IScreenCriteria c1 = new MovingAverageConverganceDiverganceLevelCriteria(12, 26, 9, 40, -0.5, RelationalOperator._GE);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
+	
 	
 	@Test
 	public void volumeDeltaTest() throws Exception {
