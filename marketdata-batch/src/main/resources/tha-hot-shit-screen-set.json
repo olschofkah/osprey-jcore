@@ -38,7 +38,7 @@
    }
   ]
  },
-{
+ {
   "screenName": "Market Turning Up",
   "strategies": [],
   "screenCriteria": [
@@ -55,7 +55,7 @@
     "criteriaBucket": {
      "type": "RSI",
      "period": 14,
-     "periodRange": 5,
+     "periodRange": 10,
      "rsiComparison": 35,
      "relationalOperator": "_LT"
     }
@@ -125,7 +125,7 @@
    }
   ]
  },
-{
+ {
   "screenName": "Market Turning Down",
   "strategies": [],
   "screenCriteria": [
@@ -142,7 +142,7 @@
     "criteriaBucket": {
      "type": "RSI",
      "period": 14,
-     "periodRange": 5,
+     "periodRange": 10,
      "rsiComparison": 65,
      "relationalOperator": "_GT"
     }
@@ -188,7 +188,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -234,7 +234,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -280,7 +280,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -325,7 +325,7 @@
   ]
  },
  {
-  "screenName": "Earnings Movers (Biotech)",
+  "screenName": "Earnings Movers (new)",
   "strategies": [],
   "screenCriteria": [
    {
@@ -339,7 +339,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -356,7 +356,7 @@
      "industries": [
       "Biotechnology"
      ],
-     "contains": true
+     "contains": false
     }
    },
    {
@@ -375,16 +375,34 @@
    },
    {
     "criteriaBucket": {
+     "type": "EARNINGS_PCT_MOVE",
+     "daysBefore": 14,
+     "daysAfter": 4,
+     "percentMoveComparison": 0.06,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_VOLATILITY",
+     "daysBefore": 14,
+     "daysAfter": 4,
+     "volatilityComparison": 0.07,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
      "type": "VOLATILITY",
      "period": 252,
-     "volatilityComparison": 0.7,
+     "volatilityComparison": 0.4,
      "relationalOperator": "_GE"
     }
    }
   ]
  },
  {
-  "screenName": "Bull: EMA Cross",
+  "screenName": "Stoch MACD Test Bull",
   "strategies": [],
   "screenCriteria": [
    {
@@ -398,7 +416,117 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {"criteriaBucket":{
+     "type":"STOCHASTICS_FULL_LEVEL",
+	 "periodLookBack":20,
+	 "periodK":10,
+	 "periodD":10,
+	 "range":3,
+	 "level":50,
+	 "relationalOperator":"_LE"
+	} 
+   },
+   {"criteriaBucket":{
+     "type":"STOCHASTICS_FULL_SIGNAL_CROSS",
+	 "periodLookBack":20,
+	 "periodK":10,
+	 "periodD":10,
+	 "range":3,
+	 "direction":"FROM_BELOW_TO_ABOVE"
+	} 
+   },	
+   {"criteriaBucket":{
+     "type":"MACD",
+	 "fastPeriod":12,
+	 "slowPeriod":26,
+	 "signalPeriod":9,
+	 "range":1,"direction":"FROM_BELOW_TO_ABOVE"
+    } 
+   }
+  ]
+ },
+ {
+  "screenName": "Stoch MACD Test Bear",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 2,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 15,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {"criteriaBucket":{
+     "type":"STOCHASTICS_FULL_LEVEL",
+	 "periodLookBack":20,
+	 "periodK":10,
+	 "periodD":10,
+	 "range":2,
+	 "level":50,
+	 "relationalOperator":"_GE"
+	} 
+   },
+   {"criteriaBucket":{
+     "type":"STOCHASTICS_FULL_SIGNAL_CROSS",
+	 "periodLookBack":20,
+	 "periodK":10,
+	 "periodD":10,
+	 "range":2,
+	 "direction":"FROM_ABOVE_TO_BELOW"
+	} 
+   },	
+   {"criteriaBucket":{
+     "type":"MACD",
+	 "fastPeriod":12,
+	 "slowPeriod":26,
+	 "signalPeriod":9,
+	 "range":1,"direction":"FROM_ABOVE_TO_BELOW" 
+    } 
+   }
+  ]
+ },
+ {
+  "screenName": "Bull: Golden Cross",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 2,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -459,7 +587,7 @@
   ]
  },
  {
-  "screenName": "Bear: EMA Cross",
+  "screenName": "Bear: Death Cross",
   "strategies": [],
   "screenCriteria": [
    {
@@ -473,7 +601,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -548,7 +676,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -632,7 +760,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -865,7 +993,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
@@ -921,7 +1049,7 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 5,
+     "price": 15,
      "relationalOperator": "_GT"
     }
    },
