@@ -32,7 +32,7 @@ public class StochasticOscillatorCurve {
 	}
 
 	public double getSignalLevel(int period) {
-		if (period < curveLength - 1) {
+		if (period < curveLength) {
 			return curvePctD[period];
 		}
 		throw new InvalidPeriodException();
@@ -53,7 +53,7 @@ public class StochasticOscillatorCurve {
 			throw new InvalidPeriodException();
 		}
 
-		if (stopPeriod > curveLength - 1) {
+		if (stopPeriod > curveLength) {
 			throw new InvalidPeriodException();
 		}
 
@@ -79,7 +79,7 @@ public class StochasticOscillatorCurve {
 			throw new InvalidPeriodException();
 		}
 
-		if (stopPeriod > curveLength - 1) {
+		if (stopPeriod > curveLength) {
 			throw new InvalidPeriodException();
 		}
 

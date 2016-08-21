@@ -31,6 +31,9 @@ import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
 import com.osprey.screen.criteria.RotationIndicatorCriteria;
 import com.osprey.screen.criteria.SectorCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorLevelCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorLevelCrossCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorSignalCrossCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
@@ -62,6 +65,9 @@ import com.osprey.screen.screens.RelativeStrengthIndexScreen;
 import com.osprey.screen.screens.RotationIndicatorScreen;
 import com.osprey.screen.screens.SectorScreen;
 import com.osprey.screen.screens.SimpleMovingAverageScreen;
+import com.osprey.screen.screens.StochasticFullOscillatorLevelCrossScreen;
+import com.osprey.screen.screens.StochasticFullOscillatorLevelScreen;
+import com.osprey.screen.screens.StochasticFullOscillatorSignalCrossScreen;
 import com.osprey.screen.screens.SymbolScreen;
 import com.osprey.screen.screens.VolatilityScreen;
 import com.osprey.screen.screens.VolumeAverageComparisonScreen;
@@ -187,8 +193,13 @@ public class ScreenPlanFactory {
 			return new IndustryScreen((IndustryCriteria) criteria);
 		case SMA:
 			return new SimpleMovingAverageScreen((SimpleMovingAverageCriteria) criteria);
-		case STOCHASTICS_X:
-			return null;
+		case STOCHASTICS_FULL_SIGNAL_CROSS:
+			return new StochasticFullOscillatorSignalCrossScreen(
+					(StochasticFullOscillatorSignalCrossCriteria) criteria);
+		case STOCHASTICS_FULL_LEVEL_CROSS:
+			return new StochasticFullOscillatorLevelCrossScreen((StochasticFullOscillatorLevelCrossCriteria) criteria);
+		case STOCHASTICS_FULL_LEVEL:
+			return new StochasticFullOscillatorLevelScreen((StochasticFullOscillatorLevelCriteria) criteria);
 		case VOLATILITY:
 			return new VolatilityScreen((VolatilityCriteria) criteria);
 		case VOLUME_AVG:

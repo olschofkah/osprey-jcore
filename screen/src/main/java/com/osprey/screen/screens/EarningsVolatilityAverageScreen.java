@@ -103,6 +103,10 @@ public class EarningsVolatilityAverageScreen implements IStockScreen {
 			volatilityAverage /= volatilityCount;
 		}
 
+		if (Double.isInfinite(volatilityAverage) || Double.isNaN(volatilityAverage)) {
+			throw new RuntimeException("" + volatilityAverage);
+		}
+
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:
 			passed = new BigDecimal(volatilityAverage).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)

@@ -40,6 +40,9 @@ import com.osprey.screen.criteria.PriceGapCriteria;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
 import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorLevelCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorLevelCrossCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorSignalCrossCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
@@ -522,6 +525,53 @@ public class LiveMarketDataScreenTest {
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
 		criteria.add(c2);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
+	
+	@Test
+	public void stochasticOscillatorTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "QQQ";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
+				end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+		
+		sqc.sortEventsDescending();
+
+		IScreenCriteria c1 = new StochasticFullOscillatorLevelCriteria(14, 3, 3, 1, 66, RelationalOperator._GE);
+		IScreenCriteria c2 = new StochasticFullOscillatorLevelCrossCriteria(14, 3, 3, 66, 80, CrossDirection.FROM_ABOVE_TO_BELOW);
+		IScreenCriteria c3 = new StochasticFullOscillatorSignalCrossCriteria(14, 3, 3, 66, CrossDirection.FROM_ABOVE_TO_BELOW);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+		criteria.add(c2);
+		criteria.add(c3);
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>();
 		securities.add(sqc);

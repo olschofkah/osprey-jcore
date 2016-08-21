@@ -29,6 +29,9 @@ import com.osprey.screen.criteria.RelativeStrengthIndexCriteria;
 import com.osprey.screen.criteria.RotationIndicatorCriteria;
 import com.osprey.screen.criteria.SectorCriteria;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorLevelCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorLevelCrossCriteria;
+import com.osprey.screen.criteria.StochasticFullOscillatorSignalCrossCriteria;
 import com.osprey.screen.criteria.SymbolCriteria;
 import com.osprey.screen.criteria.VolatilityCriteria;
 import com.osprey.screen.criteria.VolumeAverageComparisonCriteria;
@@ -143,7 +146,14 @@ public class ScreenCriteriaGenerator {
 		case SMA:
 			result = objectMapper.convertValue(getCriteriaBucket(), SimpleMovingAverageCriteria.class);
 			break;
-		case STOCHASTICS_X:
+		case STOCHASTICS_FULL_SIGNAL_CROSS:
+			result = objectMapper.convertValue(getCriteriaBucket(), StochasticFullOscillatorSignalCrossCriteria.class);
+			break;
+		case STOCHASTICS_FULL_LEVEL_CROSS:
+			result = objectMapper.convertValue(getCriteriaBucket(), StochasticFullOscillatorLevelCrossCriteria.class);
+			break;
+		case STOCHASTICS_FULL_LEVEL:
+			result = objectMapper.convertValue(getCriteriaBucket(), StochasticFullOscillatorLevelCriteria.class);
 			break;
 		case VOLATILITY:
 			result = objectMapper.convertValue(getCriteriaBucket(), VolatilityCriteria.class);
