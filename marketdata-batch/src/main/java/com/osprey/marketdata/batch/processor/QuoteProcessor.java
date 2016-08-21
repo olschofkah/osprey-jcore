@@ -102,7 +102,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 
 		// Calculate vol
 		int volPeriod = sqc.getHistoricalQuotes().size() < 252 ? sqc.getHistoricalQuotes().size() : 252;
-		if (volPeriod > 1) {
+		if (volPeriod > 2) {
 			double volatility = OspreyQuantMath.volatility(volPeriod, sqc.getHistoricalQuotes());
 			fundamentalQuote.setVolatility(volatility);
 		}

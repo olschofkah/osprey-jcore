@@ -80,10 +80,18 @@ public class EarningsVolatilityAverageScreen implements IStockScreen {
 				// done collecting data for this event, go to the next and calc
 				// this vol
 
-				volatilityAverage += OspreyQuantMath.volatility(currentQuotePeriodList.size(), currentQuotePeriodList);
-				++volatilityCount;
+				// calculate only if there were any prices found to use ...
+				// needs at least 3 periods to calculate vol.
+				if (currentQuotePeriodList.size() > 2) {
+					volatilityAverage += OspreyQuantMath.volatility(currentQuotePeriodList.size(),
+							currentQuotePeriodList);
+					++volatilityCount;
+				}
+				
+				// clear the list for the next calc
 				currentQuotePeriodList.clear();
 
+				// find the next earnings event
 				currentEarningsEvent = null;
 				while (currentEarningsEvent == null && !eventQueue.isEmpty()) {
 					currentEvent = eventQueue.poll();
@@ -93,18 +101,16 @@ public class EarningsVolatilityAverageScreen implements IStockScreen {
 					}
 				}
 
+				// stop if we're out of earnings to average. 
 				if (currentEarningsEvent == null) {
 					break;
 				}
 			}
 		}
 
+		// average the results
 		if (volatilityCount != 0) {
 			volatilityAverage /= volatilityCount;
-		}
-
-		if (Double.isInfinite(volatilityAverage) || Double.isNaN(volatilityAverage)) {
-			throw new RuntimeException("" + volatilityAverage);
 		}
 
 		switch (criteria.getRelationalOperator()) {

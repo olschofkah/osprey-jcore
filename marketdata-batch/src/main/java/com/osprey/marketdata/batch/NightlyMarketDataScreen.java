@@ -121,11 +121,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(8);// TODO extract
+		executor.setCorePoolSize(10);// TODO extract
 		executor.setMaxPoolSize(16); // TODO extract
 		executor.setThreadFactory(threadFactory());
 		executor.setAllowCoreThreadTimeOut(false);
-		executor.setKeepAliveSeconds(30);
+		executor.setKeepAliveSeconds(30); // TODO extract
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		return executor;
 	}

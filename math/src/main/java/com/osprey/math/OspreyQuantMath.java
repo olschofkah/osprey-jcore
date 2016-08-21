@@ -486,7 +486,7 @@ public final class OspreyQuantMath {
 	 */
 	public static double volatility(int period, List<HistoricalQuote> prices) {
 
-		if (period < 0) {
+		if (period < 3) {
 			throw new InvalidPeriodException();
 		}
 
