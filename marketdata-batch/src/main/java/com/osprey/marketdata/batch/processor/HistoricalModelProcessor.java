@@ -41,7 +41,7 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 	private IHotShitRepository repo;
 
 	private static int NUMBER_OF_HIST_PERIODS = 252; // TODO extract to config
-	private static boolean HIST_ENABLED = false; 
+	private static boolean HIST_ENABLED = true; 
 
 	@Override
 	public SecurityQuoteContainer process(SecurityQuoteContainer item) throws Exception {
