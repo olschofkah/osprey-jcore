@@ -3,9 +3,12 @@ package com.osprey.marketdata.batch.processor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +44,10 @@ public class InitialScreenService {
 	@Qualifier("om1")
 	private ObjectMapper om;
 
-	public Set<SecurityKey> filter(Set<SecurityQuoteContainer> securities) {
+	private List<IScreenCriteria> criteria;
+
+	@PostConstruct
+	public void init() {
 		InputStream in = getClass().getClassLoader().getResourceAsStream(screenJsonFile);
 
 		ScreenStrategyEntry entry = null;
@@ -52,8 +58,8 @@ public class InitialScreenService {
 		}
 
 		// Convert the criteria generators into criteria.
-		List<IScreenCriteria> criteria = new ArrayList<>(entry.getScreenCriteria().size());
 		IScreenCriteria sc;
+		criteria = new ArrayList<>(entry.getScreenCriteria().size());
 		for (ScreenCriteriaGenerator generator : entry.getScreenCriteria()) {
 			sc = generator.generate();
 			criteria.add(sc);
@@ -71,7 +77,13 @@ public class InitialScreenService {
 				((SymbolCriteria) sc).setSymbols(blackListSymbolStrings);
 			}
 		}
+	}
 
+	public List<IScreenCriteria> getCriteria() {
+		return Collections.unmodifiableList(criteria);
+	}
+
+	public Set<SecurityKey> filter(Set<SecurityQuoteContainer> securities) {
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 		List<ScreenPlan> screenPlan = screenPlanFactory.build(criteria);
 

@@ -1,7 +1,19 @@
 {
-    "screenName":"initialSecurityMasterScreenSet",
+	"screenName": "initialSecurityMasterScreenSet",
 	"screenCriteria": [
-        {"criteriaBucket":{"type":"INSTRUMENT_TYPE","instrumentTypes":["STOCK","ETF","ETN"], "contains":true}},
-        {"criteriaBucket":{"type":"SYMBOL","symbols":["DANG"], "contains":false}}
-    ]
+		{
+			"criteriaBucket": {
+				"type": "SYMBOL",
+				"symbols": [],
+				"contains": false
+			}
+		},
+		{
+			"criteriaBucket": {
+				"type": "PRICE",
+				"price": 2.5,
+				"relationalOperator": "_GT"
+			}
+		}
+	]
 }

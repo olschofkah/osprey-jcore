@@ -42,7 +42,6 @@ import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.HistoricalModelProcessor;
 import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
 import com.osprey.marketdata.batch.processor.HotShitScreenProvidor;
-import com.osprey.marketdata.batch.processor.InitialScreenProcessor;
 import com.osprey.marketdata.batch.processor.InitialScreenService;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
 import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
@@ -66,7 +65,6 @@ import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 import com.osprey.screen.repository.jdbctemplate.HotShitJdbcRepository;
 import com.osprey.screen.repository.jdbctemplate.OspreyJSONObjectJdbcRepository;
 import com.osprey.screen.service.BlackListService;
-import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 import com.osprey.securitymaster.repository.jdbctemplate.SecurityMasterJdbcRepository;
@@ -176,7 +174,7 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public SecurityMasterItemReader initialScreenReader() {
+	public SecurityMasterItemReader externalSecurityMasterReader() {
 		return new SecurityMasterItemReader();
 	}
 
@@ -246,13 +244,6 @@ public class NightlyMarketDataScreen {
 			}
 
 		};
-	}
-
-	
-	
-	@Bean
-	public InitialScreenProcessor initialScreenProcessor() {
-		return new InitialScreenProcessor();
 	}
 
 	@Bean
@@ -364,8 +355,7 @@ public class NightlyMarketDataScreen {
 				.flow(noOp()) // 
 				.next(marketDataLoadDecider())
 				.on(MarketDataLoadDecider.DO_FETCH)
-					.to(initialScreen())
-					.next(disruptorStartup())
+					.to(disruptorStartup())
 					.next(quoteAndCalcAndPersist()) 
 					.next(disruptorShutdown()) 
 					.next(deletePreviousHotlistForToday()) 
@@ -379,25 +369,10 @@ public class NightlyMarketDataScreen {
 				.end()
 				.build();
 	}
-
-	@Bean
-	public Step initialScreen() {
-		return stepBuilderFactory.get("preScreen")
-				.allowStartIfComplete(true)
-				.<Security, SecurityQuoteContainer>chunk(250)
-				.faultTolerant()
-				.retryLimit(5)
-				.retry(MarketDataIOException.class)
-				.reader(initialScreenReader())
-				.processor(initialScreenProcessor())
-				.writer(initialScreenQueueWriter())
-				.taskExecutor(taskExecutor())
-				.build();
-	}
 	
 	@Bean
 	public Step loadQuotes() {
-		return stepBuilderFactory.get("loadQuotes")
+		return stepBuilderFactory.get("loadSecurities")
 				.allowStartIfComplete(true)
 				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(250)
 				.reader(quoteItemReader())
@@ -419,7 +394,7 @@ public class NightlyMarketDataScreen {
 		return stepBuilderFactory.get("quoteAndCalc")
 				.allowStartIfComplete(true)
 				.<SecurityQuoteContainer, SecurityQuoteContainer>chunk(8)
-				.reader(postInitialScreenQueueReader())
+				.reader(externalSecurityMasterReader())
 				.faultTolerant()
 				.backOffPolicy(exponentialBackOffPolicy())
 				.retryLimit(5)

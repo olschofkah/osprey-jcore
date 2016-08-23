@@ -28,6 +28,12 @@ public class EarningsVolatilityAverageScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
+		if (sqc.getEvents() == null) {
+			// no earnings found
+			passed = false; // should already be false.
+			return this;
+		}
+
 		int period = criteria.getDaysAfter() + criteria.getDaysBefore() + 1;
 
 		Queue<SecurityEvent> eventQueue = new LinkedList<>(sqc.getEvents());
@@ -87,7 +93,7 @@ public class EarningsVolatilityAverageScreen implements IStockScreen {
 							currentQuotePeriodList);
 					++volatilityCount;
 				}
-				
+
 				// clear the list for the next calc
 				currentQuotePeriodList.clear();
 
@@ -101,7 +107,7 @@ public class EarningsVolatilityAverageScreen implements IStockScreen {
 					}
 				}
 
-				// stop if we're out of earnings to average. 
+				// stop if we're out of earnings to average.
 				if (currentEarningsEvent == null) {
 					break;
 				}

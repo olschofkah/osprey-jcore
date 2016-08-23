@@ -1,7 +1,6 @@
 package com.osprey.screen;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -104,7 +103,7 @@ public class ScreenPlanFactory {
 		List<ScreenPlan> plans = new ArrayList<>(securities.size());
 
 		// flip the order since they're dropped onto a stack;
-		Collections.reverse(criterias);
+		// Collections.reverse(criterias);
 
 		for (SecurityQuoteContainer sqc : securities) {
 			ScreenPlan plan = new ScreenPlan(sqc);

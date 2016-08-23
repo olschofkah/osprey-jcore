@@ -23,16 +23,17 @@ public class MomentumScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		
 		double momentum = 0.0;
 		int previousComp = 2;
 		int comp;
 		boolean isAboveToBelow = criteria.getDirection() == CrossDirection.FROM_ABOVE_TO_BELOW;
-		
-		List<Pair<LocalDate, Double>> curve = OspreyQuantMath.momentumCurve(criteria.getPeriod1(), sqc.getHistoricalQuotes());
-		
 
-		for (int offset = criteria.getRange() - 1; offset >= 0; --offset) {
+		List<Pair<LocalDate, Double>> curve = OspreyQuantMath.momentumCurve(criteria.getPeriod1(),
+				sqc.getHistoricalQuotes());
+
+		int adjRange = criteria.getRange() > curve.size() ? curve.size() : criteria.getRange();
+
+		for (int offset = adjRange - 1; offset >= 0; --offset) {
 
 			momentum = curve.get(offset).getValue();
 

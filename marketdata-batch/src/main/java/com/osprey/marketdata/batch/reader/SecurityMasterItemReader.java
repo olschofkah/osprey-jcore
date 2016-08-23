@@ -1,5 +1,8 @@
 package com.osprey.marketdata.batch.reader;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -16,13 +19,14 @@ import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.feed.ISecurityMasterService;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 
-public class SecurityMasterItemReader implements ItemReader<Security> {
+public class SecurityMasterItemReader implements ItemReader<SecurityQuoteContainer> {
 
 	final static Logger logger = LogManager.getLogger(JobCompletionNotificationListener.class);
 
-	private ConcurrentLinkedQueue<Security> queue;
+	private ConcurrentLinkedQueue<SecurityQuoteContainer> queue;
 	private volatile ReentrantLock lock = new ReentrantLock();
 
 	@Autowired
@@ -35,13 +39,15 @@ public class SecurityMasterItemReader implements ItemReader<Security> {
 	private SlackClient slack;
 
 	@Override
-	public Security read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+	public SecurityQuoteContainer read()
+			throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 
 		if (queue == null) {
 			lock.lock();
 			try {
 				if (queue == null) {
-					queue = new ConcurrentLinkedQueue<>(securityMasterService.fetchSecurityMaster());
+					Set<Security> externalList = securityMasterService.fetchSecurityMaster();
+					queue = convertSecurityToContainer(externalList);
 				}
 			} catch (MarketDataIOException e) {
 				logger.error(e);
@@ -50,7 +56,8 @@ public class SecurityMasterItemReader implements ItemReader<Security> {
 						"Failed to externally fetch the security master.  Loading from the previous day ... ");
 
 				if (queue == null) {
-					queue = new ConcurrentLinkedQueue<>(repo.findSecurities());
+					List<Security> dbList = repo.findSecurities();
+					queue = new ConcurrentLinkedQueue<>(convertSecurityToContainer(dbList));
 				}
 			} finally {
 				lock.unlock();
@@ -58,6 +65,19 @@ public class SecurityMasterItemReader implements ItemReader<Security> {
 		}
 
 		return queue.poll();
+	}
+
+	private ConcurrentLinkedQueue<SecurityQuoteContainer> convertSecurityToContainer(
+			Collection<Security> externalList) {
+		SecurityQuoteContainer tmpContainer;
+		ConcurrentLinkedQueue<SecurityQuoteContainer> swapQueue = new ConcurrentLinkedQueue<>();
+
+		for (Security security : externalList) {
+			tmpContainer = new SecurityQuoteContainer(security.getKey());
+			tmpContainer.setSecurity(security);
+			swapQueue.add(tmpContainer);
+		}
+		return swapQueue;
 	}
 
 }

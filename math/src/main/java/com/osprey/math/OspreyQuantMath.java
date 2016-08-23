@@ -766,7 +766,7 @@ public final class OspreyQuantMath {
 			throw new InvalidPeriodException();
 		}
 
-		if (p + offset > prices.size()) {
+		if (p + offset + lag + 1 > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
 		double dailyReturn;
@@ -802,7 +802,7 @@ public final class OspreyQuantMath {
 			throw new InvalidPeriodException();
 		}
 
-		if (longPeriod + offset > prices.size()) {
+		if (longPeriod + 1 + offset + lag > prices.size()) {
 			throw new InsufficientHistoryException();
 		}
 

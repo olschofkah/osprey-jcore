@@ -108,7 +108,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 		}
 
 		try {
-			double rotationIndicator = OspreyQuantMath.rotationIndicator(60, 21, 0, 1, sqc.getHistoricalQuotes());
+			double rotationIndicator = OspreyQuantMath.rotationIndicator(60, 20, 0, 1, sqc.getHistoricalQuotes());
 			fundamentalQuote.setRotationIndicator(rotationIndicator);
 		} catch (InsufficientHistoryException e) { // eat it
 		}

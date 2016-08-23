@@ -26,6 +26,8 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 
 	@Autowired
 	private HotShitScreenProvidor screenProvidor;
+	@Autowired
+	private InitialScreenService initialScreenService;
 
 	@Override
 	public HotListItem process(SecurityQuoteContainer item) throws Exception {
@@ -46,6 +48,8 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 			for (ScreenCriteriaGenerator generator : entry.getScreenCriteria()) {
 				criteria.add(generator.generate());
 			}
+			
+			criteria.addAll(initialScreenService.getCriteria());
 
 			SimpleScreenExecutor executor = new SimpleScreenExecutor();
 			executor.setPlans(screenPlanFactory.build(criteria));

@@ -25,6 +25,12 @@ public class EarningsPercentMoveAverageScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
+		if (sqc.getEvents() == null) {
+			// no earnings found
+			passed = false; // should already be false.
+			return this;
+		}
+
 		Queue<SecurityEvent> eventQueue = new LinkedList<>(sqc.getEvents());
 		SecurityEvent currentEarningsEvent = null;
 		SecurityEvent currentEvent;

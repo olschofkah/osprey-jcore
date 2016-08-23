@@ -427,32 +427,36 @@
      "relationalOperator": "_GE"
     }
    },
-   {"criteriaBucket":{
-     "type":"STOCHASTICS_FULL_LEVEL",
-	 "periodLookBack":20,
-	 "periodK":10,
-	 "periodD":10,
-	 "range":3,
-	 "level":50,
-	 "relationalOperator":"_LE"
-	} 
+   {
+    "criteriaBucket": {
+     "type": "STOCHASTICS_FULL_LEVEL",
+     "periodLookBack": 20,
+     "periodK": 10,
+     "periodD": 10,
+     "range": 3,
+     "level": 50,
+     "relationalOperator": "_LE"
+    }
    },
-   {"criteriaBucket":{
-     "type":"STOCHASTICS_FULL_SIGNAL_CROSS",
-	 "periodLookBack":20,
-	 "periodK":10,
-	 "periodD":10,
-	 "range":3,
-	 "direction":"FROM_BELOW_TO_ABOVE"
-	} 
-   },	
-   {"criteriaBucket":{
-     "type":"MACD",
-	 "fastPeriod":12,
-	 "slowPeriod":26,
-	 "signalPeriod":9,
-	 "range":1,"direction":"FROM_BELOW_TO_ABOVE"
-    } 
+   {
+    "criteriaBucket": {
+     "type": "STOCHASTICS_FULL_SIGNAL_CROSS",
+     "periodLookBack": 20,
+     "periodK": 10,
+     "periodD": 10,
+     "range": 3,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 1,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
    }
   ]
  },
@@ -482,32 +486,36 @@
      "relationalOperator": "_GE"
     }
    },
-   {"criteriaBucket":{
-     "type":"STOCHASTICS_FULL_LEVEL",
-	 "periodLookBack":20,
-	 "periodK":10,
-	 "periodD":10,
-	 "range":2,
-	 "level":50,
-	 "relationalOperator":"_GE"
-	} 
+   {
+    "criteriaBucket": {
+     "type": "STOCHASTICS_FULL_LEVEL",
+     "periodLookBack": 20,
+     "periodK": 10,
+     "periodD": 10,
+     "range": 2,
+     "level": 50,
+     "relationalOperator": "_GE"
+    }
    },
-   {"criteriaBucket":{
-     "type":"STOCHASTICS_FULL_SIGNAL_CROSS",
-	 "periodLookBack":20,
-	 "periodK":10,
-	 "periodD":10,
-	 "range":2,
-	 "direction":"FROM_ABOVE_TO_BELOW"
-	} 
-   },	
-   {"criteriaBucket":{
-     "type":"MACD",
-	 "fastPeriod":12,
-	 "slowPeriod":26,
-	 "signalPeriod":9,
-	 "range":1,"direction":"FROM_ABOVE_TO_BELOW" 
-    } 
+   {
+    "criteriaBucket": {
+     "type": "STOCHASTICS_FULL_SIGNAL_CROSS",
+     "periodLookBack": 20,
+     "periodK": 10,
+     "periodD": 10,
+     "range": 2,
+     "direction": "FROM_ABOVE_TO_BELOW"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 1,
+     "direction": "FROM_ABOVE_TO_BELOW"
+    }
    }
   ]
  },
@@ -939,6 +947,55 @@
   ]
  },
  {
+  "screenName": "Bull Fast K TEST",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 10000000,
+     "range": 2,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 20,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 5000000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "STOCHASTICS_FULL_LEVEL",
+     "periodLookBack": 20,
+     "periodK": 1,
+     "periodD": 10,
+     "range": 1,
+     "level": 60,
+     "relationalOperator": "_LE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "STOCHASTICS_FULL_SIGNAL_CROSS",
+     "periodLookBack": 20,
+     "periodK": 1,
+     "periodD": 10,
+     "range": 2,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
+   }
+  ]
+ },
+ {
   "screenName": "Sector Rotation",
   "strategies": [],
   "screenCriteria": [
@@ -1030,6 +1087,108 @@
      "periodRange": 5,
      "rsiComparison": 30,
      "relationalOperator": "_LE"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "Potential Bottoms(MACD,MACD-HISTO,RSI)",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 2,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 100000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 2,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD_DIVERGANCE",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 5,
+     "divergance": -0.25,
+     "relationalOperator": "_LT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "RSI",
+     "period": 14,
+     "periodRange": 5,
+     "rsiComparison": 30,
+     "relationalOperator": "_LE"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "Potential Tops(MACD,MACD-HISTO,RSI)",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 2,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 100000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 2,
+     "direction": "FROM_ABOVE_TO_BELOW"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD_DIVERGANCE",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 5,
+     "divergance": 0.25,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "RSI",
+     "period": 14,
+     "periodRange": 5,
+     "rsiComparison": 70,
+     "relationalOperator": "_GE"
     }
    }
   ]
