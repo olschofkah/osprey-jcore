@@ -2,9 +2,11 @@ package com.osprey.screen.screens;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.PricePercentageChangeCriteria;
+import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
@@ -24,8 +26,14 @@ public class PricePercentageChangeScreen implements IStockScreen {
 			throw new InsufficientHistoryException();
 		}
 
-		double close0 = sqc.getHistoricalQuotes().get(0).getAdjClose();
-		double close1 = sqc.getHistoricalQuotes().get(criteria.getPeriod() - 1).getAdjClose();
+		List<HistoricalQuote> historicalQuotes = sqc.getHistoricalQuotes();
+		if (historicalQuotes.size() < criteria.getPeriod()) {
+			passed = false;
+			return this;
+		}
+
+		double close0 = historicalQuotes.get(0).getAdjClose();
+		double close1 = historicalQuotes.get(criteria.getPeriod() - 1).getAdjClose();
 
 		double pctGap = 1 - (close0 / close1);
 
