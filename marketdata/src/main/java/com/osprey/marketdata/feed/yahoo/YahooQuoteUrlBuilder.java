@@ -28,6 +28,10 @@ public class YahooQuoteUrlBuilder {
 	private String calendarEvents;
 	@Value("${yahoo.quote.stock.module.price}")
 	private String price;
+	@Value("${yahoo.quote.stock.module.netSharePurchaseActivity}")
+	private String netSharePurchaseActivity;
+	@Value("${yahoo.quote.stock.module.majorHoldersBreakdown}")
+	private String majorHoldersBreakdown;
 
 	@Value("${yahoo.quote.stock.module.seperator}")
 	private String seperator;
@@ -52,12 +56,24 @@ public class YahooQuoteUrlBuilder {
 		return yahooQuoteUrl + symbol + "?" + fieldName + "=" + urlBuilder.toString();
 	}
 
+	public YahooQuoteUrlBuilder netSharePurchaseActivity() {
+		prepend();
+		urlBuilder.append(netSharePurchaseActivity);
+		return this;
+	}
+
+	public YahooQuoteUrlBuilder majorHoldersBreakdown() {
+		prepend();
+		urlBuilder.append(majorHoldersBreakdown);
+		return this;
+	}
+
 	public YahooQuoteUrlBuilder price() {
 		prepend();
 		urlBuilder.append(price);
 		return this;
 	}
-	
+
 	public YahooQuoteUrlBuilder summaryProfile() {
 		prepend();
 		urlBuilder.append(summaryProfile);

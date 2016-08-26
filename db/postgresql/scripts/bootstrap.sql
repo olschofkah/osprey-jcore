@@ -95,6 +95,19 @@ CREATE TABLE "oc_security_fundamental" (
 	"revenue_qtr_growth" float8,
 	"total_assets" float8,
 	"yield" float8,
+	
+	"buy_info_shares" int8,
+	"sell_info_shares" int8,
+	"sell_pct_insider_shares" float8,
+	"net_pct_insider_shares" float8,
+	"net_insider_shares_buying" int8,
+	"net_inst_buying_pct" float8,
+	"total_insider_shares" int8,
+	"insider_pct_held" float8,
+	"inst_pct_held" float8,
+	"inst_float_pct_held" float8,
+	"inst_cnt" int8,
+	
 	"volatility" float8,
 	"rotation_indicator" float8,
 	"_8_day_ema" float8,
@@ -109,6 +122,18 @@ CREATE TABLE "oc_security_fundamental" (
   OIDS=FALSE
 );
 
+
+	private long buyInfoShares;
+	private long sellInfoShares;
+	private double sellPercentInsiderShares;
+	private double netPercentInsiderShares;
+	private long netInsiderSharesBuying;
+	private double netInstBuyingPercent;
+	private long totalInsiderShares;
+	private double insiderPercentHeld;
+	private double institutionsPercentHeld;
+	private double institutionsFloatPercentHeld;
+	private long institutionsCount;
 
 
 CREATE TABLE "oc_security_quote" (

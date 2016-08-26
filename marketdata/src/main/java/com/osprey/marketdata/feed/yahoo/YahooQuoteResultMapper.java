@@ -17,6 +17,8 @@ import com.osprey.marketdata.feed.yahoo.pojo.DefaultKeyStatistics;
 import com.osprey.marketdata.feed.yahoo.pojo.Earnings;
 import com.osprey.marketdata.feed.yahoo.pojo.Earnings_;
 import com.osprey.marketdata.feed.yahoo.pojo.FinancialData;
+import com.osprey.marketdata.feed.yahoo.pojo.MajorHoldersBreakdown;
+import com.osprey.marketdata.feed.yahoo.pojo.NetSharePurchaseActivity;
 import com.osprey.marketdata.feed.yahoo.pojo.Price;
 import com.osprey.marketdata.feed.yahoo.pojo.Quarterly;
 import com.osprey.marketdata.feed.yahoo.pojo.Quarterly_;
@@ -69,12 +71,89 @@ public class YahooQuoteResultMapper {
 			mapPrice(result.getPrice(), sqc);
 		}
 
+		if (result.getMajorHoldersBreakdown() != null) {
+			mapMajorHoldersBreakdown(result.getMajorHoldersBreakdown(), sqc);
+		}
+
+		if (result.getNetSharePurchaseActivity() != null) {
+			mapNetSharePurchaseActivity(result.getNetSharePurchaseActivity(), sqc);
+		}
+
 		sqc.timestamp();
 
 		return sqc;
 	}
 
-	// TODO consider pre-market & post-market quotes
+	private static void mapNetSharePurchaseActivity(NetSharePurchaseActivity a,
+			SecurityQuoteContainer sqc) {
+		
+		// fundamental quote info
+		FundamentalQuote fq;
+		if (sqc.getFundamentalQuote() == null) {
+			fq = new FundamentalQuote(sqc.getKey(), LocalDate.now());
+			sqc.setFundamentalQuote(fq);
+		} else {
+			fq = sqc.getFundamentalQuote();
+		}
+		
+		if (a.getBuyInfoShares() != null && a.getBuyInfoShares().getRaw() != null) {
+			fq.setBuyInfoShares(a.getBuyInfoShares().getRaw());
+		}
+		
+		if (a.getSellInfoShares() != null && a.getSellInfoShares().getRaw() != null) {
+			fq.setSellInfoShares(a.getSellInfoShares().getRaw());
+		}		
+		
+		if (a.getSellPercentInsiderShares() != null && a.getSellPercentInsiderShares().getRaw() != null) {
+			fq.setSellPercentInsiderShares(a.getSellPercentInsiderShares().getRaw());
+		}
+		
+		if (a.getNetPercentInsiderShares() != null && a.getNetPercentInsiderShares().getRaw() != null) {
+			fq.setNetPercentInsiderShares(a.getNetPercentInsiderShares().getRaw());
+		}
+		
+		if (a.getNetInstSharesBuying() != null && a.getNetInstSharesBuying().getRaw() != null) {
+			fq.setNetInstSharesBuying(a.getNetInstSharesBuying().getRaw());
+		}
+		
+		if (a.getNetInstBuyingPercent() != null && a.getNetInstBuyingPercent().getRaw() != null) {
+			fq.setNetInstBuyingPercent(a.getNetInstBuyingPercent().getRaw());
+		}
+		
+		if (a.getTotalInsiderShares() != null && a.getTotalInsiderShares().getRaw() != null) {
+			fq.setTotalInsiderShares(a.getTotalInsiderShares().getRaw());
+		}
+	
+	}
+
+	private static void mapMajorHoldersBreakdown(MajorHoldersBreakdown a,
+			SecurityQuoteContainer sqc) {
+		FundamentalQuote fq;
+		if (sqc.getFundamentalQuote() == null) {
+			fq = new FundamentalQuote(sqc.getKey(), LocalDate.now());
+			sqc.setFundamentalQuote(fq);
+		} else {
+			fq = sqc.getFundamentalQuote();
+		}
+		
+		if (a.getInsidersPercentHeld() != null && a.getInsidersPercentHeld().getRaw() != null) {
+			fq.setInsidersPercentHeld(a.getInsidersPercentHeld().getRaw());
+		}
+		
+		if (a.getInstitutionsPercentHeld() != null && a.getInstitutionsPercentHeld().getRaw() != null) {
+			fq.setInstitutionsPercentHeld(a.getInstitutionsPercentHeld().getRaw());
+		}		
+		
+		if (a.getInstitutionsFloatPercentHeld() != null && a.getInstitutionsFloatPercentHeld().getRaw() != null) {
+			fq.setInstitutionsFloatPercentHeld(a.getInstitutionsFloatPercentHeld().getRaw());
+		}
+		
+		if (a.getInstitutionsCount() != null && a.getInstitutionsCount().getRaw() != null) {
+			fq.setInstitutionsCount(a.getInstitutionsCount().getRaw());
+		}
+
+	
+	}
 
 	private static void mapPrice(Price p, SecurityQuoteContainer sqc) {
 
@@ -396,7 +475,7 @@ public class YahooQuoteResultMapper {
 		if (sqc.getEvents() != null) {
 			sqc.getEvents().clear();
 		}
-		
+
 		List<SecurityEvent> newEvents = new ArrayList<>(events);
 		sqc.setEvents(newEvents);
 	}

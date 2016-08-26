@@ -150,6 +150,17 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" trailing_eps , " +
 			" trailing_pe , " +
 			" yield , "
+			+ "buy_info_shares , "
+			+ "sell_info_shares , "
+			+ "sell_pct_insider_shares , "
+			+ "net_pct_insider_shares , "
+			+ "net_insider_shares_buying , "
+			+ "net_inst_buying_pct , "
+			+ "total_insider_shares , "
+			+ "insider_pct_held , "
+			+ "inst_pct_held , "
+			+ "inst_float_pct_held , "
+			+ "inst_cnt , "
 			+ "rotation_indicator , "
 			+ "_8_day_ema , "
 			+ "_10_day_ema , "
@@ -160,8 +171,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ "_200_day_ema , "
 			+ " volatility ) "
 			+ " values " 
-			+ " (?,?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
-
+			+ " (?,?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
 	
 	private static final String UPDATE_OC_FUNDAMENTAL = "update oc_security_fundamental set " +
 			" last_update_ts = clock_timestamp(), " +
@@ -225,6 +235,17 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			" trailing_eps = ?, " +
 			" trailing_pe = ?, " +
 			" yield = ?, " +
+			" buy_info_shares = ? , " +
+			" sell_info_shares = ? , " +
+			" sell_pct_insider_shares = ? , " +
+			" net_pct_insider_shares = ? , " +
+			" net_insider_shares_buying = ? , " +
+			" net_inst_buying_pct = ? , " +
+			" total_insider_shares = ? , " +
+			" insider_pct_held = ? , " +
+			" inst_pct_held = ?, " +
+			" inst_float_pct_held = ? , " +
+			" inst_cnt = ? , " +
 			" rotation_indicator = ?, " +
 			" _8_day_ema = ?, " +
 			" _10_day_ema = ?, " +
@@ -299,6 +320,17 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " trailing_eps , "
 			+ " trailing_pe , "
 			+ " yield , "
+			+ " buy_info_shares , "
+			+ " sell_info_shares , "
+			+ " sell_pct_insider_shares , "
+			+ " net_pct_insider_shares , "
+			+ " net_insider_shares_buying , "
+			+ " net_inst_buying_pct , "
+			+ " total_insider_shares , "
+			+ " insider_pct_held , "
+			+ " inst_pct_held , "
+			+ " inst_float_pct_held , "
+			+ " inst_cnt , "
 			+ " rotation_indicator , "
 			+ " _8_day_ema , "
 			+ " _10_day_ema , "
@@ -394,7 +426,9 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRevenueLow(), fq.getRevenuePerShare(), fq.getRevenueQtrGrowth(), fq.getSharesOutstanding(),
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
-					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), 
+					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), 	fq.getYield(), 
+					fq.getBuyInfoShares(), fq.getSellInfoShares(), fq.getSellPercentInsiderShares(), fq.getNetPercentInsiderShares(), fq.getNetInsiderSharesBuying(),
+					fq.getNetInstBuyingPercent(), fq.getTotalInsiderShares(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsFloatPercentHeld(), fq.getInstitutionsCount(),
 					fq.getRotationIndicator(),
 					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
 					fq.getVolatility(), 
@@ -418,6 +452,8 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
 					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), 
+					fq.getBuyInfoShares(), fq.getSellInfoShares(), fq.getSellPercentInsiderShares(), fq.getNetPercentInsiderShares(), fq.getNetInsiderSharesBuying(),
+					fq.getNetInstBuyingPercent(), fq.getTotalInsiderShares(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsFloatPercentHeld(), fq.getInstitutionsCount(),
 					fq.getRotationIndicator(),
 					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
 					fq.getVolatility());
@@ -599,6 +635,18 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 				fq.setTrailingEps(rs.getDouble("trailing_eps"));
 				fq.setTrailingPe(rs.getDouble("trailing_pe"));
 				fq.setYield(rs.getDouble("yield"));
+				
+				fq.setBuyInfoShares(rs.getLong("buy_info_shares"));
+				fq.setSellInfoShares(rs.getLong("sell_info_shares"));
+				fq.setSellPercentInsiderShares(rs.getDouble("sell_pct_insider_shares"));
+				fq.setNetPercentInsiderShares(rs.getDouble("net_pct_insider_shares"));
+				fq.setNetInstSharesBuying(rs.getLong("net_insider_shares_buying"));
+				fq.setNetInstBuyingPercent(rs.getDouble("net_inst_buying_pct"));
+				fq.setTotalInsiderShares(rs.getLong("total_insider_shares"));
+				fq.setInsidersPercentHeld(rs.getDouble("insider_pct_held"));
+				fq.setInstitutionsPercentHeld(rs.getDouble("inst_pct_held"));
+				fq.setInstitutionsFloatPercentHeld(rs.getDouble("inst_float_pct_held"));
+				fq.setInstitutionsCount(rs.getLong("inst_cnt"));
 
 				fq.setRotationIndicator(rs.getDouble("rotation_indicator"));
 				fq.set_10DayEma(rs.getDouble("_8_day_ema"));

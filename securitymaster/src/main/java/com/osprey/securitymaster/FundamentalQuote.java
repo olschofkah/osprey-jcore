@@ -72,7 +72,19 @@ public class FundamentalQuote {
 	private double yield;
 	private double dividendRate;
 	private double dividendYield;
-	
+
+	private long buyInfoShares;
+	private long sellInfoShares;
+	private double sellPercentInsiderShares;
+	private double netPercentInsiderShares;
+	private long netInsiderSharesBuying;
+	private double netInstBuyingPercent;
+	private long totalInsiderShares;
+	private double insiderPercentHeld;
+	private double institutionsPercentHeld;
+	private double institutionsFloatPercentHeld;
+	private long institutionsCount;
+
 	// Calculated Values
 	private double volatility;
 	private double rotationIndicator;
@@ -598,8 +610,8 @@ public class FundamentalQuote {
 	public void setTotalAssets(Long raw) {
 		this.totalAssets = raw;
 	}
-	
-	public long getTotalAssets(){
+
+	public long getTotalAssets() {
 		return this.totalAssets;
 	}
 
@@ -705,6 +717,94 @@ public class FundamentalQuote {
 
 	public void setRotationIndicator(double rotationIndicator) {
 		this.rotationIndicator = rotationIndicator;
+	}
+
+	public void setBuyInfoShares(Long raw) {
+		this.buyInfoShares = raw;
+	}
+
+	public void setSellInfoShares(Long raw) {
+		this.sellInfoShares = raw;
+	}
+
+	public void setSellPercentInsiderShares(Double raw) {
+		this.sellPercentInsiderShares = raw;
+	}
+
+	public void setNetPercentInsiderShares(Double raw) {
+		this.netPercentInsiderShares = raw;
+	}
+
+	public void setNetInstSharesBuying(Long raw) {
+		this.netInsiderSharesBuying = raw;
+	}
+
+	public void setNetInstBuyingPercent(Double raw) {
+		this.netInstBuyingPercent = raw;
+	}
+
+	public void setTotalInsiderShares(Long raw) {
+		this.totalInsiderShares = raw;
+	}
+
+	public void setInsidersPercentHeld(Double raw) {
+		this.insiderPercentHeld = raw;
+	}
+
+	public void setInstitutionsPercentHeld(Double raw) {
+		this.institutionsPercentHeld = raw;
+	}
+
+	public void setInstitutionsFloatPercentHeld(Double raw) {
+		this.institutionsFloatPercentHeld = raw;
+	}
+
+	public void setInstitutionsCount(Long raw) {
+		this.institutionsCount = raw;
+	}
+
+	public long getBuyInfoShares() {
+		return buyInfoShares;
+	}
+
+	public long getSellInfoShares() {
+		return sellInfoShares;
+	}
+
+	public double getSellPercentInsiderShares() {
+		return sellPercentInsiderShares;
+	}
+
+	public double getNetPercentInsiderShares() {
+		return netPercentInsiderShares;
+	}
+
+	public long getNetInsiderSharesBuying() {
+		return netInsiderSharesBuying;
+	}
+
+	public double getNetInstBuyingPercent() {
+		return netInstBuyingPercent;
+	}
+
+	public long getTotalInsiderShares() {
+		return totalInsiderShares;
+	}
+
+	public double getInsiderPercentHeld() {
+		return insiderPercentHeld;
+	}
+
+	public double getInstitutionsPercentHeld() {
+		return institutionsPercentHeld;
+	}
+
+	public double getInstitutionsFloatPercentHeld() {
+		return institutionsFloatPercentHeld;
+	}
+
+	public long getInstitutionsCount() {
+		return institutionsCount;
 	}
 
 }
