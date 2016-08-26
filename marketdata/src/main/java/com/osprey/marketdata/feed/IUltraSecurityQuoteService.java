@@ -13,6 +13,6 @@ public interface IUltraSecurityQuoteService {
 
 	public SecurityQuoteContainer quoteUltra(Security s) throws MarketDataNotAvailableException, MarketDataIOException;
 
-	public SecurityQuoteContainer quoteUltra(SecurityQuoteContainer sqc)
+	public SecurityQuoteContainer quoteUltra(SecurityQuoteContainer sqc, boolean simplerQuote)
 			throws MarketDataNotAvailableException, MarketDataIOException;
 }

@@ -550,7 +550,7 @@ public class LiveMarketDataScreenTest {
 		LocalDate start = end.minusYears(1).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "BOX";
+		String symbol = "BKCC";
 
 		Security security = new Security(new SecurityKey(symbol, null));
 		security.setInstrumentType(InstrumentType.STOCK);
@@ -563,8 +563,8 @@ public class LiveMarketDataScreenTest {
 		
 		sqc.sortEventsDescending();
 
-		IScreenCriteria c1 = new EarningsPercentMoveAverageCriteria(14, 4, 0.06, RelationalOperator._GE);
-		IScreenCriteria c2 = new EarningsVolatilityAverageCriteria(14, 4, 0.07, RelationalOperator._GE);
+		IScreenCriteria c1 = new EarningsPercentMoveAverageCriteria(14, 4, 0.01, RelationalOperator._GT);
+		IScreenCriteria c2 = new EarningsVolatilityAverageCriteria(14, 4, 0.01, RelationalOperator._GT);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);

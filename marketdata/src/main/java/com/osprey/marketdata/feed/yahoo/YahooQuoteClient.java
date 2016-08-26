@@ -32,7 +32,7 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 	@Override
 	public SecurityQuoteContainer quoteUltra(SecurityKey s)
 			throws MarketDataNotAvailableException, MarketDataIOException {
-		return quoteUltra(new SecurityQuoteContainer(s));
+		return quoteUltra(new SecurityQuoteContainer(s), false);
 
 	}
 
@@ -40,29 +40,43 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 	public SecurityQuoteContainer quoteUltra(Security s) throws MarketDataNotAvailableException, MarketDataIOException {
 		SecurityQuoteContainer sqc = new SecurityQuoteContainer(s.getKey());
 		sqc.setSecurity(s);
-		return quoteUltra(sqc);
+		return quoteUltra(sqc, false);
 	}
 
 	@Override
-	public SecurityQuoteContainer quoteUltra(SecurityQuoteContainer sqc)
+	public SecurityQuoteContainer quoteUltra(SecurityQuoteContainer sqc, boolean simplerQuote)
 			throws MarketDataNotAvailableException, MarketDataIOException {
 		logger.info("Quoting for {} ... ", () -> sqc.getKey().getSymbol());
 
 		YahooQuoteUrlBuilder yahooQuoteUrlBuilder = appCtx.getBean(YahooQuoteUrlBuilder.class,
 				sqc.getKey().getSymbol());
 
-		String url = yahooQuoteUrlBuilder
-				.summaryDetail()
-				.summaryProfile() 
-				.calendarEvents()
-				.defaultKeyStatistics()
-				.earnings()
-				.financialData()
-				.price()
-				.netSharePurchaseActivity()
-				.majorHoldersBreakdown()
-				.build();
-
+		String url;
+		
+		if(simplerQuote) {
+			url = yahooQuoteUrlBuilder
+					.summaryDetail()
+					.summaryProfile() 
+					.calendarEvents()
+					.defaultKeyStatistics()
+					.earnings()
+					.financialData()
+					.price()
+					.build();
+		} else {
+			url = yahooQuoteUrlBuilder
+					.summaryDetail()
+					.summaryProfile() 
+					.calendarEvents()
+					.defaultKeyStatistics()
+					.earnings()
+					.financialData()
+					.price()
+					.netSharePurchaseActivity()
+					.majorHoldersBreakdown()
+					.build();
+		}
+		
 		YahooQuote yahooQuote = null;
 		try {
 			yahooQuote = http.getForObject(url, YahooQuote.class);
@@ -80,6 +94,12 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 		if (yahooQuote == null || yahooQuote.getQuoteSummary() == null
 				|| yahooQuote.getQuoteSummary().getResult() == null) {
 			logger.error("Failed quoting {} ", new Object[] { sqc.getKey().getSymbol() });
+
+			// try again requesting less data. 
+			if (!simplerQuote) {
+				return quoteUltra(sqc, true);
+			}
+
 			throw new MarketDataIOException("Failed Quoting " + sqc.getKey().getSymbol());
 		}
 

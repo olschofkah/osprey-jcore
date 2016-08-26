@@ -47,7 +47,7 @@ public class MockMarketDataFeedService
 	}
 	
 	@Override
-	public SecurityQuoteContainer quoteUltra(SecurityQuoteContainer sqc) throws MarketDataNotAvailableException, MarketDataIOException {
+	public SecurityQuoteContainer quoteUltra(SecurityQuoteContainer sqc, boolean simplerQuote) throws MarketDataNotAvailableException, MarketDataIOException {
 		logger.warn("Mock Quoting Fundamental for ticker {}", () -> sqc);
 		return generateRandomUltraQuote(sqc);
 	}

@@ -399,7 +399,7 @@ public class NightlyMarketDataScreen {
 				.backOffPolicy(exponentialBackOffPolicy())
 				.retryLimit(5)
 				.retry(MarketDataIOException.class)
-				.skipLimit(35)
+				.skipLimit(25)
 				.skip(MarketDataNotAvailableException.class)
 				.skip(MarketDataIOException.class)
 				.processor(quoteProcessor())

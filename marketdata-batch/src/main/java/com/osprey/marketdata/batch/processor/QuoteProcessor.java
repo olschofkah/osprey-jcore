@@ -46,7 +46,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 		checkThrottle();
 
 		try {
-			fundamentalQuoteService.quoteUltra(sqc);
+			fundamentalQuoteService.quoteUltra(sqc, false);
 		} catch (MarketDataNotAvailableException e) {
 			logger.warn("Failed to quote {} | Message {}", new Object[] { sqc.getKey().getSymbol(), e.getMessage() });
 			return null;
