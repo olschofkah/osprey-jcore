@@ -30,7 +30,7 @@ import com.osprey.screen.repository.IHotShitRepository;
 
 // @Repository
 public class HotShitJdbcRepository implements IHotShitRepository {
-	
+
 	final static Logger logger = LogManager.getLogger(HotShitJdbcRepository.class);
 
 	private JdbcTemplate jdbc;
@@ -72,6 +72,16 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 	public void deleteHotShitForDatesAndSymbol(String symbol, LocalDate earliestDate, LocalDate latestDate) {
 		jdbc.update("delete from tha_hot_shit where symbol = ? and date >= ? and date <= ?", symbol,
 				Date.valueOf(earliestDate), Date.valueOf(latestDate));
+	}
+
+	@Override
+	public int findCountBySymbolAndDays(String symbol, int days) {
+		Date sqlDate = Date.valueOf(LocalDate.now().minusDays(days));
+
+		int count = jdbc.queryForObject("select count(1) from tha_hot_shit where symbol = ? and date >= ?",
+				new Object[] { symbol, sqlDate }, Integer.class);
+		
+		return count;
 	}
 
 	@Override

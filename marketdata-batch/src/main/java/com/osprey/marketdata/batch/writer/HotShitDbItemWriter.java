@@ -26,9 +26,13 @@ public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
 		if (items.isEmpty()) {
 			return;
 		}
-		
+
 		HotListItem itemZero = items.get(0);
 		LocalDate lDate = itemZero.getReportDate().toLocalDate();
+
+		for (HotListItem item : items) {
+			item.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 7));
+		}
 
 		repo.deleteAndPersist(itemZero.getKey().getSymbol(), lDate, lDate, items);
 	}

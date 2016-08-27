@@ -14,6 +14,7 @@ public class HotListItem {
 
 	private SecurityKey key;
 	private Date reportDate;
+	private int recentCount;
 	private List<OptionStrategy> strategies = new ArrayList<>();
 	private List<String> namedScreenSets = new ArrayList<>();
 
@@ -75,5 +76,13 @@ public class HotListItem {
 
 	public void setReportDate(Date reportDate) {
 		this.reportDate = reportDate;
+	}
+
+	public int getRecentCount() {
+		return recentCount;
+	}
+
+	public void setRecentCount(int recentCount) {
+		this.recentCount = recentCount;
 	}
 }

@@ -113,6 +113,8 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 							hotListItem = new HotListItem(item.getKey());
 							hotListItems.add(hotListItem);
 							hotListItem.setReportDate(Date.valueOf(lastDate));
+							hotListItem.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 7));
+							
 							itemMap.put(item.getKey(), hotListItem);
 						}
 						hotListItem = itemMap.get(item.getKey());

@@ -17,4 +17,6 @@ public interface IHotShitRepository {
 
 	void persistThaHotShit(List<? extends HotListItem> lst);
 
+	int findCountBySymbolAndDays(String symbol, int days);
+
 }
