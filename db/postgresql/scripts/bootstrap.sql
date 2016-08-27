@@ -117,6 +117,8 @@ CREATE TABLE "oc_security_fundamental" (
 	"_50_day_ema" float8,
 	"_100_day_ema" float8,
 	"_200_day_ema" float8,
+	"earnings_volatility" float8,
+	"earnings_avg_pct" float8,
 	CONSTRAINT oc_security_ext_stat_log_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE

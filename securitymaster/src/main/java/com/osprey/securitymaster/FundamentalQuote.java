@@ -95,6 +95,8 @@ public class FundamentalQuote {
 	private double _50DayEma;
 	private double _100DayEma;
 	private double _200DayEma;
+	private double earningsAveragePercent;
+	private double earningsVolatility;
 
 	public FundamentalQuote(String symbol, LocalDate dt, ZonedDateTime timestamp) {
 		this(new SecurityKey(symbol, null), dt, timestamp);
@@ -805,6 +807,22 @@ public class FundamentalQuote {
 
 	public long getInstitutionsCount() {
 		return institutionsCount;
+	}
+
+	public double getEarningsAveragePercent() {
+		return earningsAveragePercent;
+	}
+
+	public void setEarningsAveragePercent(double earningsAveragePercent) {
+		this.earningsAveragePercent = earningsAveragePercent;
+	}
+
+	public double getEarningsVolatility() {
+		return earningsVolatility;
+	}
+
+	public void setEarningsVolatility(double earningsVolatility) {
+		this.earningsVolatility = earningsVolatility;
 	}
 
 }
