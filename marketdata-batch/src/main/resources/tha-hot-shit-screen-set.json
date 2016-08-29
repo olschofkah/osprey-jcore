@@ -990,7 +990,7 @@
      "periodK": 1,
      "periodD": 10,
      "range": 2,
-     "direction": "FROM_BELOW_TO_ABOVE"
+     "direction": "FROM_ABOVE_TO_BELOW"
     }
    }
   ]

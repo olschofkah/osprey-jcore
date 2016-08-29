@@ -39,7 +39,7 @@ public enum InstrumentType {
 	MUTUALFUND(35,"",""), 
 	BOND(36,"",""), 
 	COMMODITY(37,"",""), 
-	FUTURE(39,"",""),
+	FUTURE(38,"",""),
 	NEXTSHARES(39,"","");
 	
 	public static final InstrumentType[] SPECIAL_CLASS_STOCKS = new InstrumentType[] {	

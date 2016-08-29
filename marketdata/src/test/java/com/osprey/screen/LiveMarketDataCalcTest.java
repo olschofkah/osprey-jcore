@@ -17,6 +17,7 @@ import com.osprey.marketdata.MarketdataApplication;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
+import com.osprey.math.EarningsCalculator;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.result.StochasticOscillatorCurve;
 import com.osprey.securitymaster.HistoricalQuote;
@@ -110,6 +111,29 @@ public class LiveMarketDataCalcTest {
 		System.out.println(OspreyQuantMath.rsiUsingEma(14, 0, hist));
 		System.out.println(OspreyQuantMath.rsiUsingWilders(14, 0, hist));
 		System.out.println(OspreyQuantMath.wildersMovingAverage(14, 0, hist));
+	}
+	
+	@Test
+	public void earningsMovementCalc() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(3).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "CIEN";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+		
+		sqc.sortEventsDescending();
+
+		System.out.println(EarningsCalculator.calcEarningsPercentMove(sqc, 10, 4));
 	}
 
 	@Test
