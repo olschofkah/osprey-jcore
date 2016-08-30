@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
@@ -19,7 +20,8 @@ import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MarketdataApplication.class)
+@ActiveProfiles("test-marketdata")
+@SpringApplicationConfiguration(classes = MarketDataTestConfiguration.class)
 public class YahooQuoteTest {
 
 	@Autowired

@@ -15,8 +15,6 @@ import javax.sql.DataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.util.PGobject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Isolation;
@@ -34,13 +32,11 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 	final static Logger logger = LogManager.getLogger(HotShitJdbcRepository.class);
 
 	private JdbcTemplate jdbc;
-
-	@Autowired
-	@Qualifier("om1")
 	private ObjectMapper om;
 
-	public HotShitJdbcRepository(DataSource ds) {
+	public HotShitJdbcRepository(DataSource ds, ObjectMapper om) {
 		jdbc = new JdbcTemplate(ds);
+		this.om = om;
 	}
 
 	@Override
@@ -80,7 +76,7 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 
 		int count = jdbc.queryForObject("select count(1) from tha_hot_shit where symbol = ? and date >= ?",
 				new Object[] { symbol, sqlDate }, Integer.class);
-		
+
 		return count;
 	}
 

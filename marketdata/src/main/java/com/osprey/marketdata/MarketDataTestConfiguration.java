@@ -22,17 +22,17 @@ import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 import com.osprey.securitymaster.repository.mock.MockSecurityMasterRepository;
 
 @Configuration
-@Profile("test")
+@Profile("test-marketdata")
 public class MarketDataTestConfiguration {
 
 	@Bean
 	public ISecurityMasterRepository securityMasterRepository() {
 		return new MockSecurityMasterRepository();
 	}
-	
+
 	@Bean
 	public NasdaqSecurityMasterFtpService nasdaqSecurityMasterFtpService() {
-		return new NasdaqSecurityMasterFtpService();
+		return new NasdaqSecurityMasterFtpService(marketDataLoadDateService());
 	}
 
 	@Bean
@@ -42,7 +42,7 @@ public class MarketDataTestConfiguration {
 
 	@Bean
 	public YahooQuoteClient yahooQuoteClient() {
-		return new YahooQuoteClient();
+		return new YahooQuoteClient(restTemplate());
 	}
 
 	@Bean
@@ -57,12 +57,12 @@ public class MarketDataTestConfiguration {
 			QuoteDataFrequency freq) {
 		return new YahooHistoricalUrlBuilder(symbol, start, end, freq);
 	}
-	
+
 	@Bean
-	public MarketDataLoadDateService marketDataLoadDateService(){
-		return new MarketDataLoadDateService();
+	public MarketDataLoadDateService marketDataLoadDateService() {
+		return new MarketDataLoadDateService(ospreyJSONObjectRepository(), om1());
 	}
-	
+
 	@Bean
 	public IOspreyJSONObjectRepository ospreyJSONObjectRepository() {
 		return new IOspreyJSONObjectRepository() {
@@ -80,9 +80,9 @@ public class MarketDataTestConfiguration {
 			}
 		};
 	}
-	
+
 	@Bean
-	public ObjectMapper om1(){
+	public ObjectMapper om1() {
 		return new ObjectMapper();
 	}
 

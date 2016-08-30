@@ -65,18 +65,18 @@ public class YahooQuoteResultMapper {
 			mapSummaryProfile(result.getSummaryProfile(), sqc);
 		}
 
-		// this should be last as it is more live data and will override a few
-		// data points.
-		if (result.getPrice() != null) {
-			mapPrice(result.getPrice(), sqc);
-		}
-
 		if (result.getMajorHoldersBreakdown() != null) {
 			mapMajorHoldersBreakdown(result.getMajorHoldersBreakdown(), sqc);
 		}
 
 		if (result.getNetSharePurchaseActivity() != null) {
 			mapNetSharePurchaseActivity(result.getNetSharePurchaseActivity(), sqc);
+		}
+		
+		// this should be last as it is more live data and will override a few
+		// data points.
+		if (result.getPrice() != null) {
+			mapPrice(result.getPrice(), sqc);
 		}
 
 		sqc.timestamp();

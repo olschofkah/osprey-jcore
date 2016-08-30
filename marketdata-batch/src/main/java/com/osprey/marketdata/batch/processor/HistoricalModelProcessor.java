@@ -13,7 +13,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.HotListItem;
@@ -32,16 +31,18 @@ import com.osprey.securitymaster.constants.SecurityEventType;
 
 public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
 
-	final static Logger logger = LogManager.getLogger(HistoricalModelProcessor.class);
+	private final static Logger logger = LogManager.getLogger(HistoricalModelProcessor.class);
 
-	@Autowired
 	private HotShitScreenProvidor screenProvidor;
-
-	@Autowired
 	private IHotShitRepository repo;
 
 	private static int NUMBER_OF_HIST_PERIODS = 252; // TODO extract to config
-	private static boolean HIST_ENABLED = true; 
+	private static boolean HIST_ENABLED = true;
+
+	public HistoricalModelProcessor(HotShitScreenProvidor screenProvidor, IHotShitRepository repo) {
+		this.screenProvidor = screenProvidor;
+		this.repo = repo;
+	}
 
 	@Override
 	public SecurityQuoteContainer process(SecurityQuoteContainer item) throws Exception {
@@ -57,7 +58,7 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 		// Copy to use for re-setting the hist back to where it was.
 		List<HistoricalQuote> origHistQuoteList = new ArrayList<>(item.getHistoricalQuotes());
-		
+
 		SecurityUpcomingEvents origUpcomingEvents = item.getUpcomingEvents();
 		item.setUpcomingEvents(new SecurityUpcomingEvents(origUpcomingEvents));
 
@@ -74,7 +75,7 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 		SimpleScreenExecutor executor;
-		
+
 		item.sortEventsDescending();
 
 		for (int i = 0; i < NUMBER_OF_HIST_PERIODS && item.getHistoricalQuotes().size() > 1; ++i) {
@@ -113,8 +114,8 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 							hotListItem = new HotListItem(item.getKey());
 							hotListItems.add(hotListItem);
 							hotListItem.setReportDate(Date.valueOf(lastDate));
-							hotListItem.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 21));
-							
+							hotListItem.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 7));
+
 							itemMap.put(item.getKey(), hotListItem);
 						}
 						hotListItem = itemMap.get(item.getKey());
@@ -136,7 +137,7 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 		item.setHistoricalQuotes(origHistQuoteList);
 		item.setUpcomingEvents(origUpcomingEvents);
-		
+
 		return item;
 	}
 
@@ -150,31 +151,25 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 		// this is pre-sorted
 		for (SecurityEvent event : item.getEvents()) {
-			if (!earningsSet
-					&& event.getEvent() == SecurityEventType.EARNINGS_ACT
+			if (!earningsSet && event.getEvent() == SecurityEventType.EARNINGS_ACT
 					&& !historicalDate.isAfter(event.getDate())) {
 				upcomingEvents.setNextEarningsDateEstLow(event.getDate());
 				upcomingEvents.setNextEarningsDateEstHigh(event.getDate());
 				earningsSet = true;
 			}
 
-			if (!revenueSet 
-					&& event.getEvent() == SecurityEventType.REVENUE
+			if (!revenueSet && event.getEvent() == SecurityEventType.REVENUE
 					&& !historicalDate.isAfter(event.getDate())) {
 				upcomingEvents.setNextRevenue(event.getDate());
 				earningsSet = true;
 			}
 
-			if (!exDivSet 
-					&& event.getEvent() == SecurityEventType.EX_DIV 
-					&& !historicalDate.isAfter(event.getDate())) {
+			if (!exDivSet && event.getEvent() == SecurityEventType.EX_DIV && !historicalDate.isAfter(event.getDate())) {
 				upcomingEvents.setNextExDivDate(event.getDate());
 				exDivSet = true;
 			}
 
-			if (!divSet 
-					&& event.getEvent() == SecurityEventType.DIV 
-					&& !historicalDate.isAfter(event.getDate())) {
+			if (!divSet && event.getEvent() == SecurityEventType.DIV && !historicalDate.isAfter(event.getDate())) {
 				upcomingEvents.setNextDivDate(event.getDate());
 				divSet = true;
 			}

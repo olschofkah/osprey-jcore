@@ -6,17 +6,19 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.screen.HotListItem;
 import com.osprey.screen.repository.IHotShitRepository;
 
 public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
 
-	final static Logger logger = LogManager.getLogger(HotShitDbItemWriter.class);
+	private final static Logger logger = LogManager.getLogger(HotShitDbItemWriter.class);
 
-	@Autowired
 	private IHotShitRepository repo;
+
+	public HotShitDbItemWriter(IHotShitRepository repo) {
+		this.repo = repo;
+	}
 
 	@Override
 	public void write(final List<? extends HotListItem> items) throws Exception {
@@ -31,7 +33,7 @@ public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
 		LocalDate lDate = itemZero.getReportDate().toLocalDate();
 
 		for (HotListItem item : items) {
-			item.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 21));
+			item.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 7));
 		}
 
 		repo.deleteAndPersist(itemZero.getKey().getSymbol(), lDate, lDate, items);

@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.osprey.marketdata.feed.mock.MockMarketDataFeedService;
@@ -23,7 +24,8 @@ import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MarketDataDevConfiguration.class)
+@ActiveProfiles("test-marketdata")
+@SpringApplicationConfiguration(classes = MarketDataTestConfiguration.class)
 public class MockMarketDataTest {
 
 	@Autowired

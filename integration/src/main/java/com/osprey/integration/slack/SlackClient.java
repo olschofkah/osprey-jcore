@@ -2,8 +2,6 @@ package com.osprey.integration.slack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +21,13 @@ public class SlackClient {
 	@Value("${slack.api.user}")
 	private String user;
 
-	@Autowired
 	private RestTemplate http;
-	
-	@Autowired
-	@Qualifier("om1")
 	private ObjectMapper om;
+
+	public SlackClient(RestTemplate http, ObjectMapper om) {
+		this.http = http;
+		this.om = om;
+	}
 
 	public void postMessage(Object message) {
 

@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.screen.HotListItem;
@@ -21,15 +20,14 @@ import com.osprey.screen.repository.IHotShitRepository;
 
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
-	final static Logger logger = LogManager.getLogger(JobCompletionNotificationListener.class);
+	private final static Logger logger = LogManager.getLogger(JobCompletionNotificationListener.class);
 
-	@Autowired
 	private IHotShitRepository repo;
-
-	@Autowired
 	private SlackClient slack;
 
-	public JobCompletionNotificationListener() {
+	public JobCompletionNotificationListener(IHotShitRepository repo, SlackClient slack) {
+		this.repo = repo;
+		this.slack = slack;
 	}
 
 	@Override
@@ -53,7 +51,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 					reportMap.get(string).add(hotItem.getKey().getSymbol());
 				}
 			}
-			
+
 			List<String> symbols;
 
 			StringBuilder sb = new StringBuilder();
@@ -67,15 +65,15 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 				sb.append(entry.getKey());
 				sb.append("\n");
 				sb.append("Symbol(s): ");
-				
+
 				symbols = entry.getValue();
 				Collections.sort(symbols);
-				
+
 				for (String symbol : symbols) {
 					sb.append(symbol);
 					sb.append(", ");
 				}
-				
+
 				sb.deleteCharAt(sb.length() - 1);
 				sb.deleteCharAt(sb.length() - 1);
 			}
@@ -86,7 +84,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 			logger.info("Work Failed");
 			slack.postMessage("Well fuck, that didn't work...  What would you like me to do?");
 		}
-		
+
 		// fugly but works ...
 		System.exit(0);
 	}

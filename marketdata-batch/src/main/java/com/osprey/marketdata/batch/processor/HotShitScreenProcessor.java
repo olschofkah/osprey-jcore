@@ -10,7 +10,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.screen.HotListItem;
 import com.osprey.screen.ScreenCriteriaGenerator;
@@ -22,12 +21,15 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContainer, HotListItem> {
 
-	final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
+	private final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
 
-	@Autowired
 	private HotShitScreenProvidor screenProvidor;
-	@Autowired
 	private InitialScreenService initialScreenService;
+
+	public HotShitScreenProcessor(HotShitScreenProvidor screenProvidor, InitialScreenService initialScreenService) {
+		this.screenProvidor = screenProvidor;
+		this.initialScreenService = initialScreenService;
+	}
 
 	@Override
 	public HotListItem process(SecurityQuoteContainer item) throws Exception {
@@ -48,7 +50,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 			for (ScreenCriteriaGenerator generator : entry.getScreenCriteria()) {
 				criteria.add(generator.generate());
 			}
-			
+
 			criteria.addAll(initialScreenService.getCriteria());
 
 			SimpleScreenExecutor executor = new SimpleScreenExecutor();

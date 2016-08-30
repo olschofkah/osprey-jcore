@@ -2,7 +2,6 @@ package com.osprey.marketdata.rest.endpoint;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +16,11 @@ public class RestQuoteService {
 
 	final static Logger logger = LogManager.getLogger(MockMarketDataFeedService.class);
 
-	@Autowired
 	private ILiveSecurityQuoteService liveQuoteService;
+	
+	public RestQuoteService(ILiveSecurityQuoteService liveQuoteService){
+		this.liveQuoteService=liveQuoteService;
+	}
 
 	@RequestMapping("/quote/{symbol}")
 	public SecurityQuote quote(@PathVariable(value = "symbol") String symbol) {

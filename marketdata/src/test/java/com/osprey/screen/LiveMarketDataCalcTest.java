@@ -27,7 +27,7 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.InstrumentType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("test")
+@ActiveProfiles("test-marketdata")
 @SpringApplicationConfiguration(classes = MarketdataApplication.class)
 public class LiveMarketDataCalcTest {
 

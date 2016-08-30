@@ -64,12 +64,11 @@ import com.osprey.securitymaster.constants.InstrumentType;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("test")
+@ActiveProfiles("test-marketdata")
 @SpringApplicationConfiguration(classes = MarketdataApplication.class)
 public class LiveMarketDataScreenTest {
 	
 	private static double DOUBLE_TEST_DELTA = 0.00001;
-
 
 	@Autowired
 	private YahooQuoteClient yahooQuoteClient;

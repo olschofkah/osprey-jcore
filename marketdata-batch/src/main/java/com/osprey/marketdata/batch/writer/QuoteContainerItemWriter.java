@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
@@ -15,13 +14,14 @@ public class QuoteContainerItemWriter implements ItemWriter<SecurityQuoteContain
 
 	final static Logger logger = LogManager.getLogger(QuoteContainerItemWriter.class);
 
-	@Autowired
 	private ISecurityMasterRepository repo;
 
 	private ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue;
 
-	public QuoteContainerItemWriter(ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue) {
+	public QuoteContainerItemWriter(ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue,
+			ISecurityMasterRepository repo) {
 		this.postQuoteQueue = postQuoteQueue;
+		this.repo = repo;
 	}
 
 	@Override

@@ -8,8 +8,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
 import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
@@ -26,18 +24,25 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
 
-	final static Logger logger = LogManager.getLogger(QuoteProcessor.class);
+	private final static Logger logger = LogManager.getLogger(QuoteProcessor.class);
 
-	@Autowired
-	@Qualifier("throttleCapacity")
 	private AtomicLong throttleCapacity;
 
-	@Autowired
 	private IUltraSecurityQuoteService fundamentalQuoteService;
-	@Autowired
 	private IHistoricalQuoteSerice historicalQuoteService;
-	@Autowired
 	private MarketScheduleService marketSchedule;
+
+	public QuoteProcessor(IUltraSecurityQuoteService fundamentalQuoteService,
+			IHistoricalQuoteSerice historicalQuoteService, 
+			MarketScheduleService marketSchedule,
+			AtomicLong throttleCapacity) {
+		
+		this.fundamentalQuoteService = fundamentalQuoteService;
+		this.historicalQuoteService = historicalQuoteService;
+		this.marketSchedule = marketSchedule;
+		this.throttleCapacity = throttleCapacity;
+
+	}
 
 	@Override
 	public SecurityQuoteContainer process(SecurityQuoteContainer sqc) throws Exception {

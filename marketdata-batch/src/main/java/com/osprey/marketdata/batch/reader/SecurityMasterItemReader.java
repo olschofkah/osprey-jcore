@@ -12,7 +12,6 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
@@ -29,14 +28,16 @@ public class SecurityMasterItemReader implements ItemReader<SecurityQuoteContain
 	private ConcurrentLinkedQueue<SecurityQuoteContainer> queue;
 	private volatile ReentrantLock lock = new ReentrantLock();
 
-	@Autowired
 	private ISecurityMasterService securityMasterService;
-
-	@Autowired
 	private ISecurityMasterRepository repo;
-
-	@Autowired
 	private SlackClient slack;
+
+	public SecurityMasterItemReader(ISecurityMasterService securityMasterService, ISecurityMasterRepository repo,
+			SlackClient slack) {
+		this.securityMasterService = securityMasterService;
+		this.repo = repo;
+		this.slack = slack;
+	}
 
 	@Override
 	public SecurityQuoteContainer read()

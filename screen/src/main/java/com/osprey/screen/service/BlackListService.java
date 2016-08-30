@@ -4,23 +4,22 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.BlackListItem;
-import com.osprey.screen.repository.jdbctemplate.OspreyJSONObjectJdbcRepository;
+import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 
 public class BlackListService {
 
 	private static final String BLACK_LIST_KEY = "black-list";
 
-	@Autowired
-	@Qualifier("om1")
 	private ObjectMapper om;
-	@Autowired
-	private OspreyJSONObjectJdbcRepository jsonRepository;
+	private IOspreyJSONObjectRepository jsonRepository;
+
+	public BlackListService(ObjectMapper om, IOspreyJSONObjectRepository jsonRepository) {
+		this.om = om;
+		this.jsonRepository = jsonRepository;
+	}
 
 	public List<BlackListItem> findBlackListSymbols() {
 		List<BlackListItem> blackList = Collections.emptyList();

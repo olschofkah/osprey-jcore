@@ -2,8 +2,9 @@ package com.osprey.marketdata.feed.yahoo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -19,15 +20,16 @@ import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
-public class YahooQuoteClient implements IUltraSecurityQuoteService {
+public class YahooQuoteClient implements IUltraSecurityQuoteService, ApplicationContextAware {
 
 	final static Logger logger = LogManager.getLogger(YahooQuoteClient.class);
 
-	@Autowired
 	private ApplicationContext appCtx;
-
-	@Autowired
 	private RestTemplate http;
+
+	public YahooQuoteClient(RestTemplate http) {
+		this.http = http;
+	}
 
 	@Override
 	public SecurityQuoteContainer quoteUltra(SecurityKey s)
@@ -52,31 +54,15 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 				sqc.getKey().getSymbol());
 
 		String url;
-		
-		if(simplerQuote) {
-			url = yahooQuoteUrlBuilder
-					.summaryDetail()
-					.summaryProfile() 
-					.calendarEvents()
-					.defaultKeyStatistics()
-					.earnings()
-					.financialData()
-					.price()
-					.build();
+
+		if (simplerQuote) {
+			url = yahooQuoteUrlBuilder.summaryDetail().summaryProfile().calendarEvents().defaultKeyStatistics()
+					.financialData().price().build();
 		} else {
-			url = yahooQuoteUrlBuilder
-					.summaryDetail()
-					.summaryProfile() 
-					.calendarEvents()
-					.defaultKeyStatistics()
-					.earnings()
-					.financialData()
-					.price()
-					.netSharePurchaseActivity()
-					.majorHoldersBreakdown()
-					.build();
+			url = yahooQuoteUrlBuilder.summaryDetail().summaryProfile().calendarEvents().defaultKeyStatistics()
+					.financialData().price().netSharePurchaseActivity().majorHoldersBreakdown().build();
 		}
-		
+
 		YahooQuote yahooQuote = null;
 		try {
 			yahooQuote = http.getForObject(url, YahooQuote.class);
@@ -95,7 +81,7 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 				|| yahooQuote.getQuoteSummary().getResult() == null) {
 			logger.error("Failed quoting {} ", new Object[] { sqc.getKey().getSymbol() });
 
-			// try again requesting less data. 
+			// try again requesting less data.
 			if (!simplerQuote) {
 				return quoteUltra(sqc, true);
 			}
@@ -107,11 +93,15 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService {
 
 		// TODO Strip out fmt and longFmt from generated objects
 		// TODO Strip out additionalProperties map from generated objects
-		// TODO Add Quote Sanity Checks
 
 		logger.debug("Completed quoting {} ... ", () -> sqc.getKey().getSymbol());
 
 		return YahooQuoteResultMapper.map(result, sqc);
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.appCtx = applicationContext;
 	}
 
 }

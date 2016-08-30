@@ -32,6 +32,7 @@ public class ThrottleDisruptor {
 		running = new AtomicBoolean(false);
 	}
 
+	@SuppressWarnings("unchecked")
 	@PostConstruct
 	private void init() {
 

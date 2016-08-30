@@ -8,8 +8,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -19,16 +17,17 @@ import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 
 public class HotShitScreenProvidor {
 
-	final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
+	private final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
 
-	@Autowired
 	private IOspreyJSONObjectRepository jsonRepository;
-
-	@Autowired
-	@Qualifier("om1")
 	private ObjectMapper om;
 
 	private List<ScreenStrategyEntry> screens;
+
+	public HotShitScreenProvidor(IOspreyJSONObjectRepository jsonRepository, ObjectMapper om) {
+		this.jsonRepository = jsonRepository;
+		this.om = om;
+	}
 
 	public List<ScreenStrategyEntry> getScreens() {
 		return screens;

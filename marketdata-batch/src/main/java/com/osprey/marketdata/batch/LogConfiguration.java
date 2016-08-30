@@ -1,4 +1,4 @@
-package com.osprey.marketdata;
+package com.osprey.marketdata.batch;
 
 import java.util.HashMap;
 import java.util.Map;

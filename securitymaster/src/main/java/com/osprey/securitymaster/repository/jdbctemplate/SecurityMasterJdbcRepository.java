@@ -683,8 +683,10 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 		persist(sqc.getSecurityQuote());
 		persist(sqc.getUpcomingEvents());
 
-		deleteEvents(sqc.getEvents());
-		persistEvents(sqc.getEvents());
+		if (sqc.getEvents() != null && !sqc.getEvents().isEmpty()) {
+			deleteEvents(sqc.getEvents());
+			persistEvents(sqc.getEvents());
+		}
 
 		deleteHistoricals(sqc.getKey());
 		persistHistoricals(sqc.getHistoricalQuotes());

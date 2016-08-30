@@ -17,7 +17,6 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.InitialScreenService;
@@ -34,12 +33,16 @@ public class QuoteItemReader implements ItemReader<SecurityQuoteContainer> {
 	private ConcurrentLinkedQueue<SecurityQuoteContainer> queue;
 	private volatile ReentrantLock lock = new ReentrantLock();
 
-	@Autowired
 	private ISecurityMasterRepository repo;
-	@Autowired
 	private ExecutorService executor;
-	@Autowired
 	private InitialScreenService initialScreenService;
+
+	public QuoteItemReader(ISecurityMasterRepository repo, ExecutorService executor,
+			InitialScreenService initialScreenService) {
+		this.repo = repo;
+		this.executor = executor;
+		this.initialScreenService = initialScreenService;
+	}
 
 	@Override
 	public SecurityQuoteContainer read()

@@ -4,22 +4,21 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 
 public class MarketDataLoadDateService {
 
-	@Autowired
 	private IOspreyJSONObjectRepository objectRepository;
-	@Autowired
-	@Qualifier("om1")
 	private ObjectMapper om;
 
 	private static final String SM_LOAD_DATE_KEY = "sm-date";
+
+	public MarketDataLoadDateService(IOspreyJSONObjectRepository objectRepository, ObjectMapper om) {
+		this.objectRepository = objectRepository;
+		this.om = om;
+	}
 
 	public void recordLoadDate(final ZonedDateTime today) {
 

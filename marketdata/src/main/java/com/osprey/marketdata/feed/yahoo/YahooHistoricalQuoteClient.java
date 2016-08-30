@@ -15,8 +15,9 @@ import java.util.Set;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.osprey.marketdata.feed.IHistoricalQuoteSerice;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
@@ -26,11 +27,10 @@ import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.utils.OspreyUtils;
 
-public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
+public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice, ApplicationContextAware {
 
 	final static Logger logger = LogManager.getLogger(YahooHistoricalQuoteClient.class);
 
-	@Autowired
 	private ApplicationContext appCtx;
 
 	@Override
@@ -108,6 +108,11 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice {
 			LocalDate end) {
 		throw new NotImplementedException(
 				"fetchHistoricalBatch(Set<Security>, LocalDate, LocalDate) is not implemented for YahooHistoricalQuoteClient");
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.appCtx = applicationContext;
 	}
 
 }

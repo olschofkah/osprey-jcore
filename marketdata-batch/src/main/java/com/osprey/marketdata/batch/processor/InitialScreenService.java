@@ -12,8 +12,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,17 +30,18 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public class InitialScreenService {
 
-	final static Logger logger = LogManager.getLogger(InitialScreenService.class);
+	private final static Logger logger = LogManager.getLogger(InitialScreenService.class);
 
 	@Value("${initial.screen.set.json}")
 	private String screenJsonFile;
 
-	@Autowired
 	private BlackListService bls;
-
-	@Autowired
-	@Qualifier("om1")
 	private ObjectMapper om;
+
+	public InitialScreenService(BlackListService bls, ObjectMapper om) {
+		this.bls = bls;
+		this.om = om;
+	}
 
 	private List<IScreenCriteria> criteria;
 
