@@ -16,7 +16,6 @@ import com.osprey.math.exception.MathException;
 import com.osprey.math.result.SMAPair;
 import com.osprey.math.result.StochasticOscillatorCurve;
 import com.osprey.securitymaster.HistoricalQuote;
-import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OptionType;
 import com.osprey.securitymaster.constants.OspreyConstants;
@@ -411,7 +410,7 @@ public final class OspreyQuantMath {
 	 *            - Prices to use for calculation
 	 * @return ( c0 + c1 + c2 + ... + cp) / p for every p
 	 */
-	public static SMAPair smaPair(int p1, int p2, int offset, List<HistoricalQuote> prices, SecurityQuote quote) {
+	public static SMAPair smaPair(int p1, int p2, int offset, List<HistoricalQuote> prices) {
 
 		if (p1 < 0 || p2 < 0) {
 			throw new InvalidPeriodException();
@@ -430,7 +429,7 @@ public final class OspreyQuantMath {
 
 		double histPrice = 0;
 		for (int i = 0 + offset; i < r + offset; ++i) {
-			histPrice = i == 0 ? quote.getLast() : prices.get(i).getAdjClose();
+			histPrice = prices.get(i).getAdjClose();
 			if (i < p1o) {
 				sma1 += histPrice;
 			}
