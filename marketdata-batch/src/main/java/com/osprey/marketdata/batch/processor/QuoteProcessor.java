@@ -176,7 +176,7 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 	private void checkThrottle() throws InterruptedException {
 		while (throttleCapacity.get() <= 0) {
 			logger.trace("Waiting for capacity ...");
-			Thread.sleep(5); // TODO make config
+			Thread.sleep(5);
 		}
 		throttleCapacity.getAndDecrement();
 	}

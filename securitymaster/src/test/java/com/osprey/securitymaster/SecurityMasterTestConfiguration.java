@@ -3,39 +3,48 @@ package com.osprey.securitymaster;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import com.osprey.securitymaster.repository.jdbctemplate.SecurityMasterJdbcRepository;
 
 @Configuration
-@Profile("test")
+@Profile("integration-test")
 public class SecurityMasterTestConfiguration {
-	
-	@Autowired
-	private DataSource ds;
-	
-	@Bean
-	public DataSource postgresDataSource() throws ClassNotFoundException {
-		
-		Class.forName("org.postgresql.Driver");
-		
-		return DataSourceBuilder.create()
-				.url("jdbc:postgresql://ospreydb.cl1fkmenjbzm.us-east-1.rds.amazonaws.com:5432/osprey01")
-				.username("ospreyjavausr")
-				.password("F4&^mfWXqazY")
-				.type(BasicDataSource.class)
-				.build();
 
-		// TODO EXTRACT TO CONFIG !!!
+	@Value("${spring.datasource.url}")
+	private String dbUrl;
+	@Value("${spring.datasource.username}")
+	private String dbUser;
+	@Value("${spring.datasource.password}")
+	private String dbPassword;
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
 	}
 
 	@Bean
-	public SecurityMasterJdbcRepository securityMasterRepository() {
-		return new SecurityMasterJdbcRepository(ds);
+	public DataSource postgresDataSource() throws ClassNotFoundException {
+
+		Class.forName("org.postgresql.Driver");
+
+		return DataSourceBuilder.create()
+				.url(dbUrl)
+				.username(dbUser)
+				.password(dbPassword)
+				.type(BasicDataSource.class)
+				.build();
+
+	}
+
+	@Bean
+	public SecurityMasterJdbcRepository securityMasterRepository() throws ClassNotFoundException {
+		return new SecurityMasterJdbcRepository(postgresDataSource());
 	}
 
 }

@@ -196,7 +196,6 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 				continue;
 			}
 
-			// TODO Convert symbol to CQS
 			sec = process(split[0], split[1], split[3], split[5], split[6], split[7], Exchange.NASDAQ, now);
 
 			if (sec != null) {

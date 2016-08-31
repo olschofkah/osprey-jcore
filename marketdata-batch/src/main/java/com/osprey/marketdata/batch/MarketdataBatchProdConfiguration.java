@@ -3,9 +3,11 @@ package com.osprey.marketdata.batch;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,18 +16,31 @@ import com.osprey.integration.slack.SlackClient;
 
 @Configuration
 public class MarketdataBatchProdConfiguration {
-	
+
+	@Value("${spring.datasource.url}")
+	private String dbUrl;
+	@Value("${spring.datasource.username}")
+	private String dbUser;
+	@Value("${spring.datasource.password}")
+	private String dbPassword;
+
+	@Value("${http.timeout}")
+	private int httpTimeout;
+
+
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertyPlaceholderConfigurer() {
+	    return new PropertySourcesPlaceholderConfigurer();
+	}
 
 	@Bean
 	public DataSource postgresDataSource() {
 		return DataSourceBuilder.create()
-				.url("jdbc:postgresql://ospreydb.cl1fkmenjbzm.us-east-1.rds.amazonaws.com:5432/osprey01")
-				.username("ospreyjavausr")
-				.password("F4&^mfWXqazY")
+				.url(dbUrl)
+				.username(dbUser)
+				.password(dbPassword)
 				.type(BasicDataSource.class)
 				.build();
-
-		// TODO EXTRACT TO CONFIG !!!
 	}
 	
 
@@ -44,8 +59,8 @@ public class MarketdataBatchProdConfiguration {
 
 		// TODO Consider using OkHttpClientHttpRequestFactory
 		SimpleClientHttpRequestFactory connFactory = new SimpleClientHttpRequestFactory();
-		connFactory.setReadTimeout(30000); // TODO make config
-		connFactory.setConnectTimeout(30000); // TODO make config
+		connFactory.setReadTimeout(httpTimeout); 
+		connFactory.setConnectTimeout(httpTimeout); 
 
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setRequestFactory(connFactory);

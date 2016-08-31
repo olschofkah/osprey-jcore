@@ -4,7 +4,7 @@ public class ThrottleEvent {
 
 	public void throttle() {
 		try {
-			Thread.sleep(100); // TODO Make Configurable
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 		}
 	}

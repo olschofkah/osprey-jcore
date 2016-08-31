@@ -26,6 +26,7 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -105,6 +106,13 @@ public class NightlyMarketDataScreen {
 	@Qualifier("om1")
 	private ObjectMapper om1;
 
+	@Value("${threads.core.pool.size}")
+	private int corePoolSize;
+	@Value("${threads.max.pool.size}")
+	private int maxPoolSize;
+	@Value("${threads.keep.alive.seconds}")
+	private int keepAliveSeconds;
+
 	// Queues to temporarily hold securities to quote and pull history for.
 	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postInitialScreenResultQueue = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<SecurityQuoteContainer> postQuoteQueue = new ConcurrentLinkedQueue<>();
@@ -146,11 +154,11 @@ public class NightlyMarketDataScreen {
 	@Bean
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(10);// TODO extract
-		executor.setMaxPoolSize(16); // TODO extract
+		executor.setCorePoolSize(corePoolSize);
+		executor.setMaxPoolSize(maxPoolSize);
 		executor.setThreadFactory(threadFactory());
 		executor.setAllowCoreThreadTimeOut(false);
-		executor.setKeepAliveSeconds(30); // TODO extract
+		executor.setKeepAliveSeconds(keepAliveSeconds);
 		executor.setWaitForTasksToCompleteOnShutdown(true);
 		return executor;
 	}

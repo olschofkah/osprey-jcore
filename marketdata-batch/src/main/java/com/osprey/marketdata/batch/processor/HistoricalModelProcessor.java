@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.HotListItem;
@@ -32,11 +33,14 @@ import com.osprey.securitymaster.constants.SecurityEventType;
 public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
 
 	private final static Logger logger = LogManager.getLogger(HistoricalModelProcessor.class);
+	
 
 	private HotShitScreenProvidor screenProvidor;
 	private IHotShitRepository repo;
 
-	private static int NUMBER_OF_HIST_PERIODS = 252; // TODO extract to config
+	@Value("${model.hist.periods}")
+	private int NUMBER_OF_HIST_PERIODS;
+	
 	private static boolean HIST_ENABLED = true;
 
 	public HistoricalModelProcessor(HotShitScreenProvidor screenProvidor, IHotShitRepository repo) {

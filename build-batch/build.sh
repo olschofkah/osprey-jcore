@@ -7,6 +7,7 @@ if [ $# -eq 0 ]
 fi
 
 mvn clean compile validate package -DskipTests
+#mvn clean compile validate package
 
 cp ../marketdata-batch/target/marketdata-batch-${1}.jar ./lib/
 cp ../marketdata/target/marketdata-${1}.jar ./lib/

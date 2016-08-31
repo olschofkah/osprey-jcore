@@ -16,6 +16,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -30,6 +31,9 @@ import com.osprey.securitymaster.utils.OspreyUtils;
 public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice, ApplicationContextAware {
 
 	final static Logger logger = LogManager.getLogger(YahooHistoricalQuoteClient.class);
+	
+	@Value("${http.timeout}")
+	private int httpTimeout;
 
 	private ApplicationContext appCtx;
 
@@ -93,8 +97,7 @@ public class YahooHistoricalQuoteClient implements IHistoricalQuoteSerice, Appli
 			throws MarketDataNotAvailableException, MarketDataIOException {
 
 		try {
-			// TODO Extract constants
-			return OspreyUtils.readLinesFromUrl(historicalQuoteUrl, 30000, 30000);
+			return OspreyUtils.readLinesFromUrl(historicalQuoteUrl, httpTimeout, httpTimeout);
 		} catch (FileNotFoundException e) {
 			throw new MarketDataNotAvailableException("", e);
 		} catch (IOException e) {

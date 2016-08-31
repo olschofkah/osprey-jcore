@@ -2,6 +2,7 @@ package com.osprey.marketdata;
 
 import java.time.LocalDate;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -25,6 +26,9 @@ import com.osprey.securitymaster.repository.mock.MockSecurityMasterRepository;
 @Configuration
 @Profile("integration-test")
 public class MarketDataTestConfiguration {
+	
+	@Value("${http.timeout}")
+	private int httpTimeout;
 	
 	@Bean
 	public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
@@ -75,14 +79,11 @@ public class MarketDataTestConfiguration {
 
 			@Override
 			public String find(String key) {
-				// TODO Auto-generated method stub
 				return null;
 			}
 
 			@Override
 			public void persist(String key, String value) {
-				// TODO Auto-generated method stub
-
 			}
 		};
 	}
@@ -95,10 +96,9 @@ public class MarketDataTestConfiguration {
 	@Bean
 	public RestTemplate restTemplate() {
 
-		// TODO Consider using OkHttpClientHttpRequestFactory
 		SimpleClientHttpRequestFactory connFactory = new SimpleClientHttpRequestFactory();
-		connFactory.setReadTimeout(30000); // TODO make config
-		connFactory.setConnectTimeout(30000); // TODO make config
+		connFactory.setReadTimeout(httpTimeout);
+		connFactory.setConnectTimeout(httpTimeout); 
 
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.setRequestFactory(connFactory);
