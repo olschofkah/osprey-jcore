@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -22,8 +23,13 @@ import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 import com.osprey.securitymaster.repository.mock.MockSecurityMasterRepository;
 
 @Configuration
-@Profile("test-marketdata")
+@Profile("integration-test")
 public class MarketDataTestConfiguration {
+	
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+	    return new PropertySourcesPlaceholderConfigurer();
+	}
 
 	@Bean
 	public ISecurityMasterRepository securityMasterRepository() {

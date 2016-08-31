@@ -20,7 +20,7 @@ import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("test-marketdata")
+@ActiveProfiles("integration-test")
 @SpringApplicationConfiguration(classes = MarketDataTestConfiguration.class)
 public class YahooQuoteTest {
 

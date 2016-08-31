@@ -56,11 +56,25 @@ public class YahooQuoteClient implements IUltraSecurityQuoteService, Application
 		String url;
 
 		if (simplerQuote) {
-			url = yahooQuoteUrlBuilder.summaryDetail().summaryProfile().calendarEvents().defaultKeyStatistics()
-					.financialData().price().build();
+			url = yahooQuoteUrlBuilder
+					.summaryDetail()
+					.summaryProfile()
+					.calendarEvents()
+					.defaultKeyStatistics()
+					.financialData()
+					.price()
+					.build();
 		} else {
-			url = yahooQuoteUrlBuilder.summaryDetail().summaryProfile().calendarEvents().defaultKeyStatistics()
-					.financialData().price().netSharePurchaseActivity().majorHoldersBreakdown().build();
+			url = yahooQuoteUrlBuilder
+					.summaryDetail()
+					.summaryProfile()
+					.calendarEvents()
+					.defaultKeyStatistics()
+					.financialData()
+					.price()
+					.netSharePurchaseActivity()
+					.majorHoldersBreakdown()
+					.build();
 		}
 
 		YahooQuote yahooQuote = null;

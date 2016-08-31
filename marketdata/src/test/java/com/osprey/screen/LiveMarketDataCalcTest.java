@@ -13,7 +13,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.osprey.marketdata.MarketdataApplication;
+import com.osprey.marketdata.MarketDataTestConfiguration;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
@@ -27,8 +27,9 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.InstrumentType;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("test-marketdata")
-@SpringApplicationConfiguration(classes = MarketdataApplication.class)
+@ActiveProfiles("integration-test")
+//@SpringApplicationConfiguration(classes = MarketdataApplication.class)
+@SpringApplicationConfiguration(classes = MarketDataTestConfiguration.class)
 public class LiveMarketDataCalcTest {
 
 	@Autowired

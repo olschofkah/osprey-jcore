@@ -24,7 +24,7 @@ import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("test-marketdata")
+@ActiveProfiles("integration-test")
 @SpringApplicationConfiguration(classes = MarketDataTestConfiguration.class)
 public class MockMarketDataTest {
 

@@ -15,7 +15,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.osprey.marketdata.MarketdataApplication;
+import com.osprey.marketdata.MarketDataTestConfiguration;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
@@ -61,13 +61,11 @@ import com.osprey.securitymaster.SecurityKey;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.InstrumentType;
 
-
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("test-marketdata")
-@SpringApplicationConfiguration(classes = MarketdataApplication.class)
+@ActiveProfiles("integration-test")
+@SpringApplicationConfiguration(classes = MarketDataTestConfiguration.class)
 public class LiveMarketDataScreenTest {
-	
+
 	private static double DOUBLE_TEST_DELTA = 0.00001;
 
 	@Autowired
@@ -90,8 +88,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -197,8 +195,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -219,8 +217,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -263,8 +261,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -329,7 +327,6 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
 
 	@Test
 	public void macdTest() throws Exception {
@@ -344,12 +341,13 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-		IScreenCriteria c1 = new MovingAverageConverganceDiverganceCrossoverCriteria(12, 26, 9, 10, CrossDirection.FROM_BELOW_TO_ABOVE);
+		IScreenCriteria c1 = new MovingAverageConverganceDiverganceCrossoverCriteria(12, 26, 9, 10,
+				CrossDirection.FROM_BELOW_TO_ABOVE);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
@@ -371,7 +369,7 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
+
 	@Test
 	public void macdDivTest() throws Exception {
 
@@ -385,12 +383,13 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-		IScreenCriteria c1 = new MovingAverageConverganceDiverganceDiverganceCriteria(12, 26, 9, 40, -0.5, RelationalOperator._LE);
+		IScreenCriteria c1 = new MovingAverageConverganceDiverganceDiverganceCriteria(12, 26, 9, 40, -0.5,
+				RelationalOperator._LE);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
@@ -412,7 +411,6 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
 
 	@Test
 	public void macdLevelTest() throws Exception {
@@ -427,12 +425,13 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-		IScreenCriteria c1 = new MovingAverageConverganceDiverganceLevelCriteria(12, 26, 9, 40, -0.5, RelationalOperator._GE);
+		IScreenCriteria c1 = new MovingAverageConverganceDiverganceLevelCriteria(12, 26, 9, 40, -0.5,
+				RelationalOperator._GE);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
@@ -454,8 +453,7 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
-	
+
 	@Test
 	public void volumeDeltaTest() throws Exception {
 
@@ -469,8 +467,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -510,14 +508,14 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-		IScreenCriteria c1 = new DollarVolumeCriteria(1000000.0,2,RelationalOperator._GE);
-		IScreenCriteria c2 = new VolumeCriteria(1000000.0,2,RelationalOperator._GE);
-		IScreenCriteria c3 = new MarketCapCriteria(1000000,RelationalOperator._GE);
+		IScreenCriteria c1 = new DollarVolumeCriteria(1000000.0, 2, RelationalOperator._GE);
+		IScreenCriteria c2 = new VolumeCriteria(1000000.0, 2, RelationalOperator._GE);
+		IScreenCriteria c3 = new MarketCapCriteria(1000000, RelationalOperator._GE);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
@@ -541,7 +539,7 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
+
 	@Test
 	public void earningsAverageMoveTest() throws Exception {
 
@@ -555,11 +553,11 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
-		
+
 		sqc.sortEventsDescending();
 
 		IScreenCriteria c1 = new EarningsPercentMoveAverageCriteria(14, 4, 0.01, RelationalOperator._GT);
@@ -586,7 +584,7 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
+
 	@Test
 	public void stochasticOscillatorTest() throws Exception {
 
@@ -600,16 +598,18 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
-		
+
 		sqc.sortEventsDescending();
 
 		IScreenCriteria c1 = new StochasticFullOscillatorLevelCriteria(14, 3, 3, 1, 66, RelationalOperator._GE);
-		IScreenCriteria c2 = new StochasticFullOscillatorLevelCrossCriteria(14, 3, 3, 66, 80, CrossDirection.FROM_ABOVE_TO_BELOW);
-		IScreenCriteria c3 = new StochasticFullOscillatorSignalCrossCriteria(14, 3, 3, 66, CrossDirection.FROM_ABOVE_TO_BELOW);
+		IScreenCriteria c2 = new StochasticFullOscillatorLevelCrossCriteria(14, 3, 3, 66, 80,
+				CrossDirection.FROM_ABOVE_TO_BELOW);
+		IScreenCriteria c3 = new StochasticFullOscillatorSignalCrossCriteria(14, 3, 3, 66,
+				CrossDirection.FROM_ABOVE_TO_BELOW);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
@@ -633,7 +633,7 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
-	
+
 	@Test
 	public void sectorRotation() throws Exception {
 
@@ -647,8 +647,8 @@ public class LiveMarketDataScreenTest {
 		security.setInstrumentType(InstrumentType.STOCK);
 
 		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
-		List<HistoricalQuote> hist = new ArrayList<>(yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start,
-				end, freq));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
@@ -656,7 +656,6 @@ public class LiveMarketDataScreenTest {
 		double acfLong = OspreyQuantMath.acf(60, 0, 1, hist);
 		double acfShort = OspreyQuantMath.acf(20, 0, 1, hist);
 
-		
 		Assert.assertEquals(-5.5565565, sectorRI, DOUBLE_TEST_DELTA);
 	}
 
