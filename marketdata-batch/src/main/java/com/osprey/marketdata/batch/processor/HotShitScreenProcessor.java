@@ -65,7 +65,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 				if (result == null) {
 					result = new HotListItem(item.getKey());
 				}
-				result.addScreen(entry.getScreenName());
+				result.addModel(entry.getScreenName());
 				result.addAllStrategies(entry.getStrategies());
 				result.setReportDate(today);
 			}

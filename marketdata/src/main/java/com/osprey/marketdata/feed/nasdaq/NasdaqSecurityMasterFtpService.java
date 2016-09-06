@@ -128,12 +128,14 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 			logger.error("Failed to obtain Security Master Data.", e);
 			throw new MarketDataIOException(e);
 		} finally {
-			try {
-				ftp.logout();
-				ftp.disconnect();
-			} catch (IOException e) {
-				logger.error("Failed to disconnect.", e);
-				throw new MarketDataIOException(e);
+			if (ftp != null) {
+				try {
+					ftp.logout();
+					ftp.disconnect();
+				} catch (IOException e) {
+					logger.error("Failed to disconnect.", e);
+					throw new MarketDataIOException(e);
+				}
 			}
 		}
 

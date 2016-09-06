@@ -54,7 +54,7 @@ import com.osprey.marketdata.batch.tasklet.NoOpTasklet;
 import com.osprey.marketdata.batch.tasklet.PurgePreviousRunHotlistTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorShutdownTasklet;
 import com.osprey.marketdata.batch.tasklet.QuoteThrottleDisruptorStartupTasklet;
-import com.osprey.marketdata.batch.writer.HotShitDbItemWriter;
+import com.osprey.marketdata.batch.writer.HotItemDbItemWriter;
 import com.osprey.marketdata.batch.writer.QuoteContainerItemWriter;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
@@ -68,9 +68,9 @@ import com.osprey.marketdata.service.MarketDataLoadDateService;
 import com.osprey.marketdata.service.MarketScheduleService;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.HotListItem;
-import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.repository.IHotItemRepository;
 import com.osprey.screen.repository.IOspreyJSONObjectRepository;
-import com.osprey.screen.repository.jdbctemplate.HotShitJdbcRepository;
+import com.osprey.screen.repository.jdbctemplate.HotItemJdbcRepository;
 import com.osprey.screen.repository.jdbctemplate.OspreyJSONObjectJdbcRepository;
 import com.osprey.screen.service.BlackListService;
 import com.osprey.securitymaster.SecurityQuoteContainer;
@@ -194,8 +194,8 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public IHotShitRepository hotShitRepository() {
-		return new HotShitJdbcRepository(dataSource, om1);
+	public IHotItemRepository hotShitRepository() {
+		return new HotItemJdbcRepository(dataSource, om1);
 	}
 
 	@Bean
@@ -350,8 +350,8 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public HotShitDbItemWriter hotShitDbItemWriter() {
-		return new HotShitDbItemWriter(hotShitRepository());
+	public HotItemDbItemWriter hotShitDbItemWriter() {
+		return new HotItemDbItemWriter(hotShitRepository());
 	}
 
 	@Bean

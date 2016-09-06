@@ -22,7 +22,7 @@ import com.osprey.screen.ScreenPlanFactory;
 import com.osprey.screen.ScreenStrategyEntry;
 import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.criteria.IScreenCriteria;
-import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.repository.IHotItemRepository;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityEvent;
 import com.osprey.securitymaster.SecurityKey;
@@ -33,38 +33,37 @@ import com.osprey.securitymaster.constants.SecurityEventType;
 public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteContainer, SecurityQuoteContainer> {
 
 	private final static Logger logger = LogManager.getLogger(HistoricalModelProcessor.class);
-	
 
 	private HotShitScreenProvidor screenProvidor;
-	private IHotShitRepository repo;
+	private IHotItemRepository repo;
 
 	@Value("${model.hist.periods}")
 	private int NUMBER_OF_HIST_PERIODS;
-	
+
 	private static boolean HIST_ENABLED = true;
 
-	public HistoricalModelProcessor(HotShitScreenProvidor screenProvidor, IHotShitRepository repo) {
+	public HistoricalModelProcessor(HotShitScreenProvidor screenProvidor, IHotItemRepository repo) {
 		this.screenProvidor = screenProvidor;
 		this.repo = repo;
 	}
 
 	@Override
-	public SecurityQuoteContainer process(SecurityQuoteContainer item) throws Exception {
+	public SecurityQuoteContainer process(SecurityQuoteContainer sqc) throws Exception {
 
-		logger.info("Performing Historical Model runs on {} ", () -> item.getKey().getSymbol());
+		logger.info("Performing Historical Model runs on {} ", () -> sqc.getKey().getSymbol());
 
-		if (!HIST_ENABLED || item.getHistoricalQuotes().isEmpty()) {
-			return item;
+		if (!HIST_ENABLED || sqc.getHistoricalQuotes().isEmpty()) {
+			return sqc;
 		}
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>(2);
-		securities.add(item);
+		securities.add(sqc);
 
 		// Copy to use for re-setting the hist back to where it was.
-		List<HistoricalQuote> origHistQuoteList = new ArrayList<>(item.getHistoricalQuotes());
+		List<HistoricalQuote> origHistQuoteList = new ArrayList<>(sqc.getHistoricalQuotes());
 
-		SecurityUpcomingEvents origUpcomingEvents = item.getUpcomingEvents();
-		item.setUpcomingEvents(new SecurityUpcomingEvents(origUpcomingEvents));
+		SecurityUpcomingEvents origUpcomingEvents = sqc.getUpcomingEvents();
+		sqc.setUpcomingEvents(new SecurityUpcomingEvents(origUpcomingEvents));
 
 		List<HotListItem> hotListItems = new ArrayList<>();
 		HotListItem hotListItem;
@@ -74,15 +73,15 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 		LocalDate firstDate = null;
 		LocalDate lastDate = null;
 
-		Iterator<HistoricalQuote> iterator = item.getHistoricalQuotes().iterator();
+		Iterator<HistoricalQuote> iterator = sqc.getHistoricalQuotes().iterator();
 		iterator.next();
 
 		ScreenPlanFactory screenPlanFactory = new ScreenPlanFactory(securities);
 		SimpleScreenExecutor executor;
 
-		item.sortEventsDescending();
+		sqc.sortEventsDescending();
 
-		for (int i = 0; i < NUMBER_OF_HIST_PERIODS && item.getHistoricalQuotes().size() > 1; ++i) {
+		for (int i = 0; i < NUMBER_OF_HIST_PERIODS && sqc.getHistoricalQuotes().size() > 1; ++i) {
 
 			// remove one day of OHLC data to calculate models back a day as if
 			// it's the current day.
@@ -94,7 +93,7 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 				firstDate = lastDate;
 			}
 
-			populateHistoricalEvents(item, histQuote.getHistoricalDate());
+			populateHistoricalEvents(sqc, histQuote.getHistoricalDate());
 
 			itemMap = new HashMap<>();
 
@@ -112,37 +111,45 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 					executor.setPlans(screenPlanFactory.build(criteria));
 					executor.execute();
 
-					if (executor.getResultSet().contains(item.getKey())) {
+					if (executor.getResultSet().contains(sqc.getKey())) {
 
-						if (!itemMap.containsKey(item.getKey())) {
-							hotListItem = new HotListItem(item.getKey());
+						if (!itemMap.containsKey(sqc.getKey())) {
+							hotListItem = new HotListItem(sqc.getKey());
 							hotListItems.add(hotListItem);
 							hotListItem.setReportDate(Date.valueOf(lastDate));
-							hotListItem.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 7));
+							hotListItem.setRecentCount(repo.findCountBySymbolAndDays(sqc.getKey().getSymbol(), 10,
+									histQuote.getHistoricalDate()));
 
-							itemMap.put(item.getKey(), hotListItem);
+							itemMap.put(sqc.getKey(), hotListItem);
 						}
-						hotListItem = itemMap.get(item.getKey());
-						hotListItem.addScreen(entry.getScreenName());
+						hotListItem = itemMap.get(sqc.getKey());
+						hotListItem.addModel(entry.getScreenName());
 						hotListItem.addAllStrategies(entry.getStrategies());
 					}
 
 				} catch (InsufficientHistoryException e) {
 					logger.debug("Insufficient history to perform {} on {}",
-							new Object[] { entry.getScreenName(), item.getKey().getSymbol() });
+							new Object[] { entry.getScreenName(), sqc.getKey().getSymbol() });
 				}
+			}
+
+			Map<String, Integer> modelStatMap;
+			for (HotListItem item : itemMap.values()) {
+				modelStatMap = repo.findCountForModelBySymbolAndDays(sqc.getKey().getSymbol(), 10,
+						histQuote.getHistoricalDate());
+				item.addModelCounts(modelStatMap);
 			}
 
 		}
 
 		if (lastDate != null) {
-			repo.deleteAndPersist(item.getKey().getSymbol(), lastDate, firstDate, hotListItems);
+			repo.deleteAndPersist(sqc.getKey().getSymbol(), lastDate, firstDate, hotListItems);
 		}
 
-		item.setHistoricalQuotes(origHistQuoteList);
-		item.setUpcomingEvents(origUpcomingEvents);
+		sqc.setHistoricalQuotes(origHistQuoteList);
+		sqc.setUpcomingEvents(origUpcomingEvents);
 
-		return item;
+		return sqc;
 	}
 
 	private void populateHistoricalEvents(SecurityQuoteContainer item, LocalDate historicalDate) {

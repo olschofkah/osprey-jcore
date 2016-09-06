@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.util.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
@@ -23,6 +25,7 @@ import com.osprey.securitymaster.secondary.HistoricalGainQuote;
 import com.osprey.securitymaster.secondary.HistoricalLossQuote;
 
 public final class OspreyQuantMath {
+	final static Logger logger = LogManager.getLogger(OspreyQuantMath.class);
 
 	private static final int MOVING_AVERAGE_MAGIC_NUMBER = OspreyConstants.MARKET_DAYS_IN_YEAR / 2;
 
@@ -496,6 +499,17 @@ public final class OspreyQuantMath {
 		double dailyReturn;
 		double price;
 		double previousPrice = prices.get(0).getAdjClose();
+
+		if (previousPrice == 0.0) {
+			logger.error(
+					"Error calculating volatility for {} due to a zero quote. Default to previous quote | period {} | quoltes {}",
+					new Object[] { prices.get(0).getKey().getSymbol(), period, prices });
+			previousPrice = prices.get(1).getAdjClose();
+			if (previousPrice == 0.0) {
+				throw new InsufficientHistoryException();
+			}
+		}
+		
 		double averageDailyReturn = 0;
 
 		List<Double> dailyReturns = new ArrayList<>(period);

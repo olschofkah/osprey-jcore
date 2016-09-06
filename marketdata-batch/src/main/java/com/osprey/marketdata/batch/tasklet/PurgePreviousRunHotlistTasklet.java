@@ -9,15 +9,15 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
-import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.repository.IHotItemRepository;
 
 public class PurgePreviousRunHotlistTasklet implements Tasklet {
 
 	private final static Logger logger = LogManager.getLogger(PurgePreviousRunHotlistTasklet.class);
 	
-	private IHotShitRepository repo;
+	private IHotItemRepository repo;
 	
-	public PurgePreviousRunHotlistTasklet(IHotShitRepository repo){
+	public PurgePreviousRunHotlistTasklet(IHotItemRepository repo){
 		this.repo=repo;
 	}
 
@@ -27,7 +27,7 @@ public class PurgePreviousRunHotlistTasklet implements Tasklet {
 		
 		logger.info("Removing existing hotlist items for {}.", () -> today);
 		
-		repo.deleteHotShitForDate(today);
+		repo.deleteForDate(today);
 		
 		return RepeatStatus.FINISHED;
 	}

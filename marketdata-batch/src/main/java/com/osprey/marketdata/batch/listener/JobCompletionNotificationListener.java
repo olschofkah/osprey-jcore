@@ -16,16 +16,17 @@ import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.screen.HotListItem;
-import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.ModelSymbolStatistic;
+import com.osprey.screen.repository.IHotItemRepository;
 
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
 	private final static Logger logger = LogManager.getLogger(JobCompletionNotificationListener.class);
 
-	private IHotShitRepository repo;
+	private IHotItemRepository repo;
 	private SlackClient slack;
 
-	public JobCompletionNotificationListener(IHotShitRepository repo, SlackClient slack) {
+	public JobCompletionNotificationListener(IHotItemRepository repo, SlackClient slack) {
 		this.repo = repo;
 		this.slack = slack;
 	}
@@ -44,11 +45,11 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 
 			Map<String, List<String>> reportMap = new HashMap<>();
 			for (HotListItem hotItem : hotItems) {
-				for (String string : hotItem.getNamedScreenSets()) {
-					if (!reportMap.containsKey(string)) {
-						reportMap.put(string, new ArrayList<>());
+				for (ModelSymbolStatistic model : hotItem.getModels()) {
+					if (!reportMap.containsKey(model.getModelName())) {
+						reportMap.put(model.getModelName(), new ArrayList<>());
 					}
-					reportMap.get(string).add(hotItem.getKey().getSymbol());
+					reportMap.get(model.getModelName()).add(hotItem.getKey().getSymbol());
 				}
 			}
 
@@ -85,7 +86,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 			slack.postMessage("Well fuck, that didn't work...  What would you like me to do?");
 		}
 
-		// fugly but works ...
+		// ugly but works ...
 		System.exit(0);
 	}
 }

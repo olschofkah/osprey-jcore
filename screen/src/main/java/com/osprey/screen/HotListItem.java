@@ -3,6 +3,7 @@ package com.osprey.screen;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -16,7 +17,7 @@ public class HotListItem {
 	private Date reportDate;
 	private int recentCount;
 	private List<OptionStrategy> strategies = new ArrayList<>();
-	private List<String> namedScreenSets = new ArrayList<>();
+	private List<ModelSymbolStatistic> models = new ArrayList<>();
 
 	public HotListItem() {
 		// for ObjectMapping Only
@@ -26,8 +27,8 @@ public class HotListItem {
 		this.key = s;
 	}
 
-	public void addScreen(String screen) {
-		getNamedScreenSets().add(screen);
+	public void addModel(String model) {
+		models.add(new ModelSymbolStatistic(0, model));
 	}
 
 	public void addStrategy(OptionStrategy os) {
@@ -42,16 +43,16 @@ public class HotListItem {
 		this.strategies = strategies;
 	}
 
-	public List<String> getNamedScreenSets() {
-		return namedScreenSets;
+	public List<ModelSymbolStatistic> getModels() {
+		return models;
 	}
 
-	public void setNamedScreenSets(List<String> namedScreenSets) {
-		this.namedScreenSets = namedScreenSets;
+	public void setModels(List<ModelSymbolStatistic> models) {
+		this.models = models;
 	}
 
-	public void addAllScreens(List<String> screens) {
-		getNamedScreenSets().addAll(screens);
+	public void addAllScreens(List<ModelSymbolStatistic> screens) {
+		getModels().addAll(screens);
 	}
 
 	public void addAllStrategies(List<OptionStrategy> oss) {
@@ -71,11 +72,11 @@ public class HotListItem {
 	}
 
 	public Date getReportDate() {
-		return reportDate;
+		return (Date) reportDate.clone();
 	}
 
 	public void setReportDate(Date reportDate) {
-		this.reportDate = reportDate;
+		this.reportDate = (Date) reportDate.clone();
 	}
 
 	public int getRecentCount() {
@@ -84,5 +85,13 @@ public class HotListItem {
 
 	public void setRecentCount(int recentCount) {
 		this.recentCount = recentCount;
+	}
+
+	public void addModelCounts(Map<String, Integer> modelStatMap) {
+		for (ModelSymbolStatistic stat : models) {
+			if (modelStatMap.containsKey(stat.getModelName())) {
+				stat.setRecentOccurrence(stat.getRecentOccurrence() + modelStatMap.get(stat.getModelName()));
+			}
+		}
 	}
 }

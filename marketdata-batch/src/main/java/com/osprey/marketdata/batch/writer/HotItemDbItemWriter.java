@@ -2,21 +2,22 @@ package com.osprey.marketdata.batch.writer;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.batch.item.ItemWriter;
 
 import com.osprey.screen.HotListItem;
-import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.repository.IHotItemRepository;
 
-public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
+public class HotItemDbItemWriter implements ItemWriter<HotListItem> {
 
-	private final static Logger logger = LogManager.getLogger(HotShitDbItemWriter.class);
+	private final static Logger logger = LogManager.getLogger(HotItemDbItemWriter.class);
 
-	private IHotShitRepository repo;
+	private IHotItemRepository repo;
 
-	public HotShitDbItemWriter(IHotShitRepository repo) {
+	public HotItemDbItemWriter(IHotItemRepository repo) {
 		this.repo = repo;
 	}
 
@@ -33,7 +34,9 @@ public class HotShitDbItemWriter implements ItemWriter<HotListItem> {
 		LocalDate lDate = itemZero.getReportDate().toLocalDate();
 
 		for (HotListItem item : items) {
-			item.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 7));
+			item.setRecentCount(repo.findCountBySymbolAndDays(item.getKey().getSymbol(), 10, lDate));
+			Map<String, Integer> modelStatMap = repo.findCountForModelBySymbolAndDays(item.getKey().getSymbol(), 10, lDate);
+			item.addModelCounts(modelStatMap);
 		}
 
 		repo.deleteAndPersist(itemZero.getKey().getSymbol(), lDate, lDate, items);

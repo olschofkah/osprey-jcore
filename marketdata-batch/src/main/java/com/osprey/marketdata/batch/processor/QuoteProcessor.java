@@ -86,17 +86,22 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 
 				SecurityQuote quote = sqc.getSecurityQuote();
 
-				HistoricalQuote hq = new HistoricalQuote(sqc.getKey().getSymbol(), today);
-				hq.setAdjClose(quote.getLast());
-				hq.setClose(quote.getLast());
-				hq.setHigh(quote.getHigh());
-				hq.setLow(quote.getLow());
-				hq.setOpen(quote.getOpen());
-				hq.setTimestamp(ZonedDateTime.now());
-				hq.setVolume(quote.getVolume());
+				if (quote.getLast() != 0.0) {
+					
+					// Only simulate the close if the last quote is 'reasonable'.
+					
+					HistoricalQuote hq = new HistoricalQuote(sqc.getKey().getSymbol(), today);
+					hq.setAdjClose(quote.getLast());
+					hq.setClose(quote.getLast());
+					hq.setHigh(quote.getHigh());
+					hq.setLow(quote.getLow());
+					hq.setOpen(quote.getOpen());
+					hq.setTimestamp(ZonedDateTime.now());
+					hq.setVolume(quote.getVolume());
 
-				// insert the generated hist quote as the first quote.
-				sqc.getHistoricalQuotes().add(0, hq);
+					// insert the generated hist quote as the first quote.
+					sqc.getHistoricalQuotes().add(0, hq);
+				}
 			}
 		}
 

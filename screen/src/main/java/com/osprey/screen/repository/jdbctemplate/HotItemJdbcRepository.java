@@ -3,38 +3,45 @@ package com.osprey.screen.repository.jdbctemplate;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.postgresql.util.PGobject;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.osprey.math.OspreyJavaMath;
 import com.osprey.screen.HotListItem;
-import com.osprey.screen.repository.IHotShitRepository;
+import com.osprey.screen.ModelSymbolStatistic;
+import com.osprey.screen.repository.IHotItemRepository;
 
 // @Repository
-public class HotShitJdbcRepository implements IHotShitRepository {
+public class HotItemJdbcRepository implements IHotItemRepository {
 
-	final static Logger logger = LogManager.getLogger(HotShitJdbcRepository.class);
+	final static Logger logger = LogManager.getLogger(HotItemJdbcRepository.class);
 
 	private JdbcTemplate jdbc;
 	private ObjectMapper om;
 
-	public HotShitJdbcRepository(DataSource ds, ObjectMapper om) {
+	public HotItemJdbcRepository(DataSource ds, ObjectMapper om) {
 		jdbc = new JdbcTemplate(ds);
 		this.om = om;
 	}
@@ -60,28 +67,56 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 	}
 
 	@Override
-	public void deleteHotShitForDate(LocalDate dt) {
+	public void deleteForDate(LocalDate dt) {
 		jdbc.update("delete from tha_hot_shit where date = ? ", Date.valueOf(dt));
 	}
 
 	@Override
-	public void deleteHotShitForDatesAndSymbol(String symbol, LocalDate earliestDate, LocalDate latestDate) {
+	public void deleteForDatesAndSymbol(String symbol, LocalDate earliestDate, LocalDate latestDate) {
 		jdbc.update("delete from tha_hot_shit where symbol = ? and date >= ? and date <= ?", symbol,
 				Date.valueOf(earliestDate), Date.valueOf(latestDate));
 	}
 
 	@Override
-	public int findCountBySymbolAndDays(String symbol, int days) {
-		Date sqlDate = Date.valueOf(LocalDate.now().minusDays(days));
+	public int findCountBySymbolAndDays(String symbol, int days, LocalDate startDate) {
+		Date sqlDate = Date.valueOf(startDate.minusDays(days));
 
-		int count = jdbc.queryForObject("select count(1) from tha_hot_shit where symbol = ? and date >= ?",
-				new Object[] { symbol, sqlDate }, Integer.class);
+		int count = jdbc.queryForObject("select count(1) from tha_hot_shit where symbol = ? and date >= ? and date < ?",
+				new Object[] { symbol, sqlDate, Date.valueOf(startDate) }, Integer.class);
 
 		return count;
 	}
 
 	@Override
-	public void persistThaHotShit(List<? extends HotListItem> items) {
+	public Map<String, Integer> findCountForModelBySymbolAndDays(String symbol, int days, LocalDate startDate) {
+		Date sqlDate = Date.valueOf(startDate.minusDays(days));
+
+		List<ModelSymbolStatistic> tmpResults = jdbc
+				.query("select payload->'models'->0->'modelName' as model, count(1) "
+						+ " from tha_hot_shit where symbol = ? and date >= ? and date < ?"
+						+ " group by payload->'models'->0->'modelName'", new RowMapper<ModelSymbolStatistic>() {
+
+							@Override
+							public ModelSymbolStatistic mapRow(ResultSet rs, int rowNum) throws SQLException {
+								String modelName = rs.getString("model");
+								modelName = StringUtils.stripStart(modelName, "\"");
+								modelName = StringUtils.stripEnd(modelName, "\"");
+								
+								return new ModelSymbolStatistic(rs.getInt("count"), modelName);
+							}
+
+						}, symbol, sqlDate, Date.valueOf(startDate));
+
+		Map<String, Integer> results = new HashMap<>(OspreyJavaMath.calcMapInitialSize(tmpResults.size()));
+		for (ModelSymbolStatistic stat : tmpResults) {
+			results.put(stat.getModelName(), stat.getRecentOccurrence());
+		}
+
+		return results;
+	}
+
+	@Override
+	public void persist(List<? extends HotListItem> items) {
 
 		final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
@@ -122,9 +157,9 @@ public class HotShitJdbcRepository implements IHotShitRepository {
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public void deleteAndPersist(String symbol, LocalDate earliestDate, LocalDate latestDate,
 			List<? extends HotListItem> lst) {
-		deleteHotShitForDatesAndSymbol(symbol, earliestDate, latestDate);
+		deleteForDatesAndSymbol(symbol, earliestDate, latestDate);
 		if (!lst.isEmpty()) {
-			persistThaHotShit(lst);
+			persist(lst);
 		}
 	}
 
