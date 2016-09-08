@@ -18,6 +18,7 @@ import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooHistoricalUrlBuilder;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteUrlBuilder;
+import com.osprey.marketdata.feed.ychart.YChartHistoricalEventsClient;
 import com.osprey.marketdata.service.MarketDataLoadDateService;
 import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
@@ -53,6 +54,10 @@ public class MarketDataTestConfiguration {
 	@Bean
 	public YahooQuoteClient yahooQuoteClient() {
 		return new YahooQuoteClient(restTemplate());
+	}
+	
+	@Bean YChartHistoricalEventsClient ychartHistoricalEventsClient(){
+		return new YChartHistoricalEventsClient(restTemplate());
 	}
 
 	@Bean

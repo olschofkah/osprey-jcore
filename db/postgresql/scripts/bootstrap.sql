@@ -188,8 +188,10 @@ CREATE TABLE "oc_security_next_events" (
 CREATE TABLE "oc_security_event" (
 	"symbol" VARCHAR(10) NOT NULL,
 	"date" DATE NOT NULL,
+	"time" TIME NULL,
 	"event_type_cd" char(2) NOT NULL,
 	"amt" float8 NOT NULL,
+	"desc" VARCHAR(50),
 	"timestamp" timestamptz NOT NULL,
 	CONSTRAINT oc_security_event_pk PRIMARY KEY ("symbol","date","event_type_cd")
 ) WITH (

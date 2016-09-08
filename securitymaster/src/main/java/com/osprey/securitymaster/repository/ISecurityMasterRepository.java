@@ -44,4 +44,6 @@ public interface ISecurityMasterRepository {
 
 	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key, LocalDate minDate, LocalDate maxDate);
 
+	void persistEventsAndFundamentals(SecurityQuoteContainer sqc);
+
 }

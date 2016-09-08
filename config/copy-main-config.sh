@@ -2,6 +2,7 @@
 
 # Boot Projects
 cp ./main/* ../marketdata-batch/src/main/resources/
+cp ./main/* ../marketdata-events-batch/src/main/resources/
 cp ./main/* ../marketdata-rest/src/main/resources/
 
 # Libs

@@ -1,6 +1,7 @@
 package com.osprey.securitymaster;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,18 +13,22 @@ public class SecurityEvent {
 
 	private final SecurityKey key;
 	private final LocalDate date;
+	private final LocalTime time;
 	private final SecurityEventType event;
 
 	private final double amount;
+	private final String description;
 
 	private final ZonedDateTime timestamp;
 
-	public SecurityEvent(SecurityKey key, LocalDate date, SecurityEventType event, double amount,
-			ZonedDateTime timestamp) {
+	public SecurityEvent(SecurityKey key, LocalDate date, LocalTime time, SecurityEventType event, double amount,
+			String description, ZonedDateTime timestamp) {
 		this.key = key;
 		this.date = date;
+		this.time = time;
 		this.event = event;
 		this.amount = amount;
+		this.description = description;
 		this.timestamp = timestamp;
 	}
 
@@ -83,5 +88,13 @@ public class SecurityEvent {
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public LocalTime getTime() {
+		return time;
 	}
 }

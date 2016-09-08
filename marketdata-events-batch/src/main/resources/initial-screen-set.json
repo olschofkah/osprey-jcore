@@ -1,0 +1,19 @@
+{
+	"screenName": "initialSecurityMasterScreenSet",
+	"screenCriteria": [
+		{
+			"criteriaBucket": {
+				"type": "SYMBOL",
+				"symbols": [],
+				"contains": false
+			}
+		},
+		{
+			"criteriaBucket": {
+				"type": "PRICE",
+				"price": 2.5,
+				"relationalOperator": "_GT"
+			}
+		}
+	]
+}

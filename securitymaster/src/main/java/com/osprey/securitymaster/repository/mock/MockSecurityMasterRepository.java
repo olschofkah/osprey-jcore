@@ -101,4 +101,10 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 		return null;
 	}
 
+	@Override
+	public void persistEventsAndFundamentals(SecurityQuoteContainer sqc) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

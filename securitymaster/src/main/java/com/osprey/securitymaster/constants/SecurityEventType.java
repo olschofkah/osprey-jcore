@@ -1,7 +1,13 @@
 package com.osprey.securitymaster.constants;
 
 public enum SecurityEventType {
-	EARNINGS_EST("EE"), EARNINGS_ACT("EA"), DIV("DV"), EX_DIV("ED"), REVENUE("RV");
+	EARNINGS_EST("EE"),
+	EARNINGS_ACT("EA"),
+	DIV("DV"),
+	EX_DIV("ED"),
+	REVENUE("RV"),
+	CORPORATE_ACTION("CA"),
+	MISC("MI");
 
 	private String code;
 

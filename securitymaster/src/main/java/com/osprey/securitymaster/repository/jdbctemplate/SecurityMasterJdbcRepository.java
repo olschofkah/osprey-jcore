@@ -4,7 +4,9 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -80,11 +82,11 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	private static final String DELETE_OC_SECURITY_EVENT = "delete from oc_security_event where symbol = ? and date >= ?";
 	//private static final String EXISTS_OC_SECURITY_EVENT = "select exists (select 1 from oc_security_event where symbol = ? and event_type_cd = ? and date = ? )";
 	private static final String INSERT_OC_SECURITY_EVENT = " insert into oc_security_event "
-			+ " (symbol, date, event_type_cd, amt, timestamp) values (?, ?, ?, ?, clock_timestamp()) ";
-
+			+ " (symbol, date, time, event_type_cd, amt, description, timestamp) values (?, ?, ?, ?, ?, ?, clock_timestamp()) ";
+	private static final String SELECT_OC_SECURITY_EVENT = "select symbol, date, time, event_type_cd, amt, description, timestamp from oc_security_event where symbol = ?";
+	
 	private static final String SELECT_CLOSE = "select close from oc_security_ohlc_hist where symbol = ? and date = ?";
 
-	private static final String SELECT_OC_SECURITY_EVENT = "select symbol, date, event_type_cd, amt, timestamp from oc_security_event where symbol = ?";
 	private static final String EXISTS_OC_FUNDAMENTAL = "select exists (select 1 from oc_security_fundamental where symbol = ? and date = ?)";
 	private static final String INSERT_OC_FUNDAMENTAL = "insert into oc_security_fundamental ( " +
 			" symbol , " +
@@ -398,11 +400,14 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 
 			public SecurityEvent mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Timestamp timestamp = rs.getTimestamp("timestamp");
+				Time time = rs.getTime("time");
 				return new SecurityEvent(
 						new SecurityKey(rs.getString("symbol"), null),
 						rs.getDate("date").toLocalDate(),
+						time == null ? null : time.toLocalTime(),
 						SecurityEventType.fromCode(rs.getString("event_type_cd")),
 						rs.getDouble("amt"),
+						rs.getString("description"),
 						OspreyUtils.getZonedDateTimeFromEpoch(timestamp.getTime())
 					);
 
@@ -414,7 +419,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	public void persist(FundamentalQuote fq) {
 
 		boolean exists = jdbc.queryForObject(EXISTS_OC_FUNDAMENTAL,
-				new Object[] { fq.getKey().getSymbol(), Date.valueOf(LocalDate.now()) }, Boolean.class);
+				new Object[] { fq.getKey().getSymbol(), Date.valueOf(fq.getDate()) }, Boolean.class);
 
 		if (exists) {
 			// update
@@ -684,7 +689,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 		persist(sqc.getUpcomingEvents());
 
 		if (sqc.getEvents() != null && !sqc.getEvents().isEmpty()) {
-			deleteEvents(sqc.getEvents());
+			deleteEvents(sqc.getKey());
 			persistEvents(sqc.getEvents());
 		}
 
@@ -693,21 +698,20 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 
 	}
 
-	public void deleteEvents(List<SecurityEvent> events) {
+	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
+	public void persistEventsAndFundamentals(SecurityQuoteContainer sqc) {
 
-		if (events != null) {
-			
-			LocalDate dt = null;
-			for (SecurityEvent event : events) {
-				if (dt == null || dt.isAfter(event.getDate())) {
-					dt = event.getDate();
-				}
-			}
+		persist(sqc.getFundamentalQuote());
 
-			if (dt != null) {
-				jdbc.update(DELETE_OC_SECURITY_EVENT, events.get(0).getKey().getSymbol(), Date.valueOf(dt));
-			}
+		if (sqc.getEvents() != null && !sqc.getEvents().isEmpty()) {
+			deleteEvents(sqc.getKey());
+			persistEvents(sqc.getEvents());
 		}
+
+	}
+
+	public void deleteEvents(SecurityKey key) {
+		jdbc.update(DELETE_OC_SECURITY_EVENT, key.getSymbol(), Date.valueOf(LocalDate.now()));
 	}
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
@@ -756,8 +760,16 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					SecurityEvent se = events.get(i);
 					ps.setString(1, se.getKey().getSymbol());
 					ps.setDate(2, Date.valueOf(se.getDate()));
-					ps.setString(3, se.getEvent().getCode());
-					ps.setDouble(4, se.getAmount());
+					
+					if (se.getTime() == null) {
+						ps.setNull(3, Types.TIME);
+					} else {
+						ps.setTime(3, Time.valueOf(se.getTime()));
+					}
+					
+					ps.setString(4, se.getEvent().getCode());
+					ps.setDouble(5, se.getAmount());
+					ps.setString(6, se.getDescription());
 				}
 			});
 		}

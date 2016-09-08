@@ -460,16 +460,16 @@ public class YahooQuoteResultMapper {
 
 		for (Quarterly quarterly : earnings.getEarningsChart().getQuarterly()) {
 			events.add(
-					new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), SecurityEventType.EARNINGS_ACT,
-							quarterly.getActual() == null ? 0.0 : quarterly.getActual().getRaw(), now));
+					new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), null, SecurityEventType.EARNINGS_ACT,
+							quarterly.getActual() == null ? 0.0 : quarterly.getActual().getRaw(), "", now));
 			events.add(
-					new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), SecurityEventType.EARNINGS_EST,
-							quarterly.getEstimate() == null ? 0.0 : quarterly.getEstimate().getRaw(), now));
+					new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), null, SecurityEventType.EARNINGS_EST,
+							quarterly.getEstimate() == null ? 0.0 : quarterly.getEstimate().getRaw(), "", now));
 		}
 
 		for (Quarterly_ quarterly : earnings.getFinancialsChart().getQuarterly()) {
-			events.add(new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), SecurityEventType.REVENUE,
-					quarterly.getRevenue() == null ? 0.0 : quarterly.getRevenue().getRaw(), now));
+			events.add(new SecurityEvent(sqc.getKey(), parseEventDate(quarterly.getDate()), null, SecurityEventType.REVENUE,
+					quarterly.getRevenue() == null ? 0.0 : quarterly.getRevenue().getRaw(), "", now));
 		}
 
 		if (sqc.getEvents() != null) {
