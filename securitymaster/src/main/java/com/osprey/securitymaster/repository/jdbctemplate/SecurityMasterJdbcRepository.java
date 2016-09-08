@@ -744,35 +744,29 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
 	public void persistEvents(final List<SecurityEvent> events) {
 
-		if (events != null) {
-			
-			if(events.size() != new HashSet<>(events).size()){
-				throw new RuntimeException("Unexpected Dupliate Events " + events);
+		jdbc.batchUpdate(INSERT_OC_SECURITY_EVENT, new BatchPreparedStatementSetter() {
+
+			public int getBatchSize() {
+				return events.size();
 			}
-			
-			jdbc.batchUpdate(INSERT_OC_SECURITY_EVENT, new BatchPreparedStatementSetter() {
 
-				public int getBatchSize() {
-					return events.size();
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				SecurityEvent se = events.get(i);
+				ps.setString(1, se.getKey().getSymbol());
+				ps.setDate(2, Date.valueOf(se.getDate()));
+
+				if (se.getTime() == null) {
+					ps.setNull(3, Types.TIME);
+				} else {
+					ps.setTime(3, Time.valueOf(se.getTime()));
 				}
 
-				public void setValues(PreparedStatement ps, int i) throws SQLException {
-					SecurityEvent se = events.get(i);
-					ps.setString(1, se.getKey().getSymbol());
-					ps.setDate(2, Date.valueOf(se.getDate()));
-					
-					if (se.getTime() == null) {
-						ps.setNull(3, Types.TIME);
-					} else {
-						ps.setTime(3, Time.valueOf(se.getTime()));
-					}
-					
-					ps.setString(4, se.getEvent().getCode());
-					ps.setDouble(5, se.getAmount());
-					ps.setString(6, se.getDescription());
-				}
-			});
-		}
+				ps.setString(4, se.getEvent().getCode());
+				ps.setDouble(5, se.getAmount());
+				ps.setString(6, se.getDescription());
+			}
+		});
+
 	}
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)
