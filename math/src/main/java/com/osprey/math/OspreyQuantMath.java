@@ -514,6 +514,7 @@ public final class OspreyQuantMath {
 		return sd.evaluate(dailyReturns)*Math.pow(252, 0.5);
 		
 	}
+	
 
 	public static double standardNormalDistribution(double x) {
 		double top = Math.exp(-0.5 * Math.pow(x, 2));

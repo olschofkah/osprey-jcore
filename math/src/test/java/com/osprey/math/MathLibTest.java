@@ -47,9 +47,11 @@ public class MathLibTest {
 
 		double vol = OspreyQuantMath.volatility(10, closingPrices);
 
-		Assert.assertEquals(2.1786312800, vol, DOUBLE_TEST_DELTA);
+		Assert.assertEquals(0.26512963388, vol, DOUBLE_TEST_DELTA);
 	}
 
+
+	
 	@Test
 	public void testBeta() throws Exception {
 
