@@ -478,13 +478,11 @@ public final class OspreyQuantMath {
 
 	/**
 	 * Annual Volatility Annual Volatility is defined as standard deviation
-	 * times sqrt(252) standard deviation = sqrt(sum(daily return (i) - average
-	 * daily return)^2/n)
+	 * times sqrt(252) standard deviation 
 	 * 
 	 * @param period
 	 * @param prices
-	 * @return volatility = sqrt(sum(daily return (i) - average daily
-	 *         return)^2/n)
+	 * @return volatility 
 	 */
 	public static double volatility(int period, List<HistoricalQuote> prices) {
 
@@ -497,44 +495,25 @@ public final class OspreyQuantMath {
 		}
 
 		double dailyReturn;
-		double price;
-		double previousPrice = prices.get(0).getAdjClose();
+		double previousPrice;
+		double price = prices.get(0).getAdjClose();
 
-		if (previousPrice == 0.0) {
-			logger.error(
-					"Error calculating volatility for {} due to a zero quote. Default to previous quote | period {} | quoltes {}",
-					new Object[] { prices.get(0).getKey().getSymbol(), period, prices });
-			previousPrice = prices.get(1).getAdjClose();
-			if (previousPrice == 0.0) {
-				throw new InsufficientHistoryException();
-			}
-		}
 		
-		double averageDailyReturn = 0;
-
-		List<Double> dailyReturns = new ArrayList<>(period);
+		double[] dailyReturns = new double[period-1];
 
 		for (int i = 1; i < period; ++i) {
-			price = prices.get(i).getAdjClose();
+			previousPrice = prices.get(i).getAdjClose();
 
 			dailyReturn = price / previousPrice - 1;
-			dailyReturns.add(dailyReturn);
+			dailyReturns[i - 1] = dailyReturn;
 
-			averageDailyReturn += dailyReturn;
-
-			previousPrice = price;
+			price = previousPrice;
 		}
 
-		averageDailyReturn /= (period - 1);
-
-		double volatility = 0;
-		for (double dr : dailyReturns) {
-			volatility += Math.pow(dr - averageDailyReturn, 2);
-		}
-
-		return Math.pow(volatility / (period - 2), 0.5) * Math.pow(period, 0.5);
+		return new StandardDeviation().evaluate(dailyReturns) * Math.sqrt(252);
 	}
-
+	
+	
 	public static double standardNormalDistribution(double x) {
 		double top = Math.exp(-0.5 * Math.pow(x, 2));
 		double bottom = Math.sqrt(2 * Math.PI);

@@ -44,7 +44,7 @@ public class LiveMarketDataCalcTest {
 		LocalDate start = end.minusYears(1).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "UWTI";
+		String symbol = "FNSR";
 
 		Security security = new Security(new SecurityKey(symbol, null));
 		security.setInstrumentType(InstrumentType.STOCK);
@@ -57,7 +57,8 @@ public class LiveMarketDataCalcTest {
 
 		double volatility = OspreyQuantMath.volatility(252, sqc.getHistoricalQuotes());
 
-		System.out.println(volatility);
+		System.out.println(volatility);		
+		
 	}
 
 	@Test
@@ -113,6 +114,8 @@ public class LiveMarketDataCalcTest {
 		System.out.println(OspreyQuantMath.rsiUsingWilders(14, 0, hist));
 		System.out.println(OspreyQuantMath.wildersMovingAverage(14, 0, hist));
 	}
+	
+
 	
 	@Test
 	public void earningsMovementCalc() throws Exception {
