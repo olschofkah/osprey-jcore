@@ -2,6 +2,8 @@ package com.osprey.math;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.Assert;
@@ -46,8 +48,8 @@ public class MathLibTest {
 		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
 
 		double vol = OspreyQuantMath.volatility(10, closingPrices);
-
-		Assert.assertEquals(0.26512963388, vol, DOUBLE_TEST_DELTA);
+		System.out.println(vol);
+		Assert.assertEquals(0.073598628, vol, DOUBLE_TEST_DELTA);
 	}
 
 
@@ -210,10 +212,6 @@ public class MathLibTest {
 		hs18.setAdjClose(37.5);
 		hs18.setClose(37.5);
 
-		HistoricalQuote hs19 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(8));
-		hs19.setAdjClose(38);
-		hs19.setClose(38);
-
 		HistoricalQuote hs20 = new HistoricalQuote(TEST_TICKER_1, now.minusDays(7));
 		hs20.setAdjClose(38.5);
 		hs20.setClose(38.5);
@@ -262,7 +260,6 @@ public class MathLibTest {
 		closingPrices.add(hs16);
 		closingPrices.add(hs17);
 		closingPrices.add(hs18);
-		closingPrices.add(hs19);
 		closingPrices.add(hs20);
 		closingPrices.add(hs21);
 		closingPrices.add(hs22);
@@ -270,6 +267,15 @@ public class MathLibTest {
 		closingPrices.add(hs24);
 		closingPrices.add(hs25);
 		closingPrices.add(hs26);
+		
+		Collections.sort(closingPrices, new Comparator<HistoricalQuote>(){
+
+			@Override
+			public int compare(HistoricalQuote o1, HistoricalQuote o2) {
+				return o2.getHistoricalDate().compareTo(o1.getHistoricalDate());
+			}
+			
+		});
 
 		return closingPrices;
 	}

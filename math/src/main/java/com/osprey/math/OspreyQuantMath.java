@@ -499,23 +499,21 @@ public final class OspreyQuantMath {
 		double price = prices.get(0).getAdjClose();
 
 		
-		double[] dailyReturns = new double[prices.size()-1];
+		double[] dailyReturns = new double[period-1];
 
-		for (int i = 1; i < period-1; ++i) {
+		for (int i = 1; i < period; ++i) {
 			previousPrice = prices.get(i).getAdjClose();
 
 			dailyReturn = price / previousPrice - 1;
-			dailyReturns[i-1] = dailyReturn;
+			dailyReturns[i - 1] = dailyReturn;
 
 			price = previousPrice;
 		}
 
-		StandardDeviation sd = new StandardDeviation();
-		return sd.evaluate(dailyReturns)*Math.pow(252, 0.5);
-		
+		return new StandardDeviation().evaluate(dailyReturns) * Math.sqrt(252);
 	}
 	
-
+	
 	public static double standardNormalDistribution(double x) {
 		double top = Math.exp(-0.5 * Math.pow(x, 2));
 		double bottom = Math.sqrt(2 * Math.PI);
