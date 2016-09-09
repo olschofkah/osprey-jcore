@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.events.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.events.processor.EventsProcessor;
-import com.osprey.marketdata.batch.events.processor.lmax.ThrottleDisruptor;
 import com.osprey.marketdata.batch.events.reader.SecurityQuoteContainerItemReader;
 import com.osprey.marketdata.batch.events.tasklet.QuoteThrottleDisruptorShutdownTasklet;
 import com.osprey.marketdata.batch.events.tasklet.QuoteThrottleDisruptorStartupTasklet;
@@ -38,6 +37,7 @@ import com.osprey.marketdata.batch.events.writer.SecurityQuoteContainerItemWrite
 import com.osprey.marketdata.feed.exception.MarketDataIOException;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.marketdata.feed.ychart.YChartHistoricalEventsClient;
+import com.osprey.marketdata.throttle.ThrottleDisruptor;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.repository.ISecurityMasterRepository;
 import com.osprey.securitymaster.repository.jdbctemplate.SecurityMasterJdbcRepository;

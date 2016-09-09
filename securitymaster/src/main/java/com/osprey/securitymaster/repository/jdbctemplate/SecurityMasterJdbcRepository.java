@@ -8,7 +8,6 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -79,7 +78,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " symbol, timestamp, last, bid, ask, bid_size, ask_size, volume, open, close, high, low, data_currency, open_interest "
 			+ " from oc_security_quote sq where symbol = ? and timestamp = (select max(timestamp) from oc_security_quote isq where isq.symbol=sq.symbol) ";
 	
-	private static final String DELETE_OC_SECURITY_EVENT = "delete from oc_security_event where symbol = ? and date >= ?";
+	private static final String DELETE_OC_SECURITY_EVENT = "delete from oc_security_event where symbol = ?";
 	//private static final String EXISTS_OC_SECURITY_EVENT = "select exists (select 1 from oc_security_event where symbol = ? and event_type_cd = ? and date = ? )";
 	private static final String INSERT_OC_SECURITY_EVENT = " insert into oc_security_event "
 			+ " (symbol, date, time, event_type_cd, amt, description, timestamp) values (?, ?, ?, ?, ?, ?, clock_timestamp()) ";
@@ -687,12 +686,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 		persist(sqc.getFundamentalQuote());
 		persist(sqc.getSecurityQuote());
 		persist(sqc.getUpcomingEvents());
-
-		if (sqc.getEvents() != null && !sqc.getEvents().isEmpty()) {
-			deleteEvents(sqc.getKey());
-			persistEvents(sqc.getEvents());
-		}
-
+		
 		deleteHistoricals(sqc.getKey());
 		persistHistoricals(sqc.getHistoricalQuotes());
 
@@ -711,7 +705,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	}
 
 	public void deleteEvents(SecurityKey key) {
-		jdbc.update(DELETE_OC_SECURITY_EVENT, key.getSymbol(), Date.valueOf(LocalDate.now()));
+		jdbc.update(DELETE_OC_SECURITY_EVENT, key.getSymbol());
 	}
 
 	@Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.REQUIRED)

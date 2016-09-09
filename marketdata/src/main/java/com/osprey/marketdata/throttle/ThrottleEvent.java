@@ -1,4 +1,4 @@
-package com.osprey.marketdata.batch.events.processor.lmax;
+package com.osprey.marketdata.throttle;
 
 public class ThrottleEvent {
 

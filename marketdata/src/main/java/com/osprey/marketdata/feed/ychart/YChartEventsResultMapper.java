@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,9 +59,18 @@ public class YChartEventsResultMapper {
 				}
 
 				if (mappedType != null) {
+					LocalTime time = null;
+					try {
+						time = event.getLocalBeginTime() == null ? null
+								: LocalTime.parse(event.getLocalBeginTime(), TIME_FORMATTER);
+					} catch (DateTimeParseException e) {
+						logger.error("Failed to parse time {} for symbol {}",
+								new Object[] { event.getLocalBeginTime(), sqc.getKey().getSymbol() });
+					}
+					
 					SecurityEvent mappedEvent = new SecurityEvent(sqc.getKey(),
 							LocalDate.parse(event.getLocalBeginDate(), DATE_FORMATTER),
-							event.getLocalBeginTime() == null ? null : LocalTime.parse(event.getLocalBeginTime(), TIME_FORMATTER),
+							time,
 							mappedType,
 							0.0,
 							event.getEventDescription(),

@@ -125,19 +125,6 @@ CREATE TABLE "oc_security_fundamental" (
 );
 
 
-	private long buyInfoShares;
-	private long sellInfoShares;
-	private double sellPercentInsiderShares;
-	private double netPercentInsiderShares;
-	private long netInsiderSharesBuying;
-	private double netInstBuyingPercent;
-	private long totalInsiderShares;
-	private double insiderPercentHeld;
-	private double institutionsPercentHeld;
-	private double institutionsFloatPercentHeld;
-	private long institutionsCount;
-
-
 CREATE TABLE "oc_security_quote" (
 	"symbol" VARCHAR(10) NOT NULL,
 	"timestamp" timestamptz,
@@ -191,7 +178,7 @@ CREATE TABLE "oc_security_event" (
 	"time" TIME NULL,
 	"event_type_cd" char(2) NOT NULL,
 	"amt" float8 NOT NULL,
-	"desc" VARCHAR(50),
+	"desc" VARCHAR(255),
 	"timestamp" timestamptz NOT NULL,
 	CONSTRAINT oc_security_event_pk PRIMARY KEY ("symbol","date","event_type_cd")
 ) WITH (

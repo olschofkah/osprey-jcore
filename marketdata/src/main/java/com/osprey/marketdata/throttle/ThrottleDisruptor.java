@@ -1,4 +1,4 @@
-package com.osprey.marketdata.batch.events.processor.lmax;
+package com.osprey.marketdata.throttle;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;

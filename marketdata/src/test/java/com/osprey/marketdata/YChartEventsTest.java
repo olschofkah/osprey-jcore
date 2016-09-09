@@ -80,7 +80,7 @@ public class YChartEventsTest {
 
 	@Test
 	public void simpleTest() throws Exception {
-		SecurityKey securityKey = new SecurityKey("QQQ", null);
+		SecurityKey securityKey = new SecurityKey("RBS", null);
 		SecurityQuoteContainer sqc = new SecurityQuoteContainer(securityKey);
 		ychartClient.populateEvents(sqc);
 

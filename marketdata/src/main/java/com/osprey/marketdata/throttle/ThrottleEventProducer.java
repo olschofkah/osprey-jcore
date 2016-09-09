@@ -1,4 +1,4 @@
-package com.osprey.marketdata.batch.processor.lmax;
+package com.osprey.marketdata.throttle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -5,7 +5,7 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 
-import com.osprey.marketdata.batch.processor.lmax.ThrottleDisruptor;
+import com.osprey.marketdata.throttle.ThrottleDisruptor;
 
 public class QuoteThrottleDisruptorShutdownTasklet implements Tasklet {
 
