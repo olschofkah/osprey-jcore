@@ -498,8 +498,14 @@ public final class OspreyQuantMath {
 		double previousPrice;
 		double price = prices.get(0).getAdjClose();
 
-		
-		double[] dailyReturns = new double[period-1];
+		if (price == 0.0) {
+			price = prices.get(1).getAdjClose();
+			if (price == 0.0) {
+				throw new InsufficientHistoryException();
+			}
+		}
+
+		double[] dailyReturns = new double[period - 1];
 
 		for (int i = 1; i < period; ++i) {
 			previousPrice = prices.get(i).getAdjClose();
@@ -510,7 +516,7 @@ public final class OspreyQuantMath {
 			price = previousPrice;
 		}
 
-		return new StandardDeviation().evaluate(dailyReturns) * Math.sqrt(252);
+		return new StandardDeviation().evaluate(dailyReturns) * Math.sqrt(OspreyConstants.MARKET_DAYS_IN_YEAR);
 	}
 	
 	

@@ -73,9 +73,14 @@ public class SecurityMasterItemReader implements ItemReader<SecurityQuoteContain
 		SecurityQuoteContainer tmpContainer;
 		ConcurrentLinkedQueue<SecurityQuoteContainer> swapQueue = new ConcurrentLinkedQueue<>();
 
+		// TODO consider moving this to execute in a thread pool since it's doing data loads. 
 		for (Security security : externalList) {
 			tmpContainer = new SecurityQuoteContainer(security.getKey());
 			tmpContainer.setSecurity(security);
+			
+			// load events as they will not be fetched through normal process
+			tmpContainer.setEvents(repo.findSecurityEvents(security.getKey()));
+			
 			swapQueue.add(tmpContainer);
 		}
 		return swapQueue;

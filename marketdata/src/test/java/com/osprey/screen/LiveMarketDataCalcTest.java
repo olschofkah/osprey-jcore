@@ -17,6 +17,7 @@ import com.osprey.marketdata.MarketDataTestConfiguration;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
+import com.osprey.marketdata.feed.ychart.YChartHistoricalEventsClient;
 import com.osprey.math.EarningsCalculator;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.result.StochasticOscillatorCurve;
@@ -36,6 +37,8 @@ public class LiveMarketDataCalcTest {
 	private YahooQuoteClient yahooQuoteClient;
 	@Autowired
 	private YahooHistoricalQuoteClient yahooHistoricalQuoteClient;
+	@Autowired
+	private YChartHistoricalEventsClient yChartClient;
 
 	@Test
 	public void volatilityCalcTest1() throws Exception {
@@ -44,7 +47,7 @@ public class LiveMarketDataCalcTest {
 		LocalDate start = end.minusYears(1).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "FNSR";
+		String symbol = "NFLX";
 
 		Security security = new Security(new SecurityKey(symbol, null));
 		security.setInstrumentType(InstrumentType.STOCK);
@@ -124,7 +127,7 @@ public class LiveMarketDataCalcTest {
 		LocalDate start = end.minusYears(3).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "CIEN";
+		String symbol = "AAPL";
 
 		Security security = new Security(new SecurityKey(symbol, null));
 		security.setInstrumentType(InstrumentType.STOCK);
@@ -135,9 +138,12 @@ public class LiveMarketDataCalcTest {
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 		
+		yChartClient.populateEvents(sqc);
+		
 		sqc.sortEventsDescending();
 
 		System.out.println(EarningsCalculator.calcEarningsPercentMove(sqc, 10, 4));
+		System.out.println(EarningsCalculator.calcEarningsVolatility(sqc, 10, 4));
 	}
 
 	@Test

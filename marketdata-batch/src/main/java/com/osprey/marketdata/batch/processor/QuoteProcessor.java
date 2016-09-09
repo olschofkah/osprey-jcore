@@ -14,6 +14,7 @@ import com.osprey.marketdata.feed.IUltraSecurityQuoteService;
 import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.exception.MarketDataNotAvailableException;
 import com.osprey.marketdata.service.MarketScheduleService;
+import com.osprey.math.EarningsCalculator;
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.securitymaster.FundamentalQuote;
@@ -163,6 +164,16 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 			double _200Ema = OspreyQuantMath.ema(200, 0, sqc.getHistoricalQuotes());
 			fundamentalQuote.set_200DayEma(_200Ema);
 		} catch (InsufficientHistoryException e) { // eat it
+		}
+
+		double earningsMove = EarningsCalculator.calcEarningsPercentMove(sqc, 10, 4);
+		if (earningsMove > 0) {
+			fundamentalQuote.setEarningsAveragePercent(earningsMove);
+		}
+
+		double earningsVolatility = EarningsCalculator.calcEarningsVolatility(sqc, 10, 4);
+		if (earningsVolatility > 0) {
+			fundamentalQuote.setEarningsVolatility(earningsVolatility);
 		}
 
 	}
