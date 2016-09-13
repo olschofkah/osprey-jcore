@@ -1,33 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
+ 
+<!-- Don't forget to set system property
+-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector
+     to make all loggers asynchronous. -->
+ 
+<Configuration status="INFO">
 
-<Configuration status="debug">
-	<Properties>
-		<Property name="log-path">logs</Property>
-	</Properties>
-	<Appenders>
-		<RollingFile name="file-log" fileName="${log-path}/localhost.log"
-			filePattern="${log-path}/localhost-%d{yyyy-MM-dd}.log">
-			<PatternLayout>
-				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
-				</pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy interval="1"
-					modulate="true" />
-			</Policies>
-		</RollingFile>
-
-		<Console name="console" target="SYSTEM_OUT">
-			<PatternLayout
-				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
-		</Console>
-	</Appenders>
-	<Loggers>
-		<Logger name="com.osprey" level="debug" additivity="false">
-			<appender-ref ref="file-log" level="info" />
-		</Logger>
-		<Root level="debug" additivity="false">
-			<appender-ref ref="console" />
-		</Root>
-	</Loggers>
+  <Appenders>
+    <!-- Async Loggers will auto-flush in batches, so switch off immediateFlush. -->
+    <RandomAccessFile name="RandomAccessFile" fileName="async.log" immediateFlush="false" append="false">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+      </PatternLayout>
+    </RandomAccessFile>
+  </Appenders>
+  <Loggers>
+    <Root level="info" includeLocation="false">
+      <AppenderRef ref="RandomAccessFile"/>
+    </Root>
+  </Loggers>
 </Configuration>
