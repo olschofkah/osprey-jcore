@@ -621,14 +621,21 @@ public final class OspreyQuantMath {
 		return v;
 	}
 
-	/*
-	 * http://stockcharts.com/school/doku.php?id=chart_school:
-	 * technical_indicators:money_flow_index_mfi 1. Typical Price = (High + Low
-	 * + Close)/3 2. Raw Money Flow = Typical Price x Volume 3. Money Flow Ratio
-	 * = (14-period Positive Money Flow)/(14-period Negative Money Flow) 4.
-	 * Money Flow Index = 100 - 100/(1 + Money Flow Ratio)
+	/**
 	 * 
+	 * http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:money_flow_index_mfi
 	 * 
+	 * <pre>
+	 * 1. Typical Price = (High + Low + Close)/3
+	 * 2. Raw Money Flow = Typical Price x Volume
+	 * 3. Money Flow Ratio = (14-period Positive Money Flow)/(14-period Negative Money Flow)
+	 * 4. Money Flow Index = 100 - 100/(1 + Money Flow Ratio)
+	 * </pre>
+	 * 
+	 * @param p
+	 * @param offset
+	 * @param prices
+	 * @return
 	 */
 	public static double moneyFlowIndex(int p, int offset, List<HistoricalQuote> prices) {
 
@@ -640,29 +647,31 @@ public final class OspreyQuantMath {
 			throw new InsufficientHistoryException();
 		}
 
-		// TODO clean this up.
+		HistoricalQuote hq = prices.get(p + offset);
+		double previousTypicalPrice = (hq.getHigh() + hq.getLow() + hq.getClose()) / 3.0;
 
-		double aveGain = 0.0;
-		double aveLoss = 0.0;
-		for (int i = offset; i < p + offset; ++i) {
-			double changeTypicalPrice = 1 / 3
-					* (prices.get(i + 1).getClose() + prices.get(i + 1).getHigh() + prices.get(i + 1).getLow())
-					- 1 / 3 * (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
-			double changeRawMoneyFlow = 1 / 3 * prices.get(i + 1).getVolume()
-					* (prices.get(i + 1).getClose() + prices.get(i + 1).getHigh() + prices.get(i + 1).getLow())
-					- 1 / 3 * prices.get(i).getVolume()
-							* (prices.get(i).getClose() + prices.get(i).getHigh() + prices.get(i).getLow());
+		double rawMoneyFlow;
+		double typicalPrice;
 
-			if (changeTypicalPrice >= 0) {
-				aveGain += changeRawMoneyFlow;
+		double posFlow = 0.0;
+		double negFlow = 0.0;
+
+		for (int i = p - 1 + offset; i >= 0 + offset; --i) {
+			hq = prices.get(i);
+
+			typicalPrice = (hq.getHigh() + hq.getLow() + hq.getClose()) / 3.0;
+			rawMoneyFlow = typicalPrice * hq.getVolume();
+
+			if (typicalPrice > previousTypicalPrice) {
+				posFlow += rawMoneyFlow;
 			} else {
-				aveLoss += changeRawMoneyFlow * -1;
+				negFlow += rawMoneyFlow;
 			}
+
+			previousTypicalPrice = typicalPrice;
 		}
 
-		double moneyFlowRatio = (aveGain) / (aveLoss);
-		return 100.0 - 100.0 / (1.0 + moneyFlowRatio);
-
+		return negFlow == 0.0 ? 100 : (100.0 - 100.0 / (1.0 + posFlow / negFlow));
 	}
 
 	public static double beta(int period, List<HistoricalQuote> prices, List<HistoricalQuote> prices_bmk) {

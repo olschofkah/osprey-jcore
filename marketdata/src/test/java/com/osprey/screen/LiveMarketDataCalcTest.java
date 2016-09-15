@@ -209,5 +209,26 @@ public class LiveMarketDataCalcTest {
 			System.out.println("%K: " + pK[i] + " %D: " + pD[i] + " date: " + dates[i]);
 		}
 	}
+	
+	
+	@Test
+	public void mfiTest1() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(3).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "AAPL";
+		
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
+		
+		double moneyFlowIndex = OspreyQuantMath.moneyFlowIndex(14, 0, hist);
+		
+		System.out.println(moneyFlowIndex);
+		
+		Assert.assertTrue(moneyFlowIndex <= 100);
+		Assert.assertTrue(moneyFlowIndex >= 0);
+	}
 
 }
