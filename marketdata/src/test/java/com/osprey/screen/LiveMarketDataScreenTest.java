@@ -33,6 +33,8 @@ import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.MarketCapCriteria;
+import com.osprey.screen.criteria.MoneyFlowIndexLevelCriteria;
+import com.osprey.screen.criteria.MoneyFlowIndexLevelCrossCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceLevelCriteria;
@@ -657,4 +659,48 @@ public class LiveMarketDataScreenTest {
 		// TODO Add Assert
 	}
 
+	@Test
+	public void mfiScreenTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "AAPL";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		sqc.sortEventsDescending();
+
+		IScreenCriteria c1 = new MoneyFlowIndexLevelCriteria(14, 1, 50, RelationalOperator._GT);
+		IScreenCriteria c2 = new MoneyFlowIndexLevelCrossCriteria(14, 4, 50, CrossDirection.FROM_BELOW_TO_ABOVE);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+		criteria.add(c2);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
 }

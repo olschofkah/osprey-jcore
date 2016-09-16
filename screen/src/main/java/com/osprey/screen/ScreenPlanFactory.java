@@ -21,6 +21,8 @@ import com.osprey.screen.criteria.IndustryCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
+import com.osprey.screen.criteria.MoneyFlowIndexLevelCriteria;
+import com.osprey.screen.criteria.MoneyFlowIndexLevelCrossCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceLevelCriteria;
@@ -56,6 +58,8 @@ import com.osprey.screen.screens.IndustryScreen;
 import com.osprey.screen.screens.InstrumentTypeScreen;
 import com.osprey.screen.screens.MarketCapScreen;
 import com.osprey.screen.screens.MomentumScreen;
+import com.osprey.screen.screens.MoneyFlowIndexLevelCrossScreen;
+import com.osprey.screen.screens.MoneyFlowIndexLevelScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceCrossoverScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceDiverganceScreen;
 import com.osprey.screen.screens.MovingAverageConverganceDiverganceLevelScreen;
@@ -233,6 +237,10 @@ public class ScreenPlanFactory {
 			return new EarningsPercentMoveAverageScreen((EarningsPercentMoveAverageCriteria) criteria);
 		case EARNINGS_VOLATILITY:
 			return new EarningsVolatilityAverageScreen((EarningsVolatilityAverageCriteria) criteria);
+		case MFI:
+			return new MoneyFlowIndexLevelScreen((MoneyFlowIndexLevelCriteria) criteria);
+		case MFI_X:
+			return new MoneyFlowIndexLevelCrossScreen((MoneyFlowIndexLevelCrossCriteria) criteria);
 		default:
 			break;
 

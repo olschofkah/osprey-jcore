@@ -63,6 +63,8 @@ public enum ScreenType {
 	ADX, 
 	EMA_VS_PRICE,
 	ROTATION_INDICATOR, 
-	VOLUME_AVG_DELTA
+	VOLUME_AVG_DELTA,
+	MFI,
+	MFI_X;
 	
 }

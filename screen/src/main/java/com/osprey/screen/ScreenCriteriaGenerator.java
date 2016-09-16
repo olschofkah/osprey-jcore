@@ -20,6 +20,8 @@ import com.osprey.screen.criteria.IndustryCriteria;
 import com.osprey.screen.criteria.InstrumentTypeCriteria;
 import com.osprey.screen.criteria.MarketCapCriteria;
 import com.osprey.screen.criteria.MomentumCriteria;
+import com.osprey.screen.criteria.MoneyFlowIndexLevelCriteria;
+import com.osprey.screen.criteria.MoneyFlowIndexLevelCrossCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceCrossoverCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceLevelCriteria;
@@ -204,6 +206,12 @@ public class ScreenCriteriaGenerator {
 			break;
 		case EARNINGS_VOLATILITY:
 			result = objectMapper.convertValue(getCriteriaBucket(), EarningsVolatilityAverageCriteria.class);
+			break;
+		case MFI:
+			result = objectMapper.convertValue(getCriteriaBucket(), MoneyFlowIndexLevelCriteria.class);
+			break;
+		case MFI_X:
+			result = objectMapper.convertValue(getCriteriaBucket(), MoneyFlowIndexLevelCrossCriteria.class);
 			break;
 		default:
 			break;
