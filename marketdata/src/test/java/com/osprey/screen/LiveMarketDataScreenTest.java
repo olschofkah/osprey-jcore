@@ -728,7 +728,7 @@ public class LiveMarketDataScreenTest {
 
 		sqc.sortEventsDescending();
 
-		IScreenCriteria c1 = new BollingerBandCrossCriteria(20, 2.0, MovingAverageType.SMA, BollingerBand.UPPER, 5, CrossDirection.FROM_BELOW_TO_ABOVE);
+		IScreenCriteria c1 = new BollingerBandCrossCriteria(20, 2.0, MovingAverageType.SMA, BollingerBand.UPPER_BAND, 5, CrossDirection.FROM_BELOW_TO_ABOVE);
 		IScreenCriteria c2 = new BollingerBandLevelCriteria(20, 2.0, MovingAverageType.SMA, BollingerBand.MOVING_AVERAGE, 2, RelationalOperator._GT);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();

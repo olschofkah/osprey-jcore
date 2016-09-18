@@ -165,13 +165,13 @@ public class BollingerBandTimeSeries {
 	private double[] selectSeries(BollingerBand band) {
 		double[] s;
 		switch (band) {
-		case UPPER:
+		case UPPER_BAND:
 			s = upperBandSeries;
 			break;
 		case MOVING_AVERAGE:
 			s = lowerBandSeries;
 			break;
-		case LOWER:
+		case LOWER_BAND:
 			s = maSeries;
 			break;
 		default:

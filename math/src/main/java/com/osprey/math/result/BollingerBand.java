@@ -1,5 +1,5 @@
 package com.osprey.math.result;
 
 public enum BollingerBand {
-	UPPER, MOVING_AVERAGE, LOWER
+	UPPER_BAND, MOVING_AVERAGE, LOWER_BAND
 }
