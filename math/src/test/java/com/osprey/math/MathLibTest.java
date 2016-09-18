@@ -2,6 +2,7 @@ package com.osprey.math;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.osprey.math.result.BollingerBandTimeSeries;
+import com.osprey.math.result.MovingAverageType;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuote;
 import com.osprey.securitymaster.constants.OptionType;
@@ -65,19 +68,6 @@ public class MathLibTest {
 		Assert.assertEquals(0.0302842, beta, DOUBLE_TEST_DELTA);
 	}
 
-	@Test
-	public void testBollingerBands() throws Exception {
-
-		List<HistoricalQuote> closingPrices = generateHistoricalPrices();
-
-		double[] bands = OspreyQuantMath.bollingerBands(10, 0, closingPrices);
-
-		Assert.assertEquals(27.2, bands[1], DOUBLE_TEST_DELTA);
-		Assert.assertEquals(15.514545, bands[2], DOUBLE_TEST_DELTA);
-		Assert.assertEquals(38.8854549, bands[0], DOUBLE_TEST_DELTA);
-
-	}
-
 	/**
 	 * test case can be verified in
 	 * http://www.wolframalpha.com/input/?i=black+scholes&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22OptionName%22%7D+-%3E+%22VanillaEuropean%22&rawformassumption=%7B%22FP%22,+%22FinancialOption%22,+%22opttype%22%7D+-%3E+%22Call%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22strike%22%7D+-%3E%22$55%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22exptime%22%7D+-%3E%224+mo%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22underlying%22%7D+-%3E%22$56.25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22vol%22%7D+-%3E%2228+%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22div%22%7D+-%3E%220%25%22&rawformassumption=%7B%22F%22,+%22FinancialOption%22,+%22rf%22%7D+-%3E%222.85%25%22&rawformassumption=%7B%22MC%22,+%22%22%7D+-%3E+%7B%22Formula%22%7D&rawformassumption=%7B%22MC%22,%22%22%7D-%3E%7B%22Formula%22%7D
@@ -112,6 +102,23 @@ public class MathLibTest {
 		double ema = OspreyQuantMath.ema(p, 0, closingPrices);
 
 		Assert.assertEquals(475.50168, ema, DOUBLE_TEST_DELTA);
+	}
+
+	@Test
+	public void testBollingerBandCalc() throws Exception {
+
+		List<HistoricalQuote> closingPrices = generate252HistoricalPrices();
+		BollingerBandTimeSeries bollingerBands = OspreyQuantMath.bollingerBands(20, 2.0, 22, closingPrices, MovingAverageType.SMA);
+
+		Assert.assertEquals(490.5, ((double[]) bollingerBands.getRawDataMap().get(BollingerBandTimeSeries.MOVING_AVERAGE_KEY))[0],
+				DOUBLE_TEST_DELTA);
+		Assert.assertEquals(502.3321595661992,
+				((double[]) bollingerBands.getRawDataMap().get(BollingerBandTimeSeries.UPPER_BAND_KEY))[0],
+				DOUBLE_TEST_DELTA);
+		Assert.assertEquals(478.6678404338008,
+				((double[]) bollingerBands.getRawDataMap().get(BollingerBandTimeSeries.LOWER_BAND_KEY))[0],
+				DOUBLE_TEST_DELTA);
+
 	}
 
 	private List<HistoricalQuote> generate252HistoricalPrices() {
@@ -279,6 +286,8 @@ public class MathLibTest {
 
 		return closingPrices;
 	}
+	
+	
 
 	private List<HistoricalQuote> generateHistoricalPrices_bmk() {
 		LocalDate now = LocalDate.now();

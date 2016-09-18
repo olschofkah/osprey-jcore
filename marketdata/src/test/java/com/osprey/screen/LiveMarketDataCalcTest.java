@@ -20,7 +20,9 @@ import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.marketdata.feed.ychart.YChartHistoricalEventsClient;
 import com.osprey.math.EarningsCalculator;
 import com.osprey.math.OspreyQuantMath;
-import com.osprey.math.result.StochasticOscillatorCurve;
+import com.osprey.math.result.BollingerBandTimeSeries;
+import com.osprey.math.result.MovingAverageType;
+import com.osprey.math.result.StochasticOscillatorTimeSeries;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.Security;
 import com.osprey.securitymaster.SecurityKey;
@@ -199,11 +201,11 @@ public class LiveMarketDataCalcTest {
 		sqc.setHistoricalQuotes(hist);
 		sqc.setSecurity(security);
 
-		StochasticOscillatorCurve curves = OspreyQuantMath.stochasticOscillatorSmaCurves(14, 1, 3, 5, hist);
+		StochasticOscillatorTimeSeries curves = OspreyQuantMath.stochasticOscillatorSmaCurves(14, 1, 3, 5, hist);
 
-		double[] pK = (double[]) curves.getRawDataMap().get(StochasticOscillatorCurve.PERCENT_K_KEY);
-		double[] pD = (double[]) curves.getRawDataMap().get(StochasticOscillatorCurve.PERCENT_D_KEY);
-		LocalDate[] dates = (LocalDate[]) curves.getRawDataMap().get(StochasticOscillatorCurve.DATE_KEY);
+		double[] pK = (double[]) curves.getRawDataMap().get(StochasticOscillatorTimeSeries.PERCENT_K_KEY);
+		double[] pD = (double[]) curves.getRawDataMap().get(StochasticOscillatorTimeSeries.PERCENT_D_KEY);
+		LocalDate[] dates = (LocalDate[]) curves.getRawDataMap().get(StochasticOscillatorTimeSeries.DATE_KEY);
 
 		for (int i = 0; i < curves.getLength(); i++) {
 			System.out.println("%K: " + pK[i] + " %D: " + pD[i] + " date: " + dates[i]);
@@ -229,6 +231,25 @@ public class LiveMarketDataCalcTest {
 		
 		Assert.assertTrue(moneyFlowIndex <= 100);
 		Assert.assertTrue(moneyFlowIndex >= 0);
+	}
+	
+	@Test
+	public void testBollingerBand() throws Exception {
+		
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(3).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "AAPL";
+		
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
+		
+		BollingerBandTimeSeries bollingerBands = OspreyQuantMath.bollingerBands(20, 2.0, 22, hist, MovingAverageType.EMA);
+
+		System.out.println(((double[]) bollingerBands.getRawDataMap().get(BollingerBandTimeSeries.MOVING_AVERAGE_KEY))[0]);
+		System.out.println(((double[]) bollingerBands.getRawDataMap().get(BollingerBandTimeSeries.UPPER_BAND_KEY))[0]);
+		System.out.println(((double[]) bollingerBands.getRawDataMap().get(BollingerBandTimeSeries.LOWER_BAND_KEY))[0]);
 	}
 
 }

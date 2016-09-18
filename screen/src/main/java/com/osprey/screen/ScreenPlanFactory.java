@@ -7,6 +7,8 @@ import java.util.Set;
 import org.apache.commons.lang3.NotImplementedException;
 
 import com.osprey.screen.criteria.BetaCriteria;
+import com.osprey.screen.criteria.BollingerBandCrossCriteria;
+import com.osprey.screen.criteria.BollingerBandLevelCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
@@ -44,6 +46,8 @@ import com.osprey.screen.criteria.VolumeAverageDeltaCriteria;
 import com.osprey.screen.criteria.VolumeCriteria;
 import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.screens.BetaScreen;
+import com.osprey.screen.screens.BollingerBandCrossScreen;
+import com.osprey.screen.screens.BollingerBandLevelScreen;
 import com.osprey.screen.screens.DollarVolumeScreen;
 import com.osprey.screen.screens.EarningsPercentMoveAverageScreen;
 import com.osprey.screen.screens.EarningsScreen;
@@ -132,8 +136,10 @@ public class ScreenPlanFactory {
 			return new BetaScreen((BetaCriteria) criteria);
 		case BLOCK_TRADE_VOL:
 			return null;
-		case BOLLINGER_BAND:
-			return null;
+		case BOLLINGER_BAND_X:
+			return new BollingerBandCrossScreen((BollingerBandCrossCriteria) criteria);
+		case BOLLINGER_BAND_LEVEL:
+			return new BollingerBandLevelScreen((BollingerBandLevelCriteria) criteria);
 		case DEBT_TO_CAPITAL:
 			return null;
 		case DMI:

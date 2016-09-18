@@ -7,7 +7,7 @@ import java.util.Map;
 import com.osprey.math.OspreyJavaMath;
 import com.osprey.math.exception.InvalidPeriodException;
 
-public class StochasticOscillatorCurve {
+public class StochasticOscillatorTimeSeries {
 
 	public static final String PERCENT_K_KEY = "%K";
 	public static final String PERCENT_D_KEY = "%D";
@@ -19,7 +19,7 @@ public class StochasticOscillatorCurve {
 
 	private final int curveLength;
 
-	public StochasticOscillatorCurve(double[] cK, double[] cD, LocalDate[] cDate) {
+	public StochasticOscillatorTimeSeries(double[] cK, double[] cD, LocalDate[] cDate) {
 		this.curvePctK = cK;
 		this.curvePctD = cD;
 		this.curveDate = cDate;
@@ -87,7 +87,7 @@ public class StochasticOscillatorCurve {
 
 		int cmp;
 		int prevCmp = 0;
-		for (int i = startPeriod; i < stopPeriod; ++i) {
+		for (int i = stopPeriod - 1; i >= startPeriod; --i) {
 			cmp = curvePctD[i] > curvePctK[i] ? -1 : (curvePctD[i] < curvePctK[i] ? 1 : 0);
 
 			if (((isBelowToAbove && prevCmp == -1) || (!isBelowToAbove && prevCmp == 1)) && cmp != prevCmp) {

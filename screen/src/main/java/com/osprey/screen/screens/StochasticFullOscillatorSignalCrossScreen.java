@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InvalidPeriodException;
-import com.osprey.math.result.StochasticOscillatorCurve;
+import com.osprey.math.result.StochasticOscillatorTimeSeries;
 import com.osprey.screen.criteria.StochasticFullOscillatorSignalCrossCriteria;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
@@ -23,7 +23,7 @@ public class StochasticFullOscillatorSignalCrossScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		StochasticOscillatorCurve curves = OspreyQuantMath.stochasticOscillatorSmaCurves(criteria.getPeriodLookBack(),
+		StochasticOscillatorTimeSeries curves = OspreyQuantMath.stochasticOscillatorSmaCurves(criteria.getPeriodLookBack(),
 				criteria.getPeriodK(), criteria.getPeriodD(), criteria.getRange(), sqc.getHistoricalQuotes());
 
 		try {

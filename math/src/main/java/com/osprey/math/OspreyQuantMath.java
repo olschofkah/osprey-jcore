@@ -15,8 +15,10 @@ import org.apache.logging.log4j.Logger;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.exception.MathException;
+import com.osprey.math.result.BollingerBandTimeSeries;
+import com.osprey.math.result.MovingAverageType;
 import com.osprey.math.result.SMAPair;
-import com.osprey.math.result.StochasticOscillatorCurve;
+import com.osprey.math.result.StochasticOscillatorTimeSeries;
 import com.osprey.securitymaster.HistoricalQuote;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OptionType;
@@ -37,6 +39,16 @@ public final class OspreyQuantMath {
 	public static double wildersMovingAverage(int p, int historicalOffset, List<HistoricalQuote> prices) {
 		double alpha = 1.0 / p;
 		return smoothedMovingAverage(p, historicalOffset, alpha, prices);
+	}
+	
+	public static double[] emaSeries(int p, int historicalOffset, int length, double[] priceSeries) {
+		double alpha = 2.0 / (p + 1.0);
+		return smoothedMovingSeries(p, historicalOffset, length, alpha, priceSeries);
+	}
+
+	public static double[] wildersMovingAverageSeries(int p, int historicalOffset, int length, double[] priceSeries) {
+		double alpha = 1.0 / p;
+		return smoothedMovingSeries(p, historicalOffset, length, alpha, priceSeries);
 	}
 
 	/**
@@ -70,6 +82,31 @@ public final class OspreyQuantMath {
 		}
 
 		return ma;
+	}
+	
+	private static double[] smoothedMovingSeries(int p, int offset, int length, double alpha, double[] priceSeries) {
+
+		if (p < 2) {
+			throw new InvalidPeriodException();
+		}
+
+		int seriesLength = p + offset + MOVING_AVERAGE_MAGIC_NUMBER + length;
+
+		double seedAverage = sma(p, seriesLength - 1, priceSeries);
+
+		if (p + offset + MOVING_AVERAGE_MAGIC_NUMBER > priceSeries.length) {
+			throw new InsufficientHistoryException();
+		}
+
+		double ma = seedAverage;
+		double[] maSeries = new double[seriesLength - offset];
+
+		for (int i = seriesLength - 1; i >= offset; --i) {
+			maSeries[i] = (priceSeries[i] - ma) * alpha + ma;
+			ma = maSeries[i];
+		}
+
+		return maSeries;
 	}
 
 	public static Map<String, List<Double>> macdCurves(int p0, int p1, int pS, List<HistoricalQuote> prices) {
@@ -272,7 +309,7 @@ public final class OspreyQuantMath {
 		}
 	}
 
-	public static StochasticOscillatorCurve stochasticOscillatorSmaCurves(int lookBackPeriod, int periodK, int periodD,
+	public static StochasticOscillatorTimeSeries stochasticOscillatorSmaCurves(int lookBackPeriod, int periodK, int periodD,
 			int length, List<HistoricalQuote> prices) {
 
 		if (periodK > prices.size() || periodD > prices.size()) {
@@ -297,7 +334,7 @@ public final class OspreyQuantMath {
 			cDate[i] = prices.get(i).getHistoricalDate();
 		}
 
-		return new StochasticOscillatorCurve(cK, cD, cDate);
+		return new StochasticOscillatorTimeSeries(cK, cD, cDate);
 	}
 
 	/**
@@ -386,21 +423,6 @@ public final class OspreyQuantMath {
 		return sd.evaluate(closes);
 	}
 
-	// http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:bollinger_bands
-	public static double[] bollingerBands(int p, int offset, List<HistoricalQuote> prices) {
-
-		// TODO @jiayang: do you always calc the mid band w/ sma?
-
-		double midband = sma(p, offset, prices);
-
-		double upperband = midband + stdev(p, prices) * 2.0;
-
-		double lowerband = midband - stdev(p, prices) * 2.0;
-
-		return (new double[] { upperband, midband, lowerband });
-
-	}
-
 	/**
 	 * Calculate two Simple Moving Averages simultaneously over a single series
 	 * of closing prices.
@@ -466,14 +488,32 @@ public final class OspreyQuantMath {
 			throw new InsufficientHistoryException();
 		}
 
-		double sma1 = 0;
+		double sma1 = 0.0;
 
 		for (int i = offset; i < p + offset; ++i) {
 			sma1 += prices.get(i).getClose();
 		}
 
-		sma1 /= p;
-		return sma1;
+		return sma1 / p;
+	}
+	
+
+	private static double sma(int p, int offset, double[] priceSeries) {
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > priceSeries.length) {
+			throw new InsufficientHistoryException();
+		}
+
+		double sma1 = 0.0;
+
+		for (int i = offset; i < p + offset; ++i) {
+			sma1 += priceSeries[i];
+		}
+
+		return sma1 / p;
 	}
 
 	/**
@@ -518,7 +558,39 @@ public final class OspreyQuantMath {
 
 		return new StandardDeviation().evaluate(dailyReturns) * Math.sqrt(OspreyConstants.MARKET_DAYS_IN_YEAR);
 	}
-	
+
+	public static BollingerBandTimeSeries bollingerBands(int p, double multiplier, int length,
+			List<HistoricalQuote> quotes, MovingAverageType maType) {
+
+
+		int pricesLength;
+		switch (maType) {
+		case SMA:
+			pricesLength = length + p > quotes.size() ? quotes.size() : length + p;
+			break;
+		case EMA:
+		case WILDERS:
+			pricesLength = length + p * 2 + MOVING_AVERAGE_MAGIC_NUMBER > quotes.size() ? quotes.size()
+					: length + p * 2 + MOVING_AVERAGE_MAGIC_NUMBER;
+			break;
+		default:
+			pricesLength = 0;
+			break;
+
+		}
+		
+		LocalDate[] cDate = new LocalDate[pricesLength];
+		double[] prices = new double[pricesLength];
+
+		HistoricalQuote hq;
+		for (int i = 0; i < pricesLength; ++i) {
+			hq = quotes.get(i);
+			cDate[i] = hq.getHistoricalDate();
+			prices[i] = hq.getClose();
+		}
+
+		return new BollingerBandTimeSeries(prices, cDate, p, multiplier, length).init(maType);
+	}
 	
 	public static double standardNormalDistribution(double x) {
 		double top = Math.exp(-0.5 * Math.pow(x, 2));

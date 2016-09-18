@@ -6,6 +6,8 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.criteria.BetaCriteria;
+import com.osprey.screen.criteria.BollingerBandCrossCriteria;
+import com.osprey.screen.criteria.BollingerBandLevelCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
@@ -70,7 +72,11 @@ public class ScreenCriteriaGenerator {
 			break;
 		case BLOCK_TRADE_VOL:
 			break;
-		case BOLLINGER_BAND:
+		case BOLLINGER_BAND_X:
+			result = objectMapper.convertValue(getCriteriaBucket(), BollingerBandCrossCriteria.class);
+			break;
+		case BOLLINGER_BAND_LEVEL:
+			result = objectMapper.convertValue(getCriteriaBucket(), BollingerBandLevelCriteria.class);
 			break;
 		case DEBT_TO_CAPITAL:
 			break;

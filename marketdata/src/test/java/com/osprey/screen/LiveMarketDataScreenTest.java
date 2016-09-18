@@ -20,7 +20,11 @@ import com.osprey.marketdata.feed.constants.QuoteDataFrequency;
 import com.osprey.marketdata.feed.yahoo.YahooHistoricalQuoteClient;
 import com.osprey.marketdata.feed.yahoo.YahooQuoteClient;
 import com.osprey.math.OspreyQuantMath;
+import com.osprey.math.result.BollingerBand;
+import com.osprey.math.result.MovingAverageType;
 import com.osprey.screen.criteria.BetaCriteria;
+import com.osprey.screen.criteria.BollingerBandCrossCriteria;
+import com.osprey.screen.criteria.BollingerBandLevelCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
@@ -681,6 +685,51 @@ public class LiveMarketDataScreenTest {
 
 		IScreenCriteria c1 = new MoneyFlowIndexLevelCriteria(14, 1, 50, RelationalOperator._GT);
 		IScreenCriteria c2 = new MoneyFlowIndexLevelCrossCriteria(14, 4, 50, CrossDirection.FROM_BELOW_TO_ABOVE);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c1);
+		criteria.add(c2);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		Assert.assertTrue(resultSet.contains(sqc.getKey()));
+
+	}
+	
+	@Test
+	public void bollingerBandScreenTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "AAPL";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		sqc.sortEventsDescending();
+
+		IScreenCriteria c1 = new BollingerBandCrossCriteria(20, 2.0, MovingAverageType.SMA, BollingerBand.UPPER, 5, CrossDirection.FROM_BELOW_TO_ABOVE);
+		IScreenCriteria c2 = new BollingerBandLevelCriteria(20, 2.0, MovingAverageType.SMA, BollingerBand.MOVING_AVERAGE, 2, RelationalOperator._GT);
 
 		List<IScreenCriteria> criteria = new ArrayList<>();
 		criteria.add(c1);
