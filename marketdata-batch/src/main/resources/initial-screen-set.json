@@ -9,9 +9,23 @@
 			}
 		},
 		{
+		    "criteriaBucket": {
+		        "type":"SECTOR",
+		        "sectors":["REIT - Industrial","REIT - Office","REIT - Healthcare Facilities"],
+		        "contains":false
+		     } 
+		},
+		{
+		    "criteriaBucket": {
+		        "type":"INDUSTRY",
+		        "industries":["Biotech","Basic Materials"],
+		        "contains":false
+		      } 
+		},
+		{
 			"criteriaBucket": {
 				"type": "PRICE",
-				"price": 2.5,
+				"price": 10,
 				"relationalOperator": "_GT"
 			}
 		}
