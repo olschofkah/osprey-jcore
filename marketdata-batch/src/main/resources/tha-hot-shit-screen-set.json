@@ -181,7 +181,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -227,7 +227,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -273,7 +273,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -318,7 +318,7 @@
     "criteriaBucket": {
      "type": "VOLATILITY",
      "period": 252,
-     "volatilityComparison": 0.4,
+     "volatilityComparison": 0.35,
      "relationalOperator": "_GE"
     }
    }
@@ -332,22 +332,22 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
-     "relationalOperator": "_GE"
+     "range": 22,
+     "relationalOperator": "_GT"
     }
    },
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 15,
+     "price": 10,
      "relationalOperator": "_GT"
     }
    },
    {
     "criteriaBucket": {
      "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
+     "marketCapComparison": 100000000,
+     "relationalOperator": "_GT"
     }
    },
    {
@@ -378,8 +378,8 @@
      "type": "EARNINGS_PCT_MOVE",
      "daysBefore": 14,
      "daysAfter": 4,
-     "percentMoveComparison": 0.06,
-     "relationalOperator": "_GE"
+     "percentMoveComparison": 0.05,
+     "relationalOperator": "_GT"
     }
    },
    {
@@ -387,16 +387,16 @@
      "type": "EARNINGS_VOLATILITY",
      "daysBefore": 14,
      "daysAfter": 4,
-     "volatilityComparison": 0.07,
-     "relationalOperator": "_GE"
+     "volatilityComparison": 0.5,
+     "relationalOperator": "_GT"
     }
    },
    {
     "criteriaBucket": {
      "type": "VOLATILITY",
      "period": 252,
-     "volatilityComparison": 0.4,
-     "relationalOperator": "_GE"
+     "volatilityComparison": 0.35,
+     "relationalOperator": "_GT"
     }
    }
   ]
@@ -409,7 +409,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -468,7 +468,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -527,7 +527,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -602,7 +602,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -677,7 +677,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -761,7 +761,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -954,7 +954,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 10000000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -1043,7 +1043,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -1099,7 +1099,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -1150,7 +1150,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
@@ -1201,7 +1201,7 @@
     "criteriaBucket": {
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
-     "range": 2,
+     "range": 22,
      "relationalOperator": "_GE"
     }
    },
