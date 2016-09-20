@@ -11,14 +11,14 @@
 		{
 		    "criteriaBucket": {
 		        "type":"SECTOR",
-		        "sectors":["REIT - Industrial","REIT - Office","REIT - Healthcare Facilities"],
+		        "sectors":["Basic Materials"],
 		        "contains":false
 		     } 
 		},
 		{
 		    "criteriaBucket": {
 		        "type":"INDUSTRY",
-		        "industries":["Biotech","Basic Materials"],
+		        "industries":["Regional -","REIT"],
 		        "contains":false
 		      } 
 		},
