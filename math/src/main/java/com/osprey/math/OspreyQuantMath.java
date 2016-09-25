@@ -947,5 +947,85 @@ public final class OspreyQuantMath {
 
 		return curve;
 	}
+	
 
+	/*C = Previous day close
+			H = Previous day high
+			L = Previous day low
+			H4 = [0.55*(H-L)] + C
+			H3 = [0.275*(H-L)] + C
+			H2 = [0.183*(H-L)] + C
+			H1 = [0.0916*(H-L)] + C
+			L1 = C – [0.0916*(H-L)]
+			L2 = C – [0.183*(H-L)]
+			L3 = C – [0.275*(H-L)]
+			L4 = C – [0.55*(H-L)]
+
+		TODO
+	 *	Case 1: Open price is between H3 and L3
+		Buy when the price move back above L3 after going below L3. Target will be H1, H2, H3 levels. Stop loss can be placed at L4 level
+		Wait for the price to go above H3 and then when it move back below H3 again sell or go short. Target will be L1,L2 L3 levels and stop loss above H4
+		
+		Case 2: Open price is between H3 and H4
+		Buy when the price move back above H3 again after going below H3. Target will be 0.5%, 1% and 1.5% . Stop loss can be placed at H3
+		Wait for the price to go above L3 and then when it move back below L3 again sell or go short. Target will be L1,L2 L3 levels and stop loss above H4. Target L1, L2 and L3
+
+		Case 3: Open price is between L3 and L4
+		Wait for the price to go above L3 and then when it moves back above L3 again go long. Target will be H1,H2 H3 levels and stop loss below L4.
+		Wait for the price to go below L4 and then when it moves below L4 go short. stop loss above L3. Target 0.5%, 1% and 1.5%
+
+		Case 4: Open price is above H4
+		Buying can be risky at this level. Wait for the price to go below H3. As soon as the price moves below H3 go short. stop loss above (H4+H3)/2. Target L1 , L2 and L3
+
+		Case 5: Open price is below L4
+		Selling could be risky at this level as price has opened with big gap down. Wait for the price to go above L3. When the price moves above L3 buy with stop loss of (L4+L3)/2. Target H1, H2 and H3
+			End of TODO*/
+
+	public static List<Double> camarillaDayTrading(int p, int offset, List<HistoricalQuote> prices) {
+
+		if (p < 0) {
+			throw new InvalidPeriodException();
+		}
+
+		if (p + offset > prices.size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double C = 0;
+		double H = 0;
+		double L = 0;
+
+		for (int i = offset; i < p + offset; ++i) {
+			C += prices.get(i).getClose();
+			H += prices.get(i).getHigh();
+			L += prices.get(i).getLow();
+		}
+
+		C /= p;
+		H /= p;
+		L /= p;
+
+
+
+		double H4 = (0.55*(H-L)) + C;
+		double H3 = (0.275*(H-L)) + C;
+		double H2 = (0.183*(H-L)) + C;
+		double H1 = (0.0916*(H-L)) + C;
+		double L1 = C - (0.0916*(H-L));
+		double L2 = C - (0.183*(H-L));
+		double L3 = C - (0.275*(H-L));
+		double L4 = C - (0.55*(H-L));
+
+		List<Double> frameList =  new ArrayList<Double>();
+		frameList.add(H4);
+		frameList.add(H3);
+		frameList.add(H2);
+		frameList.add(H1);
+		frameList.add(L1);
+		frameList.add(L2);
+		frameList.add(L3);
+		frameList.add(L4);
+
+		return frameList;		
+	}
 }

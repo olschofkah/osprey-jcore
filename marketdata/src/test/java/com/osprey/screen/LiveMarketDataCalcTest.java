@@ -95,6 +95,36 @@ public class LiveMarketDataCalcTest {
 		// System.out.println(ema4 + " close:" + hist.get(1));
 		System.out.println(ema5 + " close:" + hist.get(0));
 	}
+	
+	@Test
+	public void camarillaDayTradingTest1() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "QQQ";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		long currentTimeMillis = System.currentTimeMillis();
+		List<Double> cDT = OspreyQuantMath.camarillaDayTrading(1, 0, hist);
+		System.out.println(System.currentTimeMillis() - currentTimeMillis);
+
+		//
+		// System.out.println(ema1 + " close:" + hist.get(4));
+		// System.out.println(ema2 + " close:" + hist.get(3));
+		// System.out.println(ema3 + " close:" + hist.get(2));
+		// System.out.println(ema4 + " close:" + hist.get(1));
+		System.out.println(cDT);
+	}
 
 	@Test
 	public void rsiCalcTest1() throws Exception {
