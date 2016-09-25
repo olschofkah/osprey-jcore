@@ -21,7 +21,7 @@ public class CamarillaBandOpenScreen implements IStockScreen {
 	@Override
 	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		double[] camarillaBands = OspreyQuantMath.camarillaBands(criteria.getPeriod(), 0, sqc.getHistoricalQuotes());
+		double[] camarillaBands = OspreyQuantMath.camarillaBands(criteria.getPeriod(), 1, sqc.getHistoricalQuotes());
 
 		// this is populated with the current quote for market hours ...
 		// with 'close' being last.
