@@ -2,6 +2,7 @@ package com.osprey.screen;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.math3.util.Pair;
@@ -97,7 +98,7 @@ public class LiveMarketDataCalcTest {
 	}
 	
 	@Test
-	public void camarillaDayTradingTest1() throws Exception {
+	public void camarillaBandsTest1() throws Exception {
 
 		LocalDate end = LocalDate.now();
 		LocalDate start = end.minusYears(1).minusDays(10);
@@ -115,7 +116,7 @@ public class LiveMarketDataCalcTest {
 		sqc.setSecurity(security);
 
 		long currentTimeMillis = System.currentTimeMillis();
-		List<Double> cDT = OspreyQuantMath.camarillaDayTrading(1, 0, hist);
+		double[] cDT = OspreyQuantMath.camarillaBands(1, 0, hist);
 		System.out.println(System.currentTimeMillis() - currentTimeMillis);
 
 		//
@@ -123,7 +124,7 @@ public class LiveMarketDataCalcTest {
 		// System.out.println(ema2 + " close:" + hist.get(3));
 		// System.out.println(ema3 + " close:" + hist.get(2));
 		// System.out.println(ema4 + " close:" + hist.get(1));
-		System.out.println(cDT);
+		System.out.println(Arrays.toString(cDT));
 	}
 
 	@Test
