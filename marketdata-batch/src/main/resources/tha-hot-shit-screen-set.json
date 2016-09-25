@@ -274,65 +274,6 @@
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
      "range": 22,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "PRICE",
-     "price": 15,
-     "relationalOperator": "_GT"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "INDUSTRY",
-     "industries": [
-      "Biotechnology"
-     ],
-     "contains": false
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "EARNINGS_ANNOUNCEMENT",
-     "daysAway": 20,
-     "relationalOperator": "_LE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "EARNINGS_ANNOUNCEMENT",
-     "daysAway": 5,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "VOLATILITY",
-     "period": 252,
-     "volatilityComparison": 0.35,
-     "relationalOperator": "_GE"
-    }
-   }
-  ]
- },
- {
-  "screenName": "Earnings Movers (new)",
-  "strategies": [],
-  "screenCriteria": [
-   {
-    "criteriaBucket": {
-     "type": "DOLLAR_VOLUME",
-     "dollarVolumeComparison": 2500000,
-     "range": 22,
      "relationalOperator": "_GT"
     }
    },
@@ -388,14 +329,6 @@
      "daysBefore": 14,
      "daysAfter": 4,
      "volatilityComparison": 0.5,
-     "relationalOperator": "_GT"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "VOLATILITY",
-     "period": 252,
-     "volatilityComparison": 0.35,
      "relationalOperator": "_GT"
     }
    }
