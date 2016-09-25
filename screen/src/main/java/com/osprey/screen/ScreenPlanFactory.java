@@ -9,6 +9,8 @@ import org.apache.commons.lang3.NotImplementedException;
 import com.osprey.screen.criteria.BetaCriteria;
 import com.osprey.screen.criteria.BollingerBandCrossCriteria;
 import com.osprey.screen.criteria.BollingerBandLevelCriteria;
+import com.osprey.screen.criteria.CamarillaBandCriteria;
+import com.osprey.screen.criteria.CamarillaBandOpenCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
@@ -48,6 +50,8 @@ import com.osprey.screen.criteria._52WeekRangePercentageCriteria;
 import com.osprey.screen.screens.BetaScreen;
 import com.osprey.screen.screens.BollingerBandCrossScreen;
 import com.osprey.screen.screens.BollingerBandLevelScreen;
+import com.osprey.screen.screens.CamarillaBandOpenScreen;
+import com.osprey.screen.screens.CamarillaBandScreen;
 import com.osprey.screen.screens.DollarVolumeScreen;
 import com.osprey.screen.screens.EarningsPercentMoveAverageScreen;
 import com.osprey.screen.screens.EarningsScreen;
@@ -247,6 +251,10 @@ public class ScreenPlanFactory {
 			return new MoneyFlowIndexLevelScreen((MoneyFlowIndexLevelCriteria) criteria);
 		case MFI_X:
 			return new MoneyFlowIndexLevelCrossScreen((MoneyFlowIndexLevelCrossCriteria) criteria);
+		case CAMARILLA_BAND:
+			return new CamarillaBandScreen((CamarillaBandCriteria) criteria);
+		case CAMARILLA_BAND_OPEN:
+			return new CamarillaBandOpenScreen((CamarillaBandOpenCriteria) criteria);
 		default:
 			break;
 

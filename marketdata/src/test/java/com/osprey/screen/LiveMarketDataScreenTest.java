@@ -25,6 +25,8 @@ import com.osprey.math.result.MovingAverageType;
 import com.osprey.screen.criteria.BetaCriteria;
 import com.osprey.screen.criteria.BollingerBandCrossCriteria;
 import com.osprey.screen.criteria.BollingerBandLevelCriteria;
+import com.osprey.screen.criteria.CamarillaBandCriteria;
+import com.osprey.screen.criteria.CamarillaBandOpenCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
@@ -707,6 +709,54 @@ public class LiveMarketDataScreenTest {
 		Assert.assertTrue(resultSet.contains(sqc.getKey()));
 
 	}
+	
+	@Test
+	public void camarillaScreenTest() throws Exception {
+
+		LocalDate end = LocalDate.now();
+		LocalDate start = end.minusYears(1).minusDays(10);
+		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
+
+		String symbol = "AAPL";
+
+		Security security = new Security(new SecurityKey(symbol, null));
+		security.setInstrumentType(InstrumentType.STOCK);
+
+		SecurityQuoteContainer sqc = yahooQuoteClient.quoteUltra(new SecurityKey(symbol, null));
+		List<HistoricalQuote> hist = new ArrayList<>(
+				yahooHistoricalQuoteClient.quoteHistorical(new SecurityKey(symbol, null), start, end, freq));
+		sqc.setHistoricalQuotes(hist);
+		sqc.setSecurity(security);
+
+		sqc.sortEventsDescending();
+
+		IScreenCriteria c1 = new CamarillaBandCriteria(1, 3, RelationalOperator._GT);
+		IScreenCriteria c2 = new CamarillaBandOpenCriteria(1, 5, RelationalOperator._GT, 4, RelationalOperator._LT);
+
+		List<IScreenCriteria> criteria = new ArrayList<>();
+		criteria.add(c2);
+		criteria.add(c1);
+
+		Set<SecurityQuoteContainer> securities = new HashSet<>();
+		securities.add(sqc);
+
+		ScreenPlanFactory factory = new ScreenPlanFactory();
+		factory.setSecurityUniverse(securities);
+
+		List<ScreenPlan> plans = factory.build(criteria);
+
+		SimpleScreenExecutor executor = new SimpleScreenExecutor();
+		executor.setPlans(plans);
+		executor.execute();
+
+		Set<SecurityKey> resultSet = executor.getResultSet();
+
+		// TODO add unit tests to cover asserts. 
+		
+		System.out.println(resultSet.contains(sqc.getKey()));
+
+	}
+	
 	
 	@Test
 	public void bollingerBandScreenTest() throws Exception {

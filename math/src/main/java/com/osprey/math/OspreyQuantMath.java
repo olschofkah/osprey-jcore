@@ -1001,9 +1001,9 @@ public final class OspreyQuantMath {
 			throw new InsufficientHistoryException();
 		}
 
-		double c = 0;
 		double h = 0;
 		double l = 0;
+		double c = 0;
 
 		HistoricalQuote hq;
 		for (int i = offset; i < p + offset; ++i) {

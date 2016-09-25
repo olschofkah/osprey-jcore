@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.criteria.BetaCriteria;
 import com.osprey.screen.criteria.BollingerBandCrossCriteria;
 import com.osprey.screen.criteria.BollingerBandLevelCriteria;
+import com.osprey.screen.criteria.CamarillaBandCriteria;
+import com.osprey.screen.criteria.CamarillaBandOpenCriteria;
 import com.osprey.screen.criteria.DollarVolumeCriteria;
 import com.osprey.screen.criteria.EarningsCriteria;
 import com.osprey.screen.criteria.EarningsPercentMoveAverageCriteria;
@@ -218,6 +220,12 @@ public class ScreenCriteriaGenerator {
 			break;
 		case MFI_X:
 			result = objectMapper.convertValue(getCriteriaBucket(), MoneyFlowIndexLevelCrossCriteria.class);
+			break;
+		case CAMARILLA_BAND:
+			result = objectMapper.convertValue(getCriteriaBucket(), CamarillaBandCriteria.class);
+			break;
+		case CAMARILLA_BAND_OPEN:
+			result = objectMapper.convertValue(getCriteriaBucket(), CamarillaBandOpenCriteria.class);
 			break;
 		default:
 			break;
