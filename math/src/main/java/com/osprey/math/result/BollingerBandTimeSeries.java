@@ -169,10 +169,10 @@ public class BollingerBandTimeSeries {
 			s = upperBandSeries;
 			break;
 		case MOVING_AVERAGE:
-			s = lowerBandSeries;
+			s = maSeries;
 			break;
 		case LOWER_BAND:
-			s = maSeries;
+			s = lowerBandSeries;
 			break;
 		default:
 			throw new MathException();
