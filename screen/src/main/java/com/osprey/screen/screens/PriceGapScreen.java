@@ -1,17 +1,13 @@
 package com.osprey.screen.screens;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.PriceGapCriteria;
+import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.securitymaster.SecurityQuoteContainer;
-import com.osprey.securitymaster.constants.OspreyConstants;
 
-public class PriceGapScreen implements IStockScreen {
+public class PriceGapScreen extends NumericalRelationalComparisonStockScreen {
 
 	private final PriceGapCriteria criteria;
-	private boolean passed;
 
 	public PriceGapScreen(PriceGapCriteria criteria) {
 		this.criteria = criteria;
@@ -29,39 +25,13 @@ public class PriceGapScreen implements IStockScreen {
 
 		double pctGap = 1 - (p0 / p1);
 
-		switch (criteria.getRelationalOperator()) {
-		case _EQ:
-			passed = new BigDecimal(pctGap).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(criteria.getPercentGap()).setScale(OspreyConstants.PRICE_SCALE,
-							RoundingMode.HALF_UP)) == 0;
-			break;
-		case _GE:
-			passed = new BigDecimal(pctGap).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(criteria.getPercentGap()).setScale(OspreyConstants.PRICE_SCALE,
-							RoundingMode.HALF_UP)) >= 0;
-			break;
-		case _GT:
-			passed = pctGap > criteria.getPercentGap();
-			break;
-		case _LE:
-			passed = new BigDecimal(pctGap).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(criteria.getPercentGap()).setScale(OspreyConstants.PRICE_SCALE,
-							RoundingMode.HALF_UP)) <= 0;
-			break;
-		case _LT:
-			passed = pctGap < criteria.getPercentGap();
-			break;
-		default:
-			passed = false;
-			break;
-
-		}
+		compare(pctGap, criteria.getPercentGap());
 
 		return this;
 	}
 
-	public boolean passed() {
-		return passed;
+	@Override
+	protected RelationalOperator getRelationalOperator() {
+		return criteria.getRelationalOperator();
 	}
-
 }

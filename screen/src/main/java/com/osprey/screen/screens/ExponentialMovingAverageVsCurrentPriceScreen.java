@@ -1,19 +1,14 @@
 package com.osprey.screen.screens;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.ExponentialMovingAverageVsCurrentPriceCriteria;
+import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.securitymaster.SecurityQuoteContainer;
-import com.osprey.securitymaster.constants.OspreyConstants;
 
-public class ExponentialMovingAverageVsCurrentPriceScreen implements IStockScreen {
+public class ExponentialMovingAverageVsCurrentPriceScreen extends NumericalRelationalComparisonStockScreen {
 
 	private final ExponentialMovingAverageVsCurrentPriceCriteria criteria;
-
-	private boolean passed;
 
 	public ExponentialMovingAverageVsCurrentPriceScreen(ExponentialMovingAverageVsCurrentPriceCriteria criteria) {
 		this.criteria = criteria;
@@ -30,36 +25,13 @@ public class ExponentialMovingAverageVsCurrentPriceScreen implements IStockScree
 
 		double close = sqc.getHistoricalQuotes().get(0).getAdjClose();
 
-		switch (criteria.getRelationalOperator()) {
-		case _EQ:
-			passed = new BigDecimal(ema1).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(close).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) == 0;
-			break;
-		case _GE:
-			passed = new BigDecimal(ema1).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(close).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) >= 0;
-			break;
-		case _GT:
-			passed = ema1 > close;
-			break;
-		case _LE:
-			passed = new BigDecimal(ema1).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-					.compareTo(new BigDecimal(close).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)) <= 0;
-			break;
-		case _LT:
-			passed = ema1 < close;
-			break;
-		default:
-			passed = false;
-			break;
-
-		}
+		compare(ema1, close);
 
 		return this;
 	}
 
-	public boolean passed() {
-		return passed;
+	@Override
+	protected RelationalOperator getRelationalOperator() {
+		return criteria.getRelationalOperator();
 	}
-
 }

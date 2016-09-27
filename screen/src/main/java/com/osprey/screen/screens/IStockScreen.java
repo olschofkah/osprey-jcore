@@ -4,7 +4,9 @@ import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public interface IStockScreen {
 
-	public IStockScreen doScreen(SecurityQuoteContainer quoteContainer);
+	public abstract IStockScreen doScreen(SecurityQuoteContainer quoteContainer);
 
-	public boolean passed();
+	public abstract boolean passed(); 
+	
+	
 }

@@ -1,7 +1,5 @@
 package com.osprey.screen.screens;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
@@ -10,15 +8,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.screen.criteria.MovingAverageConverganceDiverganceDiverganceCriteria;
+import com.osprey.screen.criteria.constants.RelationalOperator;
 import com.osprey.securitymaster.SecurityQuoteContainer;
-import com.osprey.securitymaster.constants.OspreyConstants;
 
-public class MovingAverageConverganceDiverganceDiverganceScreen implements IStockScreen {
+public class MovingAverageConverganceDiverganceDiverganceScreen extends NumericalRelationalComparisonStockScreen {
 	final static Logger logger = LogManager.getLogger(MovingAverageConverganceDiverganceDiverganceScreen.class);
 
 	private final MovingAverageConverganceDiverganceDiverganceCriteria criteria;
-
-	private boolean passed;
 
 	public MovingAverageConverganceDiverganceDiverganceScreen(
 			MovingAverageConverganceDiverganceDiverganceCriteria criteria) {
@@ -46,33 +42,7 @@ public class MovingAverageConverganceDiverganceDiverganceScreen implements IStoc
 
 			divergance = macd - macdSignal;
 
-			switch (criteria.getRelationalOperator()) {
-			case _EQ:
-				passed = new BigDecimal(divergance).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-						.compareTo(new BigDecimal(criteria.getDivergance()).setScale(OspreyConstants.PRICE_SCALE,
-								RoundingMode.HALF_UP)) == 0;
-				break;
-			case _GE:
-				passed = new BigDecimal(divergance).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-						.compareTo(new BigDecimal(criteria.getDivergance()).setScale(OspreyConstants.PRICE_SCALE,
-								RoundingMode.HALF_UP)) >= 0;
-				break;
-			case _GT:
-				passed = divergance > criteria.getDivergance();
-				break;
-			case _LE:
-				passed = new BigDecimal(divergance).setScale(OspreyConstants.PRICE_SCALE, RoundingMode.HALF_UP)
-						.compareTo(new BigDecimal(criteria.getDivergance()).setScale(OspreyConstants.PRICE_SCALE,
-								RoundingMode.HALF_UP)) <= 0;
-				break;
-			case _LT:
-				passed = divergance < criteria.getDivergance();
-				break;
-			default:
-				passed = false;
-				break;
-
-			}
+			compare(divergance, criteria.getDivergance());
 
 			if (passed) {
 				break;
@@ -82,8 +52,9 @@ public class MovingAverageConverganceDiverganceDiverganceScreen implements IStoc
 		return this;
 	}
 
-	public boolean passed() {
-		return passed;
+	@Override
+	protected RelationalOperator getRelationalOperator() {
+		return criteria.getRelationalOperator();
 	}
 
 }
