@@ -42,8 +42,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.integration.slack.SlackClient;
 import com.osprey.marketdata.batch.listener.JobCompletionNotificationListener;
 import com.osprey.marketdata.batch.processor.HistoricalModelProcessor;
-import com.osprey.marketdata.batch.processor.HotShitScreenProcessor;
-import com.osprey.marketdata.batch.processor.HotShitScreenProvidor;
+import com.osprey.marketdata.batch.processor.HotListScreenProcessor;
+import com.osprey.marketdata.batch.processor.HotListScreenProvidor;
 import com.osprey.marketdata.batch.processor.InitialScreenService;
 import com.osprey.marketdata.batch.processor.QuoteProcessor;
 import com.osprey.marketdata.batch.reader.QuoteItemReader;
@@ -194,7 +194,7 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public IHotItemRepository hotShitRepository() {
+	public IHotItemRepository hotListRepository() {
 		return new HotItemJdbcRepository(dataSource, om1);
 	}
 
@@ -214,8 +214,8 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public HotShitScreenProvidor hotShitScreenProvidor() {
-		return new HotShitScreenProvidor(this.ospreyJSONObjectRepository(), om1);
+	public HotListScreenProvidor hotListScreenProvidor() {
+		return new HotListScreenProvidor(this.ospreyJSONObjectRepository(), om1);
 	}
 
 	@Bean
@@ -282,18 +282,18 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public HotShitScreenProcessor hotShitScreenProcessor() {
-		return new HotShitScreenProcessor(hotShitScreenProvidor(), initialScreenService());
+	public HotListScreenProcessor hotListScreenProcessor() {
+		return new HotListScreenProcessor(hotListScreenProvidor(), initialScreenService());
 	}
 
 	@Bean
 	public HistoricalModelProcessor historicalModelProcessor() {
-		return new HistoricalModelProcessor(hotShitScreenProvidor(), hotShitRepository());
+		return new HistoricalModelProcessor(hotListScreenProvidor(), hotListRepository());
 	}
 
 	@Bean
 	public PurgePreviousRunHotlistTasklet purgePreviousRunHotlistTasklet() {
-		return new PurgePreviousRunHotlistTasklet(hotShitRepository());
+		return new PurgePreviousRunHotlistTasklet(hotListRepository());
 	}
 
 	@Bean
@@ -342,7 +342,7 @@ public class NightlyMarketDataScreen {
 
 			@Override
 			public void write(List<? extends SecurityQuoteContainer> items) throws Exception {
-				logger.debug("Queuing securities for the hot shit ...");
+				logger.debug("Queuing securities for the hot list ...");
 				historicalModelQueue.addAll(items);
 			}
 
@@ -350,8 +350,8 @@ public class NightlyMarketDataScreen {
 	}
 
 	@Bean
-	public HotItemDbItemWriter hotShitDbItemWriter() {
-		return new HotItemDbItemWriter(hotShitRepository());
+	public HotItemDbItemWriter hotListDbItemWriter() {
+		return new HotItemDbItemWriter(hotListRepository());
 	}
 
 	@Bean
@@ -368,7 +368,7 @@ public class NightlyMarketDataScreen {
 
 	@Bean
 	public JobExecutionListener listener() {
-		return new JobCompletionNotificationListener(hotShitRepository(), slack);
+		return new JobCompletionNotificationListener(hotListRepository(), slack);
 	}
 
 	@Bean
@@ -471,8 +471,8 @@ public class NightlyMarketDataScreen {
 				.skip(InsufficientHistoryException.class)
 				.skipLimit(512)
 				.reader(postQuoteQueueReader())
-				.processor(hotShitScreenProcessor())
-				.writer(hotShitDbItemWriter())
+				.processor(hotListScreenProcessor())
+				.writer(hotListDbItemWriter())
 				.taskExecutor(taskExecutor())
 				.build();
 	}

@@ -19,14 +19,14 @@ import com.osprey.screen.SimpleScreenExecutor;
 import com.osprey.screen.criteria.IScreenCriteria;
 import com.osprey.securitymaster.SecurityQuoteContainer;
 
-public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContainer, HotListItem> {
+public class HotListScreenProcessor implements ItemProcessor<SecurityQuoteContainer, HotListItem> {
 
-	private final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
+	private final static Logger logger = LogManager.getLogger(HotListScreenProcessor.class);
 
-	private HotShitScreenProvidor screenProvidor;
+	private HotListScreenProvidor screenProvidor;
 	private InitialScreenService initialScreenService;
 
-	public HotShitScreenProcessor(HotShitScreenProvidor screenProvidor, InitialScreenService initialScreenService) {
+	public HotListScreenProcessor(HotListScreenProvidor screenProvidor, InitialScreenService initialScreenService) {
 		this.screenProvidor = screenProvidor;
 		this.initialScreenService = initialScreenService;
 	}
@@ -34,7 +34,7 @@ public class HotShitScreenProcessor implements ItemProcessor<SecurityQuoteContai
 	@Override
 	public HotListItem process(SecurityQuoteContainer item) throws Exception {
 
-		logger.info("Performing tha hot shit on {} ", () -> item.getKey().getSymbol());
+		logger.info("Performing tha hot list on {} ", () -> item.getKey().getSymbol());
 
 		Set<SecurityQuoteContainer> securities = new HashSet<>(2);
 		securities.add(item);

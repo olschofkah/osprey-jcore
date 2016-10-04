@@ -15,16 +15,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.osprey.screen.ScreenStrategyEntry;
 import com.osprey.screen.repository.IOspreyJSONObjectRepository;
 
-public class HotShitScreenProvidor {
+public class HotListScreenProvidor {
 
-	private final static Logger logger = LogManager.getLogger(HotShitScreenProcessor.class);
+	private final static Logger logger = LogManager.getLogger(HotListScreenProcessor.class);
 
 	private IOspreyJSONObjectRepository jsonRepository;
 	private ObjectMapper om;
 
 	private List<ScreenStrategyEntry> screens;
 
-	public HotShitScreenProvidor(IOspreyJSONObjectRepository jsonRepository, ObjectMapper om) {
+	public HotListScreenProvidor(IOspreyJSONObjectRepository jsonRepository, ObjectMapper om) {
 		this.jsonRepository = jsonRepository;
 		this.om = om;
 	}

@@ -60,7 +60,7 @@ public class MockSecurityMasterRepository implements ISecurityMasterRepository {
 		
 	}
 
-	public void deleteThaHotShitForDay(LocalDate date) {
+	public void deleteThaHotListForDay(LocalDate date) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -34,7 +34,7 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 	private final static Logger logger = LogManager.getLogger(HistoricalModelProcessor.class);
 
-	private HotShitScreenProvidor screenProvidor;
+	private HotListScreenProvidor screenProvidor;
 	private IHotItemRepository repo;
 
 	@Value("${model.hist.periods}")
@@ -42,7 +42,7 @@ public class HistoricalModelProcessor implements ItemProcessor<SecurityQuoteCont
 
 	private static boolean HIST_ENABLED = true;
 
-	public HistoricalModelProcessor(HotShitScreenProvidor screenProvidor, IHotItemRepository repo) {
+	public HistoricalModelProcessor(HotListScreenProvidor screenProvidor, IHotItemRepository repo) {
 		this.screenProvidor = screenProvidor;
 		this.repo = repo;
 	}
