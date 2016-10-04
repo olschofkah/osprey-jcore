@@ -59,7 +59,7 @@ public class HotListScreenProcessor implements ItemProcessor<SecurityQuoteContai
 
 			if (executor.getResultSet().contains(item.getKey())) {
 
-				logger.info("Adding {} to the hot shit for {} ",
+				logger.info("Adding {} to the hot list for {} ",
 						new Object[] { item.getKey().getSymbol(), LocalDate.now() });
 
 				if (result == null) {

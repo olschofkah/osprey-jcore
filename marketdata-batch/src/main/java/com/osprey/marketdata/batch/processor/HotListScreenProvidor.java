@@ -35,14 +35,14 @@ public class HotListScreenProvidor {
 
 	@PostConstruct
 	public void init() {
-		String hotShitScreens = jsonRepository.find("screens");
+		String hotListScreens = jsonRepository.find("screens");
 
-		logger.info("Using the following screens ... {}", () -> hotShitScreens);
+		logger.info("Using the following screens ... {}", () -> hotListScreens);
 
 		try {
 			screens = Collections
 					.unmodifiableList(om.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true)
-							.readValue(hotShitScreens, new TypeReference<List<ScreenStrategyEntry>>() {
+							.readValue(hotListScreens, new TypeReference<List<ScreenStrategyEntry>>() {
 							}));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
