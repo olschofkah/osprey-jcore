@@ -211,22 +211,22 @@ CREATE TABLE "oc_security_ohlc_hist" (
   OIDS=FALSE
 );
 
-CREATE TABLE "tha_hot_shit" (
+CREATE TABLE "tha_hot_list" (
 	"symbol" VARCHAR(10) NOT NULL,
 	"date" DATE NOT NULL,
 	"timestamp" timestamptz NOT NULL,
 	"payload" jsonb NOT NULL, -- screen, strategy
-	CONSTRAINT tha_hot_shit_pk PRIMARY KEY ("symbol","date")
+	CONSTRAINT tha_hot_list_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE
 );
 
-CREATE TABLE "tha_hot_shit_ignore" (
+CREATE TABLE "tha_hot_list_ignore" (
 	"symbol" VARCHAR(10) NOT NULL,
 	"date" DATE NOT NULL,
 	"timestamp" timestamptz NOT NULL,
 	"deleted" boolean NOT NULL default FALSE,
-	CONSTRAINT tha_hot_shit_pk PRIMARY KEY ("symbol","date")
+	CONSTRAINT tha_hot_list_pk PRIMARY KEY ("symbol","date")
 ) WITH (
   OIDS=FALSE
 );
@@ -331,7 +331,7 @@ ALTER TABLE "oc_security_int_stat_log" ADD CONSTRAINT "oc_security_int_stat_log_
 
 ALTER TABLE "oc_security_ochl_hist" ADD CONSTRAINT "oc_security_ochl_hist_fk0" FOREIGN KEY ("symbol") REFERENCES "oc_security"("symbol");
 
-ALTER TABLE "tha_hot_shit" ADD CONSTRAINT "tha_hot_shit_fk0" FOREIGN KEY ("symbol") REFERENCES "oc_security"("symbol");
+ALTER TABLE "tha_hot_list" ADD CONSTRAINT "tha_hot_list_fk0" FOREIGN KEY ("symbol") REFERENCES "oc_security"("symbol");
 ALTER TABLE "oc_trigger" ADD CONSTRAINT "oc_trigger_fk0" FOREIGN KEY ("symbol") REFERENCES "oc_security"("symbol");
 
 ALTER TABLE "oc_optn_chain" ADD CONSTRAINT "oc_optn_chain_fk0" FOREIGN KEY ("symbol") REFERENCES "oc_security"("symbol");

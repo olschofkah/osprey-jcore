@@ -16,7 +16,7 @@ ALTER TABLE "oc_security_int_stat_log" DROP CONSTRAINT IF EXISTS "oc_security_in
 
 ALTER TABLE "oc_security_ochl_hist" DROP CONSTRAINT IF EXISTS "oc_security_ochl_hist_fk0";
 
-ALTER TABLE "tha_hot_shit" DROP CONSTRAINT IF EXISTS "tha_hot_shit_fk0";
+ALTER TABLE "tha_hot_list" DROP CONSTRAINT IF EXISTS "tha_hot_list_fk0";
 
 ALTER TABLE "oc_trigger" DROP CONSTRAINT IF EXISTS "oc_trigger_fk0";
 
@@ -46,7 +46,7 @@ DROP TABLE IF EXISTS "oc_security_int_stat_log";
 
 DROP TABLE IF EXISTS "oc_security_ochl_hist";
 
-DROP TABLE IF EXISTS "tha_hot_shit";
+DROP TABLE IF EXISTS "tha_hot_list";
 
 DROP TABLE IF EXISTS "oc_trigger";
 

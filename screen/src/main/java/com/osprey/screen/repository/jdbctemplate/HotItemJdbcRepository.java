@@ -50,7 +50,7 @@ public class HotItemJdbcRepository implements IHotItemRepository {
 	public List<HotListItem> findForDate(LocalDate dt) {
 		final Date today = Date.valueOf(dt);
 
-		List<String> result = jdbc.queryForList("select payload from tha_hot_shit where date = ?", String.class, today);
+		List<String> result = jdbc.queryForList("select payload from tha_hot_list where date = ?", String.class, today);
 
 		List<HotListItem> hotItems = new ArrayList<>(result.size());
 		for (String o : result) {
@@ -68,12 +68,12 @@ public class HotItemJdbcRepository implements IHotItemRepository {
 
 	@Override
 	public void deleteForDate(LocalDate dt) {
-		jdbc.update("delete from tha_hot_shit where date = ? ", Date.valueOf(dt));
+		jdbc.update("delete from tha_hot_list where date = ? ", Date.valueOf(dt));
 	}
 
 	@Override
 	public void deleteForDatesAndSymbol(String symbol, LocalDate earliestDate, LocalDate latestDate) {
-		jdbc.update("delete from tha_hot_shit where symbol = ? and date >= ? and date <= ?", symbol,
+		jdbc.update("delete from tha_hot_list where symbol = ? and date >= ? and date <= ?", symbol,
 				Date.valueOf(earliestDate), Date.valueOf(latestDate));
 	}
 
@@ -81,7 +81,7 @@ public class HotItemJdbcRepository implements IHotItemRepository {
 	public int findCountBySymbolAndDays(String symbol, int days, LocalDate startDate) {
 		Date sqlDate = Date.valueOf(startDate.minusDays(days));
 
-		int count = jdbc.queryForObject("select count(1) from tha_hot_shit where symbol = ? and date >= ? and date < ?",
+		int count = jdbc.queryForObject("select count(1) from tha_hot_list where symbol = ? and date >= ? and date < ?",
 				new Object[] { symbol, sqlDate, Date.valueOf(startDate) }, Integer.class);
 
 		return count;
@@ -93,7 +93,7 @@ public class HotItemJdbcRepository implements IHotItemRepository {
 
 		List<ModelSymbolStatistic> tmpResults = jdbc
 				.query("select payload->'models'->0->'modelName' as model, count(1) "
-						+ " from tha_hot_shit where symbol = ? and date >= ? and date < ?"
+						+ " from tha_hot_list where symbol = ? and date >= ? and date < ?"
 						+ " group by payload->'models'->0->'modelName'", new RowMapper<ModelSymbolStatistic>() {
 
 							@Override
@@ -120,7 +120,7 @@ public class HotItemJdbcRepository implements IHotItemRepository {
 
 		final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
 
-		jdbc.batchUpdate("insert into tha_hot_shit values (?,?,?,?)", new BatchPreparedStatementSetter() {
+		jdbc.batchUpdate("insert into tha_hot_list values (?,?,?,?)", new BatchPreparedStatementSetter() {
 
 			@Override
 			public void setValues(PreparedStatement ps, int i) throws SQLException {

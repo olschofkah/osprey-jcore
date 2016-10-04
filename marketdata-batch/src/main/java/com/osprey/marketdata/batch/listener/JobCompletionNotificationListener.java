@@ -83,7 +83,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
 
 		} else if (jobExecution.getStatus() == BatchStatus.FAILED) {
 			logger.info("Work Failed");
-			slack.postMessage("Well fuck, that didn't work...  What would you like me to do?");
+			slack.postMessage("Well that didn't work ...  What would you like me to do?");
 		}
 
 		// ugly but works ...
