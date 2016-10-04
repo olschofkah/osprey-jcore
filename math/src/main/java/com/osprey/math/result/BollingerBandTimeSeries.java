@@ -8,6 +8,7 @@ import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
 import com.osprey.math.OspreyJavaMath;
 import com.osprey.math.OspreyQuantMath;
+import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.math.exception.InvalidPeriodException;
 import com.osprey.math.exception.MathException;
 
@@ -45,6 +46,10 @@ public class BollingerBandTimeSeries {
 	}
 
 	public BollingerBandTimeSeries init(MovingAverageType maType) {
+		
+		if(priceSeries.length < maPeriod){
+			throw new InsufficientHistoryException();
+		}
 
 		maSeries = new double[length];
 		upperBandSeries = new double[length];
