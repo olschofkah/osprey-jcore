@@ -25,7 +25,7 @@ echo "${DOCKER_AWS_LOGIN}"
 
 ${DOCKER_AWS_LOGIN}
 
-docker build --build-arg app_version=${1} -t ospreycapital/marketdata-batch .
+docker build --no-cache --build-arg app_version=${1} -t ospreycapital/marketdata-batch .
 
 
 # Tag the build
