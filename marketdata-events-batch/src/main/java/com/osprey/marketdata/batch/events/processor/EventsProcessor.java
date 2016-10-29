@@ -50,12 +50,12 @@ public class EventsProcessor implements ItemProcessor<SecurityQuoteContainer, Se
 
 		FundamentalQuote fundamentalQuote = sqc.getFundamentalQuote();
 
-		double earningsMove = EarningsCalculator.calcEarningsPercentMove(sqc, 10, 4);
+		double earningsMove = EarningsCalculator.calcEarningsPercentMove(sqc, 7, 3);
 		if (earningsMove > 0) {
 			fundamentalQuote.setEarningsAveragePercent(earningsMove);
 		}
 
-		double earningsVolatility = EarningsCalculator.calcEarningsVolatility(sqc, 10, 4);
+		double earningsVolatility = EarningsCalculator.calcEarningsVolatility(sqc, 7, 3);
 		if (earningsVolatility > 0) {
 			fundamentalQuote.setEarningsVolatility(earningsVolatility);
 		}

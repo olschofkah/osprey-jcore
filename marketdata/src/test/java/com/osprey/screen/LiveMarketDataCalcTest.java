@@ -160,7 +160,7 @@ public class LiveMarketDataCalcTest {
 		LocalDate start = end.minusYears(3).minusDays(10);
 		QuoteDataFrequency freq = QuoteDataFrequency.DAY;
 
-		String symbol = "AAPL";
+		String symbol = "GNC";
 
 		Security security = new Security(new SecurityKey(symbol, null));
 		security.setInstrumentType(InstrumentType.STOCK);
@@ -175,8 +175,8 @@ public class LiveMarketDataCalcTest {
 		
 		sqc.sortEventsDescending();
 
-		System.out.println(EarningsCalculator.calcEarningsPercentMove(sqc, 10, 4));
-		System.out.println(EarningsCalculator.calcEarningsVolatility(sqc, 10, 4));
+		System.out.println(EarningsCalculator.calcEarningsPercentMove(sqc, 7, 3));
+		System.out.println(EarningsCalculator.calcEarningsVolatility(sqc, 7, 3));
 	}
 
 	@Test
