@@ -33,10 +33,9 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 	private MarketScheduleService marketSchedule;
 
 	public QuoteProcessor(IUltraSecurityQuoteService fundamentalQuoteService,
-			IHistoricalQuoteSerice historicalQuoteService, 
-			MarketScheduleService marketSchedule,
+			IHistoricalQuoteSerice historicalQuoteService, MarketScheduleService marketSchedule,
 			AtomicLong throttleCapacity) {
-		
+
 		this.fundamentalQuoteService = fundamentalQuoteService;
 		this.historicalQuoteService = historicalQuoteService;
 		this.marketSchedule = marketSchedule;
@@ -87,9 +86,10 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 				SecurityQuote quote = sqc.getSecurityQuote();
 
 				if (quote.getLast() != 0.0) {
-					
-					// Only simulate the close if the last quote is 'reasonable'.
-					
+
+					// Only simulate the close if the last quote is
+					// 'reasonable'.
+
 					HistoricalQuote hq = new HistoricalQuote(sqc.getKey().getSymbol(), today);
 					hq.setAdjClose(quote.getLast());
 					hq.setClose(quote.getLast());
@@ -110,6 +110,11 @@ public class QuoteProcessor implements ItemProcessor<SecurityQuoteContainer, Sec
 	private void populateCalcs(SecurityQuoteContainer sqc) {
 
 		FundamentalQuote fundamentalQuote = sqc.getFundamentalQuote();
+
+		if (fundamentalQuote == null) {
+			logger.warn("Missing fundamental quote for {} ... skippings calcs ", () -> sqc.getKey().getSymbol());
+			return;
+		}
 
 		// Calculate vol
 		int volPeriod = sqc.getHistoricalQuotes().size() < 252 ? sqc.getHistoricalQuotes().size() : 252;

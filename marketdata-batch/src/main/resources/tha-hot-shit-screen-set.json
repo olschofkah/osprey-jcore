@@ -39,6 +39,53 @@
   ]
  },
  {
+  "screenName": "Trader ETFs",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "SYMBOL",
+     "symbols": [
+      "SLV",
+      "GDX",
+      "VXX",
+      "VIX",
+      "TZA",
+      "TNA",
+      "SPX",
+      "QQQ",
+      "SPY",
+      "XLE",
+      "XLF",
+      "EEM",
+      "GDX",
+      "TLT",
+      "FXI",
+      "EWZ",
+      "GLD",
+      "XLI",
+      "UPP",
+      "UCO",
+      "XRT",
+      "EWJ",
+      "EWG",
+      "EUO",
+      "XHB",
+      "EWA",
+      "VWO",
+      "DBC",
+      "VOO",
+      "VTI",
+      "SCHB",
+      "TFLO",
+      "SCHP"
+     ],
+     "contains": true
+    }
+   }
+  ]
+ },
+ {
   "screenName": "Market Turning Up",
   "strategies": [],
   "screenCriteria": [
@@ -280,14 +327,14 @@
    {
     "criteriaBucket": {
      "type": "PRICE",
-     "price": 10,
+     "price": 5,
      "relationalOperator": "_GT"
     }
    },
    {
     "criteriaBucket": {
      "type": "MARKET_CAP",
-     "marketCapComparison": 100000000,
+     "marketCapComparison": 1000000000,
      "relationalOperator": "_GT"
     }
    },
@@ -303,33 +350,243 @@
    {
     "criteriaBucket": {
      "type": "EARNINGS_ANNOUNCEMENT",
-     "daysAway": 20,
+     "daysAway": 15,
      "relationalOperator": "_LE"
     }
    },
    {
     "criteriaBucket": {
      "type": "EARNINGS_ANNOUNCEMENT",
-     "daysAway": 5,
+     "daysAway": 1,
      "relationalOperator": "_GE"
     }
    },
    {
     "criteriaBucket": {
      "type": "EARNINGS_PCT_MOVE",
-     "daysBefore": 14,
-     "daysAfter": 4,
-     "percentMoveComparison": 0.05,
+     "daysBefore": 7,
+     "daysAfter": 3,
+     "percentMoveComparison": 0.095,
      "relationalOperator": "_GT"
     }
    },
    {
     "criteriaBucket": {
      "type": "EARNINGS_VOLATILITY",
-     "daysBefore": 14,
-     "daysAfter": 4,
-     "volatilityComparison": 0.5,
+     "daysBefore": 7,
+     "daysAfter": 3,
+     "volatilityComparison": 0.65,
      "relationalOperator": "_GT"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "z_Earnings Calendar 0",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 1,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_ANNOUNCEMENT",
+     "daysAway": 0,
+     "relationalOperator": "_EQ"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "z_Earnings Calendar 1",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 1,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_ANNOUNCEMENT",
+     "daysAway": 1,
+     "relationalOperator": "_EQ"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "z_Earnings Calendar 2",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 1,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_ANNOUNCEMENT",
+     "daysAway": 2,
+     "relationalOperator": "_EQ"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "z_Earnings Calendar 3",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 1,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_ANNOUNCEMENT",
+     "daysAway": 3,
+     "relationalOperator": "_EQ"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "z_Earnings Calendar 4",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 1,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_ANNOUNCEMENT",
+     "daysAway": 4,
+     "relationalOperator": "_EQ"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "z_Earnings Calendar 5",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 1,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_ANNOUNCEMENT",
+     "daysAway": 5,
+     "relationalOperator": "_EQ"
     }
    }
   ]
@@ -515,14 +772,6 @@
      "period2": 50,
      "range": 3,
      "direction": "FROM_BELOW_TO_ABOVE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "VOLATILITY",
-     "period": 252,
-     "volatilityComparison": 0.5,
-     "relationalOperator": "_GE"
     }
    }
   ]
@@ -929,46 +1178,6 @@
   ]
  },
  {
-  "screenName": "Sector Rotation",
-  "strategies": [],
-  "screenCriteria": [
-   {
-    "criteriaBucket": {
-     "type": "SYMBOL",
-     "symbols": [
-      "QQQ",
-      "SPY",
-      "DIA",
-      "USO",
-      "XBI",
-      "XLY",
-      "XLP",
-      "XLE",
-      "XLF",
-      "XLFS",
-      "XLV",
-      "XLI",
-      "XLB",
-      "XLRE",
-      "XLK",
-      "XLU"
-     ],
-     "contains": true
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "ROTATION_INDICATOR",
-     "longPeriod": 60,
-     "shortPeriod": 20,
-     "lag": 1,
-     "rotationBenchmark": 0,
-     "relationalOperator": "_GT"
-    }
-   }
-  ]
- },
- {
   "screenName": "Potential Bottoms(MACD,RSI)",
   "strategies": [],
   "screenCriteria": [
@@ -1039,7 +1248,7 @@
    {
     "criteriaBucket": {
      "type": "MARKET_CAP",
-     "marketCapComparison": 100000000,
+     "marketCapComparison": 1000000000,
      "relationalOperator": "_GE"
     }
    },
@@ -1076,6 +1285,64 @@
   ]
  },
  {
+  "screenName": "Potential Breakouts above 50EMA",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 2,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MACD_DIVERGANCE",
+     "fastPeriod": 12,
+     "slowPeriod": 26,
+     "signalPeriod": 9,
+     "range": 5,
+     "divergance": -0.25,
+     "relationalOperator": "_LT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EMA_VS_PRICE",
+     "period1": 50,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "RSI",
+     "period": 14,
+     "periodRange": 5,
+     "rsiComparison": 30,
+     "relationalOperator": "_LE"
+    }
+   }
+  ]
+ },
+ {
   "screenName": "Potential Tops(MACD,MACD-HISTO,RSI)",
   "strategies": [],
   "screenCriteria": [
@@ -1090,7 +1357,7 @@
    {
     "criteriaBucket": {
      "type": "MARKET_CAP",
-     "marketCapComparison": 100000000,
+     "marketCapComparison": 1000000000,
      "relationalOperator": "_GE"
     }
    },
@@ -1122,6 +1389,155 @@
      "periodRange": 5,
      "rsiComparison": 70,
      "relationalOperator": "_GE"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "Bull Bollinger Bandz",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 15,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "BOLLINGER_BAND_X",
+     "period": 20,
+     "multiplier": 2,
+     "maType": "EMA",
+     "band": "LOWER_BAND",
+     "range": 2,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "Bear Bollinger Bandz",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 15,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "BOLLINGER_BAND_X",
+     "period": 20,
+     "multiplier": 2,
+     "maType": "EMA",
+     "band": "UPPER_BAND",
+     "range": 2,
+     "direction": "FROM_ABOVE_TO_BELOW"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "CAMARILLA_Case_1_Long",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "PRICE",
+     "price": 5,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MARKET_CAP",
+     "marketCapComparison": 1000000000,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "INSTRUMENT_TYPE",
+     "instrumentTypes": [
+      "STOCK"
+     ],
+     "contains": true
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "CAMARILLA_BAND_OPEN",
+     "period": 1,
+     "bandIndex1": 4,
+     "relationalOperator1": "_LT",
+     "bandIndex2": 6,
+     "relationalOperator2": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "CAMARILLA_BAND",
+     "period": 1,
+     "bandIndex": 6,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EARNINGS_ANNOUNCEMENT",
+     "daysAway": 20,
+     "relationalOperator": "_GE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "MOMENTUM_X",
+     "period1": 2,
+     "range": 2,
+     "crossoverPoint": 0,
+     "direction": "FROM_BELOW_TO_ABOVE"
     }
    }
   ]

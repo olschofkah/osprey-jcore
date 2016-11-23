@@ -35,9 +35,9 @@ import com.osprey.securitymaster.utils.OspreyUtils;
 
 // @Repository
 public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
-	
+
 	final static Logger logger = LogManager.getLogger(SecurityMasterJdbcRepository.class);
-	
+
 	private LocalDate DEFAULT_HISTORICAL_LOAD_DATE_MIN = LocalDate.now().minusYears(4);
 	private LocalDate DEFAULT_HISTORICAL_LOAD_DATE_MAX = LocalDate.now();
 
@@ -52,14 +52,13 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			+ " (symbol, cusip, instrument_cd, lot_size, company_name, country, state, employee_cnt, industry, sector, exchange_cd, currency, last_update_ts, create_ts, description, previous_close) "
 			+ " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, clock_timestamp(), clock_timestamp(), ?, ?) ";
 	private static final String EXISTS_OC_SECURITY = "select exists (select 1 from oc_security where symbol = ? )";
-	
+
 	private static final String SELECT_OHLC_HIST = "select symbol, date, open, high, low, close, adj_close, volume, timestamp "
-			+ " from oc_security_ohlc_hist where symbol = ? and date >= ? and date <= ? "
-			+ " order by date desc ";
+			+ " from oc_security_ohlc_hist where symbol = ? and date >= ? and date <= ? " + " order by date desc ";
 	private static final String DELETE_OHLC_HIST_FOR_SYMBOL = "delete from oc_security_ohlc_hist where symbol = ?";
 	private static final String INSERT_OHLC_HIST = " insert into oc_security_ohlc_hist (symbol, date, open, high, low, close, adj_close, volume, timestamp) "
 			+ " values (?,?,?,?,?,?,?,?,clock_timestamp())";
-	
+
 	private static final String EXISTS_OC_SECURITY_NEXT_EVENT = "select exists (select 1 from oc_security_next_events where symbol = ? )";
 	private static final String INSERT_OC_SECURITY_NEXT_EVENT = "insert into oc_security_next_events "
 			+ " (symbol, next_earnings_date_est_low, next_earnings_date_est_high, next_div_date, next_ex_div_date, next_revenue, timestamp) "
@@ -70,283 +69,92 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	private static final String UPDATE_OC_SECURITY_NEXT_EVENT = "update oc_security_next_events set "
 			+ " next_earnings_date_est_low = ?, next_earnings_date_est_high = ?, next_div_date = ?, next_ex_div_date = ?, next_revenue = ?, timestamp = clock_timestamp() "
 			+ " where symbol = ? ";
-	
+
 	private static final String INSERT_OC_SECURITY_QUOTE = "insert into oc_security_quote "
 			+ " (symbol, timestamp, last, bid, ask, bid_size, ask_size, volume, open, close, high, low, data_currency, open_interest) "
 			+ " values (?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?)";
 	private static final String SELECT_OC_SECURITY_QUOTE = "select "
 			+ " symbol, timestamp, last, bid, ask, bid_size, ask_size, volume, open, close, high, low, data_currency, open_interest "
 			+ " from oc_security_quote sq where symbol = ? and timestamp = (select max(timestamp) from oc_security_quote isq where isq.symbol=sq.symbol) ";
-	
+
 	private static final String DELETE_OC_SECURITY_EVENT = "delete from oc_security_event where symbol = ?";
-	//private static final String EXISTS_OC_SECURITY_EVENT = "select exists (select 1 from oc_security_event where symbol = ? and event_type_cd = ? and date = ? )";
+	// private static final String EXISTS_OC_SECURITY_EVENT = "select exists
+	// (select 1 from oc_security_event where symbol = ? and event_type_cd = ?
+	// and date = ? )";
 	private static final String INSERT_OC_SECURITY_EVENT = " insert into oc_security_event "
 			+ " (symbol, date, time, event_type_cd, amt, description, timestamp) values (?, ?, ?, ?, ?, ?, clock_timestamp()) ";
 	private static final String SELECT_OC_SECURITY_EVENT = "select symbol, date, time, event_type_cd, amt, description, timestamp from oc_security_event where symbol = ?";
-	
+
 	private static final String SELECT_CLOSE = "select close from oc_security_ohlc_hist where symbol = ? and date = ?";
 
 	private static final String EXISTS_OC_FUNDAMENTAL = "select exists (select 1 from oc_security_fundamental where symbol = ? and date = ?)";
-	private static final String INSERT_OC_FUNDAMENTAL = "insert into oc_security_fundamental ( " +
-			" symbol , " +
-			" date , " +
-			" last_update_ts  , " +
-			" _10_day_avg_volume , " +
-			" _200_day_average , " +
-			" _50_day_average , " +
-			" _52_week_high , " +
-			" _52_week_low , " +
-			" average_volume , " +
-			" beta , " +
-			" book_value , " +
-			" current_ratio , " +
-			" debt_to_equity , " +
-			" div_rate , " +
-			" div_yield , " +
-			" earnings_avg , " +
-			" earnings_growth , " +
-			" earnings_high , " +
-			" earnings_low , " +
-			" earnings_qtr_growth , " +
-			" ebitda , " +
-			" ebitda_margins , " +
-			" enterprise_to_ebitda , " +
-			" enterprise_to_revenue , " +
-			" enterprise_value , " +
-			" float_shares , " +
-			" forward_eps , " +
-			" forward_pe , " +
-			" free_cashflow , " +
-			" gross_margins , " +
-			" gross_profits , " +
-			" held_pct_insiders , " +
-			" held_pct_institutions , " +
-			" market_cap , " +
-			" net_income_to_common , " +
-			" operating_cashflow , " +
-			" operating_margins , " +
-			" peg_ratio , " +
-			" price_to_book , " +
-			" price_to_sales , " +
-			" profit_margins , " +
-			" quick_ratio , " +
-			" return_on_assets , " +
-			" return_on_equity , " +
-			" revenue_avg , " +
-			" revenue_growth , " +
-			" revenue_high , " +
-			" revenue_low , " +
-			" revenue_per_share , " +
-			" revenue_qtr_growth , " +
-			" shares_outstanding , " +
-			" shares_short , " +
-			" shares_short_prior_month , " +
-			" short_percent_of_float , " +
-			" short_ratio , " +
-			" total_assets ,  " +
-			" total_cash , " +
-			" total_cash_per_share , " +
-			" total_debt , " +
-			" total_revenue , " +
-			" trailing_eps , " +
-			" trailing_pe , " +
-			" yield , "
-			+ "buy_info_shares , "
-			+ "sell_info_shares , "
-			+ "sell_pct_insider_shares , "
-			+ "net_pct_insider_shares , "
-			+ "net_insider_shares_buying , "
-			+ "net_inst_buying_pct , "
-			+ "total_insider_shares , "
-			+ "insider_pct_held , "
-			+ "inst_pct_held , "
-			+ "inst_float_pct_held , "
-			+ "inst_cnt , "		
-			+ " earnings_volatility , "
-			+ " earnings_avg_pct , "
-			+ "rotation_indicator , "
-			+ "_8_day_ema , "
-			+ "_10_day_ema , "
-			+ "_15_day_ema , "
-			+ "_20_day_ema , "
-			+ "_50_day_ema , "
-			+ "_100_day_ema , "
-			+ "_200_day_ema , "
-			+ " volatility ) "
-			+ " values " 
+	private static final String INSERT_OC_FUNDAMENTAL = "insert into oc_security_fundamental ( " + " symbol , "
+			+ " date , " + " last_update_ts  , " + " _10_day_avg_volume , " + " _200_day_average , "
+			+ " _50_day_average , " + " _52_week_high , " + " _52_week_low , " + " average_volume , " + " beta , "
+			+ " book_value , " + " current_ratio , " + " debt_to_equity , " + " div_rate , " + " div_yield , "
+			+ " earnings_avg , " + " earnings_growth , " + " earnings_high , " + " earnings_low , "
+			+ " earnings_qtr_growth , " + " ebitda , " + " ebitda_margins , " + " enterprise_to_ebitda , "
+			+ " enterprise_to_revenue , " + " enterprise_value , " + " float_shares , " + " forward_eps , "
+			+ " forward_pe , " + " free_cashflow , " + " gross_margins , " + " gross_profits , "
+			+ " held_pct_insiders , " + " held_pct_institutions , " + " market_cap , " + " net_income_to_common , "
+			+ " operating_cashflow , " + " operating_margins , " + " peg_ratio , " + " price_to_book , "
+			+ " price_to_sales , " + " profit_margins , " + " quick_ratio , " + " return_on_assets , "
+			+ " return_on_equity , " + " revenue_avg , " + " revenue_growth , " + " revenue_high , " + " revenue_low , "
+			+ " revenue_per_share , " + " revenue_qtr_growth , " + " shares_outstanding , " + " shares_short , "
+			+ " shares_short_prior_month , " + " short_percent_of_float , " + " short_ratio , " + " total_assets ,  "
+			+ " total_cash , " + " total_cash_per_share , " + " total_debt , " + " total_revenue , "
+			+ " trailing_eps , " + " trailing_pe , " + " yield , " + "buy_info_shares , " + "sell_info_shares , "
+			+ "sell_pct_insider_shares , " + "net_pct_insider_shares , " + "net_insider_shares_buying , "
+			+ "net_inst_buying_pct , " + "total_insider_shares , " + "insider_pct_held , " + "inst_pct_held , "
+			+ "inst_float_pct_held , " + "inst_cnt , " + " earnings_volatility , " + " earnings_avg_pct , "
+			+ "rotation_indicator , " + "_8_day_ema , " + "_10_day_ema , " + "_15_day_ema , " + "_20_day_ema , "
+			+ "_50_day_ema , " + "_100_day_ema , " + "_200_day_ema , " + " volatility ) " + " values "
 			+ " (?,?,clock_timestamp(),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? )";
-	
-	private static final String UPDATE_OC_FUNDAMENTAL = "update oc_security_fundamental set " +
-			" last_update_ts = clock_timestamp(), " +
-			" _10_day_avg_volume = ?, " +
-			" _200_day_average = ?, " +
-			" _50_day_average = ?, " +
-			" _52_week_high = ?, " +
-			" _52_week_low = ?, " +
-			" average_volume = ?, " +
-			" beta = ?, " +
-			" book_value = ?, " +
-			" current_ratio = ?, " +
-			" debt_to_equity = ?, " +
-			" div_rate = ?, " +
-			" div_yield = ?, " +
-			" earnings_avg = ?, " +
-			" earnings_growth = ?, " +
-			" earnings_high = ?, " +
-			" earnings_low = ?, " +
-			" earnings_qtr_growth = ?, " +
-			" ebitda = ?, " +
-			" ebitda_margins = ?, " +
-			" enterprise_to_ebitda = ?, " +
-			" enterprise_to_revenue = ?, " +
-			" enterprise_value = ?, " +
-			" float_shares = ?, " +
-			" forward_eps = ?, " +
-			" forward_pe = ?, " +
-			" free_cashflow = ?, " +
-			" gross_margins = ?, " +
-			" gross_profits = ?, " +
-			" held_pct_insiders = ?, " +
-			" held_pct_institutions = ?, " +
-			" market_cap = ?, " +
-			" net_income_to_common = ?, " +
-			" operating_cashflow = ?, " +
-			" operating_margins = ?, " +
-			" peg_ratio = ?, " +
-			" price_to_book = ?, " +
-			" price_to_sales = ?, " +
-			" profit_margins = ?, " +
-			" quick_ratio = ?, " +
-			" return_on_assets = ?, " +
-			" return_on_equity = ?, " +
-			" revenue_avg = ?, " +
-			" revenue_growth = ?, " +
-			" revenue_high = ?, " +
-			" revenue_low = ?, " +
-			" revenue_per_share = ?, " +
-			" revenue_qtr_growth = ?, " +
-			" shares_outstanding = ?, " +
-			" shares_short = ?, " +
-			" shares_short_prior_month = ?, " +
-			" short_percent_of_float = ?, " +
-			" short_ratio = ?, " +
-			" total_assets = ?,  " +
-			" total_cash = ?, " +
-			" total_cash_per_share = ?, " +
-			" total_debt = ?, " +
-			" total_revenue = ?, " +
-			" trailing_eps = ?, " +
-			" trailing_pe = ?, " +
-			" yield = ?, " +
-			" buy_info_shares = ? , " +
-			" sell_info_shares = ? , " +
-			" sell_pct_insider_shares = ? , " +
-			" net_pct_insider_shares = ? , " +
-			" net_insider_shares_buying = ? , " +
-			" net_inst_buying_pct = ? , " +
-			" total_insider_shares = ? , " +
-			" insider_pct_held = ? , " +
-			" inst_pct_held = ?, " +
-			" inst_float_pct_held = ? , " +
-			" inst_cnt = ? , " +
-			" earnings_volatility = ?, " +
-			" earnings_avg_pct = ?, " +
-			" rotation_indicator = ?, " +
-			" _8_day_ema = ?, " +
-			" _10_day_ema = ?, " +
-			" _15_day_ema = ?, " +
-			" _20_day_ema = ?, " +
-			" _50_day_ema = ?, " +
-			" _100_day_ema = ?, " +
-			" _200_day_ema = ?, " +
-			" volatility = ? " +
-			" where symbol = ? and date = ? ";
-	private static final String SELECT_OC_FUNDAMENTAL = "select " +
-			" symbol , " +
-			" date , " +
-			" last_update_ts  , " +
-			" _10_day_avg_volume , " +
-			" _200_day_average , " +
-			" _50_day_average , " +
-			" _52_week_high , " +
-			" _52_week_low , " +
-			" average_volume , " +
-			" beta , " +
-			" book_value , " +
-			" current_ratio , " +
-			" debt_to_equity , " +
-			" div_rate , " +
-			" div_yield , " +
-			" earnings_avg , " +
-			" earnings_growth , " +
-			" earnings_high , " +
-			" earnings_low , " +
-			" earnings_qtr_growth , " +
-			" ebitda , " +
-			" ebitda_margins , " +
-			" enterprise_to_ebitda , " +
-			" enterprise_to_revenue , " +
-			" enterprise_value , " +
-			" float_shares , " +
-			" forward_eps , " +
-			" forward_pe , " +
-			" free_cashflow , " +
-			" gross_margins , " +
-			" gross_profits , "
-			+ " held_pct_insiders , "
-			+ " held_pct_institutions , "
-			+ " market_cap , "
-			+ " net_income_to_common , "
-			+ " operating_cashflow , "
-			+ " operating_margins , "
-			+ " peg_ratio , "
-			+ " price_to_book , "
-			+ " price_to_sales , "
-			+ " profit_margins , "
-			+ " quick_ratio , "
-			+ " return_on_assets , "
-			+ " return_on_equity , "
-			+ " revenue_avg , "
-			+ " revenue_growth , "
-			+ " revenue_high , "
-			+ " revenue_low , "
-			+ " revenue_per_share , "
-			+ " revenue_qtr_growth , "
-			+ " shares_outstanding , "
-			+ " shares_short , "
-			+ " shares_short_prior_month , "
-			+ " short_percent_of_float , "
-			+ " short_ratio , "
-			+ " total_assets ,  "
-			+ " total_cash , "
-			+ " total_cash_per_share , "
-			+ " total_debt , "
-			+ " total_revenue , "
-			+ " trailing_eps , "
-			+ " trailing_pe , "
-			+ " yield , "
-			+ " buy_info_shares , "
-			+ " sell_info_shares , "
-			+ " sell_pct_insider_shares , "
-			+ " net_pct_insider_shares , "
-			+ " net_insider_shares_buying , "
-			+ " net_inst_buying_pct , "
-			+ " total_insider_shares , "
-			+ " insider_pct_held , "
-			+ " inst_pct_held , "
-			+ " inst_float_pct_held , "
-			+ " inst_cnt , "
-			+ " earnings_volatility , "
-			+ " earnings_avg_pct , "
-			+ " rotation_indicator , "
-			+ " _8_day_ema , "
-			+ " _10_day_ema , "
-			+ " _15_day_ema , "
-			+ " _20_day_ema , "
-			+ " _50_day_ema , "
-			+ " _100_day_ema , "
-			+ " _200_day_ema , "
-			+ " volatility "
+
+	private static final String UPDATE_OC_FUNDAMENTAL = "update oc_security_fundamental set "
+			+ " last_update_ts = clock_timestamp(), " + " _10_day_avg_volume = ?, " + " _200_day_average = ?, "
+			+ " _50_day_average = ?, " + " _52_week_high = ?, " + " _52_week_low = ?, " + " average_volume = ?, "
+			+ " beta = ?, " + " book_value = ?, " + " current_ratio = ?, " + " debt_to_equity = ?, " + " div_rate = ?, "
+			+ " div_yield = ?, " + " earnings_avg = ?, " + " earnings_growth = ?, " + " earnings_high = ?, "
+			+ " earnings_low = ?, " + " earnings_qtr_growth = ?, " + " ebitda = ?, " + " ebitda_margins = ?, "
+			+ " enterprise_to_ebitda = ?, " + " enterprise_to_revenue = ?, " + " enterprise_value = ?, "
+			+ " float_shares = ?, " + " forward_eps = ?, " + " forward_pe = ?, " + " free_cashflow = ?, "
+			+ " gross_margins = ?, " + " gross_profits = ?, " + " held_pct_insiders = ?, "
+			+ " held_pct_institutions = ?, " + " market_cap = ?, " + " net_income_to_common = ?, "
+			+ " operating_cashflow = ?, " + " operating_margins = ?, " + " peg_ratio = ?, " + " price_to_book = ?, "
+			+ " price_to_sales = ?, " + " profit_margins = ?, " + " quick_ratio = ?, " + " return_on_assets = ?, "
+			+ " return_on_equity = ?, " + " revenue_avg = ?, " + " revenue_growth = ?, " + " revenue_high = ?, "
+			+ " revenue_low = ?, " + " revenue_per_share = ?, " + " revenue_qtr_growth = ?, "
+			+ " shares_outstanding = ?, " + " shares_short = ?, " + " shares_short_prior_month = ?, "
+			+ " short_percent_of_float = ?, " + " short_ratio = ?, " + " total_assets = ?,  " + " total_cash = ?, "
+			+ " total_cash_per_share = ?, " + " total_debt = ?, " + " total_revenue = ?, " + " trailing_eps = ?, "
+			+ " trailing_pe = ?, " + " yield = ?, " + " buy_info_shares = ? , " + " sell_info_shares = ? , "
+			+ " sell_pct_insider_shares = ? , " + " net_pct_insider_shares = ? , " + " net_insider_shares_buying = ? , "
+			+ " net_inst_buying_pct = ? , " + " total_insider_shares = ? , " + " insider_pct_held = ? , "
+			+ " inst_pct_held = ?, " + " inst_float_pct_held = ? , " + " inst_cnt = ? , " + " earnings_volatility = ?, "
+			+ " earnings_avg_pct = ?, " + " rotation_indicator = ?, " + " _8_day_ema = ?, " + " _10_day_ema = ?, "
+			+ " _15_day_ema = ?, " + " _20_day_ema = ?, " + " _50_day_ema = ?, " + " _100_day_ema = ?, "
+			+ " _200_day_ema = ?, " + " volatility = ? " + " where symbol = ? and date = ? ";
+	private static final String SELECT_OC_FUNDAMENTAL = "select " + " symbol , " + " date , " + " last_update_ts  , "
+			+ " _10_day_avg_volume , " + " _200_day_average , " + " _50_day_average , " + " _52_week_high , "
+			+ " _52_week_low , " + " average_volume , " + " beta , " + " book_value , " + " current_ratio , "
+			+ " debt_to_equity , " + " div_rate , " + " div_yield , " + " earnings_avg , " + " earnings_growth , "
+			+ " earnings_high , " + " earnings_low , " + " earnings_qtr_growth , " + " ebitda , " + " ebitda_margins , "
+			+ " enterprise_to_ebitda , " + " enterprise_to_revenue , " + " enterprise_value , " + " float_shares , "
+			+ " forward_eps , " + " forward_pe , " + " free_cashflow , " + " gross_margins , " + " gross_profits , "
+			+ " held_pct_insiders , " + " held_pct_institutions , " + " market_cap , " + " net_income_to_common , "
+			+ " operating_cashflow , " + " operating_margins , " + " peg_ratio , " + " price_to_book , "
+			+ " price_to_sales , " + " profit_margins , " + " quick_ratio , " + " return_on_assets , "
+			+ " return_on_equity , " + " revenue_avg , " + " revenue_growth , " + " revenue_high , " + " revenue_low , "
+			+ " revenue_per_share , " + " revenue_qtr_growth , " + " shares_outstanding , " + " shares_short , "
+			+ " shares_short_prior_month , " + " short_percent_of_float , " + " short_ratio , " + " total_assets ,  "
+			+ " total_cash , " + " total_cash_per_share , " + " total_debt , " + " total_revenue , "
+			+ " trailing_eps , " + " trailing_pe , " + " yield , " + " buy_info_shares , " + " sell_info_shares , "
+			+ " sell_pct_insider_shares , " + " net_pct_insider_shares , " + " net_insider_shares_buying , "
+			+ " net_inst_buying_pct , " + " total_insider_shares , " + " insider_pct_held , " + " inst_pct_held , "
+			+ " inst_float_pct_held , " + " inst_cnt , " + " earnings_volatility , " + " earnings_avg_pct , "
+			+ " rotation_indicator , " + " _8_day_ema , " + " _10_day_ema , " + " _15_day_ema , " + " _20_day_ema , "
+			+ " _50_day_ema , " + " _100_day_ema , " + " _200_day_ema , " + " volatility "
 			+ " from oc_security_fundamental ocsf where symbol = ? and date = "
 			+ " ( select max(date) from oc_security_fundamental ocsfi where ocsfi.symbol = ocsf.symbol ) ";
 
@@ -400,15 +208,10 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 			public SecurityEvent mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Timestamp timestamp = rs.getTimestamp("timestamp");
 				Time time = rs.getTime("time");
-				return new SecurityEvent(
-						new SecurityKey(rs.getString("symbol"), null),
-						rs.getDate("date").toLocalDate(),
-						time == null ? null : time.toLocalTime(),
-						SecurityEventType.fromCode(rs.getString("event_type_cd")),
-						rs.getDouble("amt"),
-						rs.getString("description"),
-						OspreyUtils.getZonedDateTimeFromEpoch(timestamp.getTime())
-					);
+				return new SecurityEvent(new SecurityKey(rs.getString("symbol"), null),
+						rs.getDate("date").toLocalDate(), time == null ? null : time.toLocalTime(),
+						SecurityEventType.fromCode(rs.getString("event_type_cd")), rs.getDouble("amt"),
+						rs.getString("description"), OspreyUtils.getZonedDateTimeFromEpoch(timestamp.getTime()));
 
 			}
 		}, key.getSymbol());
@@ -436,23 +239,23 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRevenueLow(), fq.getRevenuePerShare(), fq.getRevenueQtrGrowth(), fq.getSharesOutstanding(),
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
-					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), 	fq.getYield(), 
-					fq.getBuyInfoShares(), fq.getSellInfoShares(), fq.getSellPercentInsiderShares(), fq.getNetPercentInsiderShares(), fq.getNetInsiderSharesBuying(),
-					fq.getNetInstBuyingPercent(), fq.getTotalInsiderShares(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsFloatPercentHeld(), fq.getInstitutionsCount(),
-					fq.getEarningsVolatility(), fq.getEarningsAveragePercent(),
-					fq.getRotationIndicator(),
-					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
-					fq.getVolatility(), 
-					fq.getKey().getSymbol(), Date.valueOf(fq.getDate()));
+					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), fq.getBuyInfoShares(),
+					fq.getSellInfoShares(), fq.getSellPercentInsiderShares(), fq.getNetPercentInsiderShares(),
+					fq.getNetInsiderSharesBuying(), fq.getNetInstBuyingPercent(), fq.getTotalInsiderShares(),
+					fq.getInstitutionsPercentHeld(), fq.getInstitutionsPercentHeld(),
+					fq.getInstitutionsFloatPercentHeld(), fq.getInstitutionsCount(), fq.getEarningsVolatility(),
+					fq.getEarningsAveragePercent(), fq.getRotationIndicator(), fq.get_8DayEma(), fq.get_10DayEma(),
+					fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
+					fq.getVolatility(), fq.getKey().getSymbol(), Date.valueOf(fq.getDate()));
 
 		} else {
 			// insert
-			jdbc.update(INSERT_OC_FUNDAMENTAL, fq.getKey().getSymbol(), Date.valueOf(fq.getDate()), fq.get_10DayAvgVolume(),
-					fq.get_200DayAverage(), fq.get_50DayAverage(), fq.get_52WeekHigh(), fq.get_52WeekLow(),
-					fq.getAverageVolume(), fq.getBeta(), fq.getBookValue(), fq.getCurrentRatio(), fq.getDebtToEquity(),
-					fq.getDividendRate(), fq.getDividendYield(), fq.getEarningsAvg(), fq.getEarningsGrowth(),
-					fq.getEarningsHigh(), fq.getEarningsLow(), fq.getEarningsQtrGrowth(), fq.getEbitda(),
-					fq.getEbitdaMargins(), fq.getEnterpriseToEbitda(), fq.getEnterpriseToRevenue(),
+			jdbc.update(INSERT_OC_FUNDAMENTAL, fq.getKey().getSymbol(), Date.valueOf(fq.getDate()),
+					fq.get_10DayAvgVolume(), fq.get_200DayAverage(), fq.get_50DayAverage(), fq.get_52WeekHigh(),
+					fq.get_52WeekLow(), fq.getAverageVolume(), fq.getBeta(), fq.getBookValue(), fq.getCurrentRatio(),
+					fq.getDebtToEquity(), fq.getDividendRate(), fq.getDividendYield(), fq.getEarningsAvg(),
+					fq.getEarningsGrowth(), fq.getEarningsHigh(), fq.getEarningsLow(), fq.getEarningsQtrGrowth(),
+					fq.getEbitda(), fq.getEbitdaMargins(), fq.getEnterpriseToEbitda(), fq.getEnterpriseToRevenue(),
 					fq.getEnterpriseValue(), fq.getFloatShares(), fq.getForwardEps(), fq.getForwardPe(),
 					fq.getFreeCashflow(), fq.getGrossMargins(), fq.getGrossProfits(), fq.getHeldPctInsiders(),
 					fq.getHeldPctInstitutions(), fq.getMarketCap(), fq.getNetIncomeToCommon(),
@@ -462,12 +265,13 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 					fq.getRevenueLow(), fq.getRevenuePerShare(), fq.getRevenueQtrGrowth(), fq.getSharesOutstanding(),
 					fq.getSharesShort(), fq.getSharesShortPriorMonth(), fq.getShortPercentOfFloat(), fq.getShortRatio(),
 					fq.getTotalAssets(), fq.getTotalCash(), fq.getTotalCashPerShare(), fq.getTotalDebt(),
-					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), 
-					fq.getBuyInfoShares(), fq.getSellInfoShares(), fq.getSellPercentInsiderShares(), fq.getNetPercentInsiderShares(), fq.getNetInsiderSharesBuying(),
-					fq.getNetInstBuyingPercent(), fq.getTotalInsiderShares(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsPercentHeld(), fq.getInstitutionsFloatPercentHeld(), fq.getInstitutionsCount(),
-					fq.getEarningsVolatility(), fq.getEarningsAveragePercent(),
-					fq.getRotationIndicator(),
-					fq.get_8DayEma(), fq.get_10DayEma(), fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
+					fq.getTotalRevenue(), fq.getTrailingEps(), fq.getTrailingPe(), fq.getYield(), fq.getBuyInfoShares(),
+					fq.getSellInfoShares(), fq.getSellPercentInsiderShares(), fq.getNetPercentInsiderShares(),
+					fq.getNetInsiderSharesBuying(), fq.getNetInstBuyingPercent(), fq.getTotalInsiderShares(),
+					fq.getInstitutionsPercentHeld(), fq.getInstitutionsPercentHeld(),
+					fq.getInstitutionsFloatPercentHeld(), fq.getInstitutionsCount(), fq.getEarningsVolatility(),
+					fq.getEarningsAveragePercent(), fq.getRotationIndicator(), fq.get_8DayEma(), fq.get_10DayEma(),
+					fq.get_15DayEma(), fq.get_20DayEma(), fq.get_50DayEma(), fq.get_100DayEma(), fq.get_200DayEma(),
 					fq.getVolatility());
 		}
 
@@ -508,14 +312,13 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key) {
 		return findSecurityQuoteContainer(key, DEFAULT_HISTORICAL_LOAD_DATE_MIN, DEFAULT_HISTORICAL_LOAD_DATE_MAX);
 	}
-	
+
 	public SecurityQuoteContainer findSecurityQuoteContainer(SecurityKey key, LocalDate minDate, LocalDate maxDate) {
 		SecurityQuoteContainer sqc = new SecurityQuoteContainer(new SecurityKey(key));
 
 		sqc.setEvents(findSecurityEvents(sqc.getKey()));
 		sqc.setFundamentalQuote(findFundamentalQuote(sqc.getKey()));
-		sqc.setHistoricalQuotes(
-				findHistoricals(sqc.getKey(), minDate, maxDate));
+		sqc.setHistoricalQuotes(findHistoricals(sqc.getKey(), minDate, maxDate));
 		sqc.setSecurity(findSecurity(sqc.getKey()));
 		sqc.setSecurityQuote(findSecurityQuote(sqc.getKey()));
 		sqc.setUpcomingEvents(findUpcomingEvents(sqc.getKey()));
@@ -530,22 +333,22 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 
 					public SecurityUpcomingEvents mapRow(ResultSet rs, int rowNum) throws SQLException {
 						SecurityUpcomingEvents nextEvents = new SecurityUpcomingEvents(new SecurityKey(key));
-						
+
 						Date date = rs.getDate("next_div_date");
 						nextEvents.setNextDivDate(date == null ? null : date.toLocalDate());
 
 						date = rs.getDate("next_earnings_date_est_high");
 						nextEvents.setNextEarningsDateEstHigh(date == null ? null : date.toLocalDate());
-						
+
 						date = rs.getDate("next_earnings_date_est_low");
 						nextEvents.setNextEarningsDateEstLow(date == null ? null : date.toLocalDate());
-						
+
 						date = rs.getDate("next_ex_div_date");
 						nextEvents.setNextExDivDate(date == null ? null : date.toLocalDate());
-						
+
 						date = rs.getDate("next_revenue");
 						nextEvents.setNextRevenue(date == null ? null : date.toLocalDate());
-						
+
 						nextEvents.setTimestamp(
 								OspreyUtils.getZonedDateTimeFromEpoch(rs.getTimestamp("timestamp").getTime()));
 
@@ -647,7 +450,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 				fq.setTrailingEps(rs.getDouble("trailing_eps"));
 				fq.setTrailingPe(rs.getDouble("trailing_pe"));
 				fq.setYield(rs.getDouble("yield"));
-				
+
 				fq.setBuyInfoShares(rs.getLong("buy_info_shares"));
 				fq.setSellInfoShares(rs.getLong("sell_info_shares"));
 				fq.setSellPercentInsiderShares(rs.getDouble("sell_pct_insider_shares"));
@@ -671,7 +474,7 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 				fq.set_100DayEma(rs.getDouble("_100_day_ema"));
 				fq.set_200DayEma(rs.getDouble("_200_day_ema"));
 				fq.setVolatility(rs.getDouble("volatility"));
-				
+
 				return fq;
 			}
 		}, key.getSymbol());
@@ -683,12 +486,21 @@ public class SecurityMasterJdbcRepository implements ISecurityMasterRepository {
 	public void persist(SecurityQuoteContainer sqc) {
 
 		persist(sqc.getSecurity());
-		persist(sqc.getFundamentalQuote());
-		persist(sqc.getSecurityQuote());
-		persist(sqc.getUpcomingEvents());
-		
+
+		if (sqc.getFundamentalQuote() != null) {
+			persist(sqc.getFundamentalQuote());
+		}
+		if (sqc.getSecurityQuote() != null) {
+			persist(sqc.getSecurityQuote());
+		}
+		if (sqc.getUpcomingEvents() != null) {
+			persist(sqc.getUpcomingEvents());
+		}
+
 		deleteHistoricals(sqc.getKey());
-		persistHistoricals(sqc.getHistoricalQuotes());
+		if (!sqc.getHistoricalQuotes().isEmpty()) {
+			persistHistoricals(sqc.getHistoricalQuotes());
+		}
 
 	}
 

@@ -82,7 +82,9 @@ public class NasdaqSecurityMasterFtpService implements ISecurityMasterService {
 		while (iterator.hasNext()) {
 			s = iterator.next();
 
-			if (!optionableSymbolSet.contains(s.getKey().getSymbol())) {
+			if (!optionableSymbolSet.contains(s.getKey().getSymbol()) 
+					//|| !(s.getKey().getSymbol().equals("NFLX") || s.getKey().getSymbol().equals("GNC") ) //for specific securities ... 
+				) {
 				logger.info("Removing {} due to not being optionable.", s.getKey().getSymbol());
 				iterator.remove();
 			}

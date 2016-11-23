@@ -34,7 +34,7 @@ public class MarketDataLoadDecider implements JobExecutionDecider {
 
 		logger.info("Last load date for market data is {} ", () -> lastLoadDate);
 
-		if (lastLoadDate.plusHours(3).isBefore(ZonedDateTime.now()) || marketSchedule.isUsEquityMarketsOpen()) {
+		if (true || lastLoadDate.plusHours(3).isBefore(ZonedDateTime.now()) || marketSchedule.isUsEquityMarketsOpen()) {
 			return new FlowExecutionStatus(DO_FETCH);
 		}
 		return new FlowExecutionStatus(DO_LOAD);
