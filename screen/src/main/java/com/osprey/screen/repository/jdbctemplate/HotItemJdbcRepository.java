@@ -119,6 +119,8 @@ public class HotItemJdbcRepository implements IHotItemRepository {
 	public void persist(List<? extends HotListItem> items) {
 
 		final Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+		
+		logger.info("persisting hot list {} ... ", () -> items.toString());
 
 		jdbc.batchUpdate("insert into tha_hot_list values (?,?,?,?)", new BatchPreparedStatementSetter() {
 

@@ -39,6 +39,37 @@
   ]
  },
  {
+  "screenName": "ETF UPTREND",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "INSTRUMENT_TYPE",
+     "instrumentTypes": [
+      "ETF"
+     ],
+     "contains": true
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EMA_X",
+     "period1": 15,
+     "period2": 50,
+     "range": 3,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EMA_VS_PRICE",
+     "period1": 200,
+     "relationalOperator": "_GT"
+    }
+   }
+  ]
+ },
+ {
   "screenName": "Trader ETFs",
   "strategies": [],
   "screenCriteria": [
@@ -49,36 +80,45 @@
       "SLV",
       "GDX",
       "VXX",
+      "UVXY",
+      "NUGT",
       "VIX",
+      "GDXJ",
+      "IWM",
+      "JNUG",
+      "XOP",
       "TZA",
       "TNA",
       "SPX",
+      "SQQQ",
+      "TQQQ",
       "QQQ",
       "SPY",
       "XLE",
       "XLF",
       "EEM",
-      "GDX",
       "TLT",
       "FXI",
       "EWZ",
+      "EFA",
+      "UNG",
       "GLD",
+      "XLU",
+      "XLP",
       "XLI",
-      "UPP",
+      "XBI",
+      "XLV",
       "UCO",
+      "USO",
       "XRT",
       "EWJ",
       "EWG",
-      "EUO",
       "XHB",
       "EWA",
       "VWO",
       "DBC",
-      "VOO",
       "VTI",
-      "SCHB",
-      "TFLO",
-      "SCHP"
+      "EZU"
      ],
      "contains": true
     }
@@ -350,7 +390,7 @@
    {
     "criteriaBucket": {
      "type": "EARNINGS_ANNOUNCEMENT",
-     "daysAway": 15,
+     "daysAway": 22,
      "relationalOperator": "_LE"
     }
    },
@@ -771,6 +811,52 @@
      "period1": 15,
      "period2": 50,
      "range": 3,
+     "direction": "FROM_BELOW_TO_ABOVE"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "True Death Cross",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EMA_X",
+     "period1": 50,
+     "period2": 200,
+     "range": 2,
+     "direction": "FROM_ABOVE_TO_BELOW"
+    }
+   }
+  ]
+ },
+ {
+  "screenName": "True Golden Cross",
+  "strategies": [],
+  "screenCriteria": [
+   {
+    "criteriaBucket": {
+     "type": "DOLLAR_VOLUME",
+     "dollarVolumeComparison": 2500000,
+     "range": 22,
+     "relationalOperator": "_GT"
+    }
+   },
+   {
+    "criteriaBucket": {
+     "type": "EMA_X",
+     "period1": 50,
+     "period2": 200,
+     "range": 2,
      "direction": "FROM_BELOW_TO_ABOVE"
     }
    }
@@ -1198,22 +1284,6 @@
    },
    {
     "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "INSTRUMENT_TYPE",
-     "instrumentTypes": [
-      "STOCK"
-     ],
-     "contains": true
-    }
-   },
-   {
-    "criteriaBucket": {
      "type": "MACD",
      "fastPeriod": 12,
      "slowPeriod": 26,
@@ -1242,13 +1312,6 @@
      "type": "DOLLAR_VOLUME",
      "dollarVolumeComparison": 2500000,
      "range": 22,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
      "relationalOperator": "_GE"
     }
    },
@@ -1356,13 +1419,6 @@
    },
    {
     "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
      "type": "MACD",
      "fastPeriod": 12,
      "slowPeriod": 26,
@@ -1414,13 +1470,6 @@
    },
    {
     "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
      "type": "BOLLINGER_BAND_X",
      "period": 20,
      "multiplier": 2,
@@ -1453,13 +1502,6 @@
    },
    {
     "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
      "type": "BOLLINGER_BAND_X",
      "period": 20,
      "multiplier": 2,
@@ -1467,77 +1509,6 @@
      "band": "UPPER_BAND",
      "range": 2,
      "direction": "FROM_ABOVE_TO_BELOW"
-    }
-   }
-  ]
- },
- {
-  "screenName": "CAMARILLA_Case_1_Long",
-  "strategies": [],
-  "screenCriteria": [
-   {
-    "criteriaBucket": {
-     "type": "DOLLAR_VOLUME",
-     "dollarVolumeComparison": 2500000,
-     "range": 22,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "PRICE",
-     "price": 5,
-     "relationalOperator": "_GT"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "INSTRUMENT_TYPE",
-     "instrumentTypes": [
-      "STOCK"
-     ],
-     "contains": true
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "CAMARILLA_BAND_OPEN",
-     "period": 1,
-     "bandIndex1": 4,
-     "relationalOperator1": "_LT",
-     "bandIndex2": 6,
-     "relationalOperator2": "_GT"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "CAMARILLA_BAND",
-     "period": 1,
-     "bandIndex": 6,
-     "relationalOperator": "_GT"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "EARNINGS_ANNOUNCEMENT",
-     "daysAway": 20,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "MOMENTUM_X",
-     "period1": 2,
-     "range": 2,
-     "crossoverPoint": 0,
-     "direction": "FROM_BELOW_TO_ABOVE"
     }
    }
   ]
@@ -1559,22 +1530,6 @@
      "type": "PRICE",
      "price": 15,
      "relationalOperator": "_GT"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "MARKET_CAP",
-     "marketCapComparison": 1000000000,
-     "relationalOperator": "_GE"
-    }
-   },
-   {
-    "criteriaBucket": {
-     "type": "INSTRUMENT_TYPE",
-     "instrumentTypes": [
-      "STOCK"
-     ],
-     "contains": true
     }
    },
    {
