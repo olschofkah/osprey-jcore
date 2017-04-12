@@ -26,13 +26,14 @@ object Main extends App with Logging {
   val quoteSink: Sink[(Try[HttpResponse], Int), Future[Done]] = Sink.foreach[(Try[HttpResponse], Int)](elem =>
     elem._1 match {
       case Success(r) =>
-        Unmarshal(r.entity).to[String]
+        val quote: Future[String] = Unmarshal(r.entity).to[String]
+        quote
       case Failure(e) =>
         logger.info(s"Failure received: ${e}")
     })
 
 
-  // Some black magic going on here with tcp buffering due to auto backpressure management ... must consume entity or it block future requests.
+  // // NOTE: Some black magic going on here with tcp buffering due to auto backpressure management ... must consume entity or it block future requests.
   //  val entityDrain: Sink[(Try[HttpResponse], Int), Future[Done]] = Sink.foreach[(Try[HttpResponse], Int)](elem =>
   //    elem._1 match {
   //      case Success(r) =>

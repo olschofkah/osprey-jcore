@@ -87,6 +87,14 @@
         </dependency>
         <dependency>
             <groupId>com.osprey</groupId>
+            <artifactId>integration</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${local.lib}/integration-0.0.1-SNAPSHOT.jar</systemPath>
+        </dependency> -->
+
+        <dependency>
+            <groupId>com.osprey</groupId>
             <artifactId>math</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>system</scope>
@@ -106,13 +114,6 @@
             <scope>system</scope>
             <systemPath>${local.lib}/securitymaster-0.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
-        <dependency>
-            <groupId>com.osprey</groupId>
-            <artifactId>integration</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${local.lib}/integration-0.0.1-SNAPSHOT.jar</systemPath>
-        </dependency> -->
     </dependencies>
 
 
