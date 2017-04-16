@@ -5,9 +5,7 @@ package com.osprey.jenai.model
   */
 class AlgoStrategyEvaluation(val signalEvals: List[TradeSignalEvaluation]) {
 
-  lazy val totalGain: Double = signalEvals.reduceLeft((a: TradeSignalEvaluation, b: TradeSignalEvaluation) => a.gain + b.gain)
-  lazy val averageHoldTimeInMinutes: Long = signalEvals
-                                            .reduceLeft((a: TradeSignalEvaluation, b: TradeSignalEvaluation) => a.holdTime + b.holdTime) / signalEvals
-                                                                                                                                           .size
+  lazy val totalGain: Double = signalEvals.map(s => s.gain).sum
+  lazy val averageHoldTimeInMinutes: Double = signalEvals.map(s => s.holdTime).sum / signalEvals.size
 
 }

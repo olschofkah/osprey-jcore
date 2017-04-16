@@ -5,23 +5,23 @@ import com.osprey.screen.criteria.{MovingAverageConverganceDiverganceCrossoverCr
 
 class TAModel(rawParams: Map[String, Any]) {
 
-  val w_intraDay: Double = rawParams.getOrElse("w_intraDay", 0.0).asInstanceOf[Double]
-  val w_close: Double = rawParams.getOrElse("w_close", 1.0).asInstanceOf[Double]
+  val weight: Double = rawParams.getOrElse("w", 0.0).asInstanceOf[Double]
 
-  val w_MACD: Double = rawParams.getOrElse("w_MACD", 0.5).asInstanceOf[Double]
-  val w_RSI: Double = rawParams.getOrElse("w_RSI", 0.5).asInstanceOf[Double]
-  
+  val weight_MACD: Double = rawParams.getOrElse("weight_MACD", 0.5).asInstanceOf[Double]
+  val weight_RSI: Double = rawParams.getOrElse("weight_RSI", 0.5).asInstanceOf[Double]
+
   val rsi: RelativeStrengthIndexCriteria =
     rawParams.getOrElse("rsi", new RelativeStrengthIndexCriteria(14, 2, 35, RelationalOperator._LT))
       .asInstanceOf[RelativeStrengthIndexCriteria]
 
   val macd: MovingAverageConverganceDiverganceCrossoverCriteria =
-    rawParams.getOrElse("macd", new MovingAverageConverganceDiverganceCrossoverCriteria(12, 26, 9, 2, CrossDirection.FROM_BELOW_TO_ABOVE))
+    rawParams.getOrElse("macd",
+      new MovingAverageConverganceDiverganceCrossoverCriteria(12, 26, 9, 2, CrossDirection.FROM_BELOW_TO_ABOVE))
       .asInstanceOf[MovingAverageConverganceDiverganceCrossoverCriteria]
 
 
   def toMap: Map[String, Any] = {
-    Map("w_intraDay" -> w_intraDay, "w_close" -> w_close, "w_MACD" -> w_MACD, "w_RSI" -> w_RSI, "rsi" -> rsi, "macd" -> macd)
+    Map("weight" -> weight, "weight_MACD" -> weight_MACD, "weight_RSI" -> weight_RSI, "rsi" -> rsi, "macd" -> macd)
   }
 
   // Weight adjustments
@@ -34,42 +34,65 @@ class TAModel(rawParams: Map[String, Any]) {
   }
 
   def adjustMacdWeighting(weight: Double): TAModel = {
-    adjustParameter("w_MACD" -> weight)
+    adjustParameter("weight_MACD" -> weight)
   }
 
   def adjustRsiWeighting(weight: Double): TAModel = {
-    adjustParameter("w_RSI" -> weight)
+    adjustParameter("weight_RSI" -> weight)
   }
 
   // MACD Adjustments
   def adjustMacdFastPeriod(adj: Int): TAModel = {
-    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(adj, macd.getSlowPeriod, macd.getSignalPeriod, macd.getRange, macd.getDirection)
+    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(adj,
+      macd.getSlowPeriod,
+      macd.getSignalPeriod,
+      macd.getRange,
+      macd.getDirection)
     adjustParameter("macd" -> adjMacd)
   }
 
   def adjustMacdSlowPeriod(adj: Int): TAModel = {
-    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod, adj, macd.getSignalPeriod, macd.getRange, macd.getDirection)
+    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod,
+      adj,
+      macd.getSignalPeriod,
+      macd.getRange,
+      macd.getDirection)
     adjustParameter("macd" -> adjMacd)
   }
 
   def adjustMacdSignalPeriod(adj: Int): TAModel = {
-    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod, macd.getSlowPeriod, adj, macd.getRange, macd.getDirection)
+    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod,
+      macd.getSlowPeriod,
+      adj,
+      macd.getRange,
+      macd.getDirection)
     adjustParameter("macd" -> adjMacd)
   }
 
   def adjustMacdRange(adj: Int): TAModel = {
-    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod, macd.getSlowPeriod, macd.getSignalPeriod, adj, macd.getDirection)
+    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod,
+      macd.getSlowPeriod,
+      macd.getSignalPeriod,
+      adj,
+      macd.getDirection)
     adjustParameter("macd" -> adjMacd)
   }
 
   def adjustMacdDirection(direction: CrossDirection): TAModel = {
-    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod, macd.getSlowPeriod, macd.getSignalPeriod, macd.getRange, direction)
+    val adjMacd = new MovingAverageConverganceDiverganceCrossoverCriteria(macd.getFastPeriod,
+      macd.getSlowPeriod,
+      macd.getSignalPeriod,
+      macd.getRange,
+      direction)
     adjustParameter("macd" -> adjMacd)
   }
 
   // RSI Adjustments
   def adjustRsiPeriod(adj: Int): TAModel = {
-    val adjRsi = new RelativeStrengthIndexCriteria(adj, rsi.getPeriodRange, rsi.getRsiComparison, rsi.getRelationalOperator)
+    val adjRsi = new RelativeStrengthIndexCriteria(adj,
+      rsi.getPeriodRange,
+      rsi.getRsiComparison,
+      rsi.getRelationalOperator)
     adjustParameter("rsi" -> adjRsi)
   }
 

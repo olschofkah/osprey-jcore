@@ -8,6 +8,6 @@ import com.osprey.jenai.trade.TradeType
 /**
   * Created by Goliaeth on 4/10/2017.
   */
-case class TradeSignal(quote: QuoteMini, tradeType: TradeType.Value, signalTime: LocalDateTime) {
+case class TradeSignal(quote: QuoteMini, tradeType: TradeType.ValueSet, signalTime: LocalDateTime) {
   val symbol: String = quote.symbol
 }

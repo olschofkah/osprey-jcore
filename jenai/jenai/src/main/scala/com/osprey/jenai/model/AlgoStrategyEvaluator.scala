@@ -9,9 +9,10 @@ object AlgoStrategyEvaluator {
 
     // TODO look how to turn off run time asserts for 'prod' runs
     assert(signals.size > 2)
-    assert(!signals.head.signalTime.isAfter(signals(1).signalTime), _ => "Out of order trade signals")
+    assert(!signals.head.signalTime.isAfter(signals(1).signalTime), "Out of order trade signals")
 
-    val signalEvals: List[TradeSignalEvaluation] = signals.grouped(2).map(tuple => TradeSignalEvaluation(tuple.head, tuple(1))).toList
+    val signalEvals: List[TradeSignalEvaluation] = signals.grouped(2).map(tuple => TradeSignalEvaluation(tuple.head,
+      tuple(1))).toList
     new AlgoStrategyEvaluation(signalEvals)
   }
 }
