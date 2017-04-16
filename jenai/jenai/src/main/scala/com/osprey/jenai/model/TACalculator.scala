@@ -22,7 +22,7 @@ object TACalculator {
                        criteria.getRelationalOperator)) {
       1
     } else {
-      calcRsi(criteria, quotes, offset - 1)
+      calcRsi(criteria, quotes, offset + 1)
     }
   }
 

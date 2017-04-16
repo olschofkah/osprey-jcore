@@ -26,13 +26,13 @@ class TALongShortStrategy(val closeLongModel: TAModel,
     val shortSignalVal: Double = runModel(closeShortModel, intraDayShortModel, previousCloses, intraDayQuotes)
 
     // TODO consider stop loss trades
-
     // TODO switch to using intraday quotes
+
     val currentQuote = previousCloses.head
     val miniQuote = QuoteMini(currentQuote.getKey.getSymbol,
-                              currentQuote.getAdjClose,
-                              currentQuote.getAdjClose,
-                              currentQuote.getTimestamp.toLocalDateTime)
+                               currentQuote.getAdjClose,
+                               currentQuote.getAdjClose,
+                               currentQuote.getTimestamp.toLocalDateTime)
 
     val buySignal: Boolean = longSignalVal > longSignalDial && longSignalVal > shortSignalVal
     val sellSignal: Boolean = shortSignalVal > shortSignalDial && longSignalVal < shortSignalVal
@@ -40,21 +40,32 @@ class TALongShortStrategy(val closeLongModel: TAModel,
     val signal = openTradeSignal match {
       case None if buySignal => Option(TradeSignal(miniQuote, TradeType.BUY, miniQuote.timestamp))
       case None if sellSignal => Option(TradeSignal(miniQuote, TradeType.SELL, miniQuote.timestamp))
-      case Some(open) if open.tradeType == TradeType.SELL && buySignal => Option(TradeSignal(miniQuote, TradeType.BUY, miniQuote.timestamp))
-      case Some(open) if open.tradeType == TradeType.BUY && sellSignal => Option(TradeSignal(miniQuote, TradeType.SELL, miniQuote.timestamp))
+      case Some(open) if open.tradeType == TradeType.SELL && buySignal => Option(TradeSignal(miniQuote,
+                                                                                              TradeType.BUY,
+                                                                                              miniQuote.timestamp))
+      case Some(open) if open.tradeType == TradeType.BUY && sellSignal => Option(TradeSignal(miniQuote,
+                                                                                              TradeType.SELL,
+                                                                                              miniQuote.timestamp))
       case _ => None
     }
 
-    if (signal.nonEmpty) logger.info("Trade signal {} produced for quote {} | Previous Signal {}", Array[Any](signal.get, miniQuote, openTradeSignal))
+    if (signal.nonEmpty) logger
+                         .info("Trade signal {} produced for quote {} | Previous Signal {}",
+                                Array[Any](signal.get, miniQuote, openTradeSignal))
 
     signal
   }
 
-  private def runModel(closeModel: TAModel, intraDayModel: TAModel,previousCloses: List[HistoricalQuote], intraDayQuotes: List[List[HistoricalQuote]]): Double = {
+  private def runModel(closeModel: TAModel,
+                       intraDayModel: TAModel,
+                       previousCloses: List[HistoricalQuote],
+                       intraDayQuotes: List[List[HistoricalQuote]]): Double = {
     val closeRsi = calcRsi(closeModel.rsi, previousCloses, 0)
-    val intraDayRsi = calcRsi(intraDayModel.rsi, intraDayQuotes.head, 0) // TODO determine what to do with intraday quote history
     val closeMacd = calcMacd(closeModel.macd, previousCloses)
-    val intraDayMacd = calcMacd(intraDayModel.macd, previousCloses)
+
+    // TODO determine what to do with intraday quote history
+    val intraDayRsi = if (intraDayQuotes.nonEmpty) calcRsi(intraDayModel.rsi, intraDayQuotes.head, 0) else 0
+    val intraDayMacd = if (intraDayQuotes.nonEmpty) calcMacd(intraDayModel.macd, intraDayQuotes.head) else 0
 
     // @formatter:off
     closeModel.weight *

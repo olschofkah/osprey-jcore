@@ -18,15 +18,21 @@ class TALongShortStrategyTests extends FunSuite with Matchers {
 
     val strategy: TALongShortStrategy = TALongShortStrategy()
 
-    evaluator.test(strategy)
+    val result: AlgoStrategyEvaluation = evaluator.test(strategy)
+
+    println(result)
   }
 
   test("Quote Generator") {
 
     val qg = new QuoteGenerator("GDXJ", 35.05, 35.07)
 
-    qg.generateHistoricalQuotes(22).foreach(x => println(x))
+    val quotes = qg.generateHistoricalQuotes(22)
+    quotes.foreach(q => println(q))
 
+    assertResult(22) {
+      quotes.size
+    }
 
   }
 

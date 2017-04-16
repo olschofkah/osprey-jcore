@@ -22,7 +22,7 @@ class QuoteGenerator(symbol: String, bidSeed: Double, askSeed: Double) {
     // TODO needs work
 
 
-    for (i <- 0 to size) {
+    for (i <- 0 until size) {
 
 
       val quote = new HistoricalQuote(symbol, dt)
@@ -32,7 +32,7 @@ class QuoteGenerator(symbol: String, bidSeed: Double, askSeed: Double) {
       quote.setLow(previousBidAskLast._3 * 0.99)
       quote.setOpen(previousBidAskLast._3 + (if (random.nextInt() < 0) -1 else 1))
       quote.setTimestamp(ZonedDateTime.now())
-      quote.setVolume(random.nextFloat().toInt * 100000)
+      quote.setVolume((random.nextFloat() * 1000000f).toLong)
 
       lb += quote
 
@@ -42,10 +42,10 @@ class QuoteGenerator(symbol: String, bidSeed: Double, askSeed: Double) {
     lb.toList
   }
 
-  private def generateQuote(bidSeed: Double, askSeed: Double): (Double, Double, Double) = {
-    val bid = bidSeed - random.nextFloat() * 2
-    val ask = askSeed + random.nextFloat() * 2
-    (bid, ask, (bid + ask) / 2)
+  private def generateQuote(bid: Double, ask: Double): (Double, Double, Double) = {
+    val delta =  random.nextFloat() * 2 * (if (random.nextInt() < 0) -1 else 1)
+    val last = ((bid + ask) / 2.0) + delta
+    (last - 0.02, last + 0.02, last)
   }
 
 }
