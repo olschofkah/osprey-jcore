@@ -6,16 +6,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="467bef3b-c241-4ef3-a405-5a7a4e639cba" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jenai/src/main/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jenai/src/main/testresources/gdxj_hist.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/quote/FileResourceHistoricalCloseQuoteSource.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/main.iml" afterPath="$PROJECT_DIR$/jenai/src/main/main.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluation.scala" afterPath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluation.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluator.scala" afterPath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluator.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TACalculator.scala" afterPath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TACalculator.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TradeSignalEvaluation.scala" afterPath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TradeSignalEvaluation.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/longshort/TALongShortStrategy.scala" afterPath="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/longshort/TALongShortStrategy.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/QuoteGenerator.scala" afterPath="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/QuoteGenerator.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/TALongShortStrategyTests.scala" afterPath="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/TALongShortStrategyTests.scala" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -36,50 +29,79 @@
       <file leaf-file-name="TALongShortStrategy.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/longshort/TALongShortStrategy.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+            <state relative-caret-position="739">
+              <caret line="89" column="30" lean-forward="false" selection-start-line="89" selection-start-column="30" selection-end-line="89" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TACalculator.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TACalculator.scala">
+      <file leaf-file-name="FileResourceHistoricalCloseQuoteSource.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/quote/FileResourceHistoricalCloseQuoteSource.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="554">
-              <caret line="38" column="33" lean-forward="false" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
-              <folding />
+            <state relative-caret-position="739">
+              <caret line="33" column="13" lean-forward="false" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+              <folding>
+                <element signature="e#32#75#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AlgoStrategyEvaluator.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluator.scala">
+      <file leaf-file-name="LocalDate.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/java/jdk1.8.0_121/src.zip!/java/time/LocalDate.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="924">
-              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+            <state relative-caret-position="406">
+              <caret line="136" column="28" lean-forward="false" selection-start-line="136" selection-start-column="19" selection-end-line="136" selection-end-column="28" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TradeSignalEvaluation.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TradeSignalEvaluation.scala">
+      <file leaf-file-name="Try.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.12.0/scala-library-2.12.0.jar!/scala/util/Try.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="792">
-              <caret line="26" column="1" lean-forward="false" selection-start-line="26" selection-start-column="1" selection-end-line="26" selection-end-column="1" />
+            <state relative-caret-position="917">
+              <caret line="30" column="7" lean-forward="false" selection-start-line="30" selection-start-column="7" selection-end-line="30" selection-end-column="7" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TALongShortStrategyTests.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="StringUtils.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar!/org/apache/commons/lang3/StringUtils.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="404">
+              <caret line="100" column="25" lean-forward="false" selection-start-line="100" selection-start-column="25" selection-end-line="100" selection-end-column="25" />
+              <folding>
+                <element signature="e#2592#2593#0" expanded="true" />
+                <element signature="e#2642#2643#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TAModel.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TAModel.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="404">
+              <caret line="98" column="6" lean-forward="false" selection-start-line="98" selection-start-column="6" selection-end-line="98" selection-end-column="6" />
+              <folding>
+                <element signature="e#32#112#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TALongShortStrategyTests.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/TALongShortStrategyTests.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="607">
-              <caret line="22" column="19" lean-forward="false" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
+            <state relative-caret-position="871">
+              <caret line="30" column="19" lean-forward="true" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
               <folding>
                 <element signature="e#32#91#0" expanded="true" />
+                <marker date="1492396453907" expanded="true" signature="1470:1657" ph="(...)" />
+                <marker date="1492396453907" expanded="true" signature="1470:1660" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -98,38 +120,18 @@
       <file leaf-file-name="gdxj_hist.csv" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jenai/src/main/testresources/gdxj_hist.csv">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="917">
+              <caret line="1866" column="51" lean-forward="true" selection-start-line="1866" selection-start-column="51" selection-end-line="1866" selection-end-column="51" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jenai/src/main/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="627">
-              <caret line="19" column="5" lean-forward="true" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OspreyQuantMath.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/jenai/src/main/lib/math-0.0.1-SNAPSHOT.jar!/com/osprey/math/OspreyQuantMath.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="626">
-              <caret line="301" column="0" lean-forward="false" selection-start-line="301" selection-start-column="0" selection-end-line="301" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="HistoricalGainQuote.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/jenai/src/main/lib/securitymaster-0.0.1-SNAPSHOT.jar!/com/osprey/securitymaster/secondary/HistoricalGainQuote.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="693">
-              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+            <state relative-caret-position="759">
+              <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -207,13 +209,14 @@
         <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyBacktester.scala" />
         <option value="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/scala/ScalaLangTests.scala" />
         <option value="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/QuoteGenerator.scala" />
-        <option value="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/TALongShortStrategyTests.scala" />
         <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TACalculator.scala" />
-        <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/longshort/TALongShortStrategy.scala" />
         <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TradeSignalEvaluation.scala" />
         <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluator.scala" />
         <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluation.scala" />
         <option value="$PROJECT_DIR$/jenai/src/main/.gitignore" />
+        <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/longshort/TALongShortStrategy.scala" />
+        <option value="$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/quote/FileQuoteSource.scala" />
+        <option value="$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/TALongShortStrategyTests.scala" />
       </list>
     </option>
   </component>
@@ -247,6 +250,232 @@
     <panes>
       <pane id="ProjectPane">
         <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.scala-lang:scala-library:2.12.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala-library-2.12.0.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.scala-lang:scala-library:2.12.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala-library-2.12.0.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.scala-lang:scala-library:2.12.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala-library-2.12.0.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Try.class" />
+              <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.scala-lang:scala-library:2.12.0" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala-library-2.12.0.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="util" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.apache.commons:commons-lang3:3.4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commons-lang3-3.4.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lang3" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Maven: org.apache.commons:commons-lang3:3.4" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commons-lang3-3.4.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; IntelliJ IDEA Community Edition IC-171.3780.107 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; IntelliJ IDEA Community Edition IC-171.3780.107 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rt.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; IntelliJ IDEA Community Edition IC-171.3780.107 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rt.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="&lt; IntelliJ IDEA Community Edition IC-171.3780.107 &gt;" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rt.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="time" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="jenai" />
@@ -328,6 +557,32 @@
               <option name="myItemId" value="scala" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="jenai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="quote" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -378,27 +633,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="ScalaTest.TALongShortStrategyTests.Initial Strategy Test">
-    <configuration default="false" name="Main" type="Application" factoryName="Application" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="com.osprey.jenai.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="MAIN_CLASS_NAME" value="com.osprey.jenai.Main" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="main" />
-      <envs />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="ScalaTest.TALongShortStrategyTests.Historical Data Strategy Test">
     <configuration default="false" name="ScalaLangTests.Testing random behavior" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="main" />
@@ -410,25 +645,6 @@
       <setting name="searchForTest" value="Across module dependencies" />
       <setting name="testName" value="Testing random behavior" />
       <setting name="testKind" value="Test name" />
-      <setting name="showProgressMessages" value="true" />
-      <setting name="useSbt" value="false" />
-      <setting name="useUiWithSbt" value="false" />
-      <classRegexps />
-      <testRegexps />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="false" name="ScalaLangTests" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="main" />
-      <setting name="path" value="com.osprey.jenai.scala.ScalaLangTests" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="file://$PROJECT_DIR$/jenai/src/main" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
       <setting name="showProgressMessages" value="true" />
       <setting name="useSbt" value="false" />
       <setting name="useUiWithSbt" value="false" />
@@ -466,6 +682,44 @@
       <setting name="workingDirectory" value="file://$PROJECT_DIR$/jenai/src/main" />
       <setting name="searchForTest" value="Across module dependencies" />
       <setting name="testName" value="Initial Strategy Test" />
+      <setting name="testKind" value="Test name" />
+      <setting name="showProgressMessages" value="true" />
+      <setting name="useSbt" value="false" />
+      <setting name="useUiWithSbt" value="false" />
+      <classRegexps />
+      <testRegexps />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="TALongShortStrategyTests.File Quote Source" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="main" />
+      <setting name="path" value="com.osprey.jenai.model.TALongShortStrategyTests" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="file://$PROJECT_DIR$/jenai/src/main" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="File Quote Source" />
+      <setting name="testKind" value="Test name" />
+      <setting name="showProgressMessages" value="true" />
+      <setting name="useSbt" value="false" />
+      <setting name="useUiWithSbt" value="false" />
+      <classRegexps />
+      <testRegexps />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="false" name="TALongShortStrategyTests.Historical Data Strategy Test" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="main" />
+      <setting name="path" value="com.osprey.jenai.model.TALongShortStrategyTests" />
+      <setting name="package" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="file://$PROJECT_DIR$/jenai/src/main" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="testName" value="Historical Data Strategy Test" />
       <setting name="testKind" value="Test name" />
       <setting name="showProgressMessages" value="true" />
       <setting name="useSbt" value="false" />
@@ -682,19 +936,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Application.Main" />
-      <item index="1" class="java.lang.String" itemvalue="ScalaTest.ScalaLangTests.Testing random behavior" />
-      <item index="2" class="java.lang.String" itemvalue="ScalaTest.ScalaLangTests" />
-      <item index="3" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Quote Generator" />
-      <item index="4" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Initial Strategy Test" />
+      <item index="0" class="java.lang.String" itemvalue="ScalaTest.ScalaLangTests.Testing random behavior" />
+      <item index="1" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Quote Generator" />
+      <item index="2" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Initial Strategy Test" />
+      <item index="3" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.File Quote Source" />
+      <item index="4" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Historical Data Strategy Test" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Initial Strategy Test" />
-        <item index="1" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Quote Generator" />
-        <item index="2" class="java.lang.String" itemvalue="ScalaTest.ScalaLangTests.Testing random behavior" />
-        <item index="3" class="java.lang.String" itemvalue="ScalaTest.ScalaLangTests" />
-        <item index="4" class="java.lang.String" itemvalue="Application.Main" />
+        <item index="0" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Historical Data Strategy Test" />
+        <item index="1" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.File Quote Source" />
+        <item index="2" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Initial Strategy Test" />
+        <item index="3" class="java.lang.String" itemvalue="ScalaTest.TALongShortStrategyTests.Quote Generator" />
+        <item index="4" class="java.lang.String" itemvalue="ScalaTest.ScalaLangTests.Testing random behavior" />
       </list>
     </recent_temporary>
   </component>
@@ -720,11 +974,14 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TALongShortStrategyTests_Initial_Strategy_Test - 2017.04.16 at 14h 31m 11s.xml">
-      <configuration name="TALongShortStrategyTests.Initial Strategy Test" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="TALongShortStrategyTests_File_Quote_Source - 2017.04.16 at 22h 22m 34s.xml">
+      <configuration name="TALongShortStrategyTests.File Quote Source" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TALongShortStrategyTests_Initial_Strategy_Test - 2017.04.16 at 14h 33m 13s.xml">
-      <configuration name="TALongShortStrategyTests.Initial Strategy Test" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="TALongShortStrategyTests_File_Quote_Source - 2017.04.16 at 22h 29m 36s.xml">
+      <configuration name="TALongShortStrategyTests.File Quote Source" configurationId="ScalaTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TALongShortStrategyTests_Historical_Data_Strategy_Test - 2017.04.16 at 22h 33m 40s.xml">
+      <configuration name="TALongShortStrategyTests.Historical Data Strategy Test" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
     <history-entry file="TALongShortStrategyTests_Initial_Strategy_Test - 2017.04.16 at 14h 41m 09s.xml">
       <configuration name="TALongShortStrategyTests.Initial Strategy Test" configurationId="ScalaTestRunConfiguration" />
@@ -744,11 +1001,8 @@
     <history-entry file="TALongShortStrategyTests_Initial_Strategy_Test - 2017.04.16 at 15h 04m 53s.xml">
       <configuration name="TALongShortStrategyTests.Initial Strategy Test" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TALongShortStrategyTests_Quote_Generator - 2017.04.16 at 14h 26m 56s.xml">
-      <configuration name="TALongShortStrategyTests.Quote Generator" configurationId="ScalaTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TALongShortStrategyTests_Quote_Generator - 2017.04.16 at 14h 28m 11s.xml">
-      <configuration name="TALongShortStrategyTests.Quote Generator" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="TALongShortStrategyTests_Initial_Strategy_Test - 2017.04.16 at 15h 57m 45s.xml">
+      <configuration name="TALongShortStrategyTests.Initial Strategy Test" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
@@ -756,12 +1010,12 @@
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.4801463" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.47910136" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3324468" sideWeight="0.26671892" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3324468" sideWeight="0.26828632" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3324468" sideWeight="0.7332811" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3324468" sideWeight="0.7317137" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15621735" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -796,27 +1050,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/com/typesafe/akka/akka-http-core_2.12/10.0.5/akka-http-core_2.12-10.0.5.jar!/akka/http/scaladsl/HttpsConnectionContext.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33">
-          <caret line="1" column="34" lean-forward="false" selection-start-line="1" selection-start-column="12" selection-end-line="1" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/scala/lib/scala-library.jar!/scala/util/Random.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="4" column="6" lean-forward="false" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/typesafe/akka/akka-actor_2.12/2.4.17/akka-actor_2.12-2.4.17.jar!/akka/actor/Status.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="8" column="19" lean-forward="false" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/com/typesafe/akka/akka-stream_2.12/2.4.17/akka-stream_2.12-2.4.17.jar!/akka/stream/SinkShape.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="33">
@@ -871,13 +1104,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="99">
           <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.12.0/scala-library-2.12.0.jar!/scala/util/Try.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33">
-          <caret line="1" column="22" lean-forward="false" selection-start-line="1" selection-start-column="22" selection-end-line="1" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -1036,16 +1262,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TAModel.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="12" column="42" lean-forward="true" selection-start-line="12" selection-start-column="42" selection-end-line="12" selection-end-column="42" />
-          <folding>
-            <element signature="e#32#112#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyBacktester.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="429">
@@ -1138,14 +1354,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/longshort/TALongShortStrategy.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TradeSignalEvaluation.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="792">
@@ -1162,16 +1370,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/TALongShortStrategyTests.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="607">
-          <caret line="22" column="19" lean-forward="false" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
-          <folding>
-            <element signature="e#32#91#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/AlgoStrategyEvaluation.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="429">
@@ -1180,19 +1378,86 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jenai/src/main/testresources/gdxj_hist.csv">
+    <entry file="file://$PROJECT_DIR$/jenai/src/main/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="759">
+          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jenai/src/main/.gitignore">
+    <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/TAModel.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="19" column="5" lean-forward="true" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+        <state relative-caret-position="404">
+          <caret line="98" column="6" lean-forward="false" selection-start-line="98" selection-start-column="6" selection-end-line="98" selection-end-column="6" />
+          <folding>
+            <element signature="e#32#112#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/model/longshort/TALongShortStrategy.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="739">
+          <caret line="89" column="30" lean-forward="false" selection-start-line="89" selection-start-column="30" selection-end-line="89" selection-end-column="30" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar!/org/apache/commons/lang3/StringUtils.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="404">
+          <caret line="100" column="25" lean-forward="false" selection-start-line="100" selection-start-column="25" selection-end-line="100" selection-end-column="25" />
+          <folding>
+            <element signature="e#2592#2593#0" expanded="true" />
+            <element signature="e#2642#2643#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.12.0/scala-library-2.12.0.jar!/scala/util/Try.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="917">
+          <caret line="30" column="7" lean-forward="false" selection-start-line="30" selection-start-column="7" selection-end-line="30" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jenai/src/main/testresources/gdxj_hist.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="917">
+          <caret line="1866" column="51" lean-forward="true" selection-start-line="1866" selection-start-column="51" selection-end-line="1866" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/java/jdk1.8.0_121/src.zip!/java/time/LocalDate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="406">
+          <caret line="136" column="28" lean-forward="false" selection-start-line="136" selection-start-column="19" selection-end-line="136" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jenai/src/main/scala/com/osprey/jenai/quote/FileResourceHistoricalCloseQuoteSource.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="739">
+          <caret line="33" column="13" lean-forward="false" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+          <folding>
+            <element signature="e#32#75#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jenai/src/main/test/com/osprey/jenai/model/TALongShortStrategyTests.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="871">
+          <caret line="30" column="19" lean-forward="true" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
+          <folding>
+            <element signature="e#32#91#0" expanded="true" />
+            <marker date="1492396453907" expanded="true" signature="1470:1657" ph="(...)" />
+            <marker date="1492396453907" expanded="true" signature="1470:1660" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -87,6 +87,9 @@ class TALongShortStrategy(val closeLongModel: TAModel,
 object TALongShortStrategy {
   def apply(): TALongShortStrategy = {
     val longModel = TAModel()
+                    .adjustRsiRange(22)
+                    .adjustMacdRange(22)
+
     val shortModel = longModel.adjustMacdDirection(CrossDirection.FROM_ABOVE_TO_BELOW)
                      .adjustRsiComparison(65)
                      .adjustRsiRelationalOperator(RelationalOperator._GT)
