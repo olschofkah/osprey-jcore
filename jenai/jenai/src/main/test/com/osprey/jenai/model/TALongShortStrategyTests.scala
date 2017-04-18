@@ -24,11 +24,13 @@ class TALongShortStrategyTests extends FunSuite with Matchers {
   test("Historical Data Strategy Test") {
     val strat = TALongShortStrategy
     val quoteSource = new FileResourceHistoricalCloseQuoteSource("gdxj_hist.csv", "GDXJ")
-    val evaluator = new AlgoStrategyBacktester(quoteSource.read(), List.empty[List[HistoricalQuote]])
+    val evaluator = new AlgoStrategyBacktester(quoteSource.read().take(252 * 2), List.empty[List[HistoricalQuote]])
+    // TODO performance problem ... 
     val strategy: TALongShortStrategy = TALongShortStrategy()
     val result: AlgoStrategyEvaluation = evaluator.test(strategy)
 
     println(result)
+    result.signalPairs.foreach(x => println(x))
   }
 
   test("Quote Generator") {

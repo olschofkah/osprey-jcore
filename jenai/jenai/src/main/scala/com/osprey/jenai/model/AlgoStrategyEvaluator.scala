@@ -12,15 +12,15 @@ object AlgoStrategyEvaluator {
       assert(!signals.head.signalTime.isAfter(signals(1).signalTime), "Out of order trade signals")
     }
 
-    val signalEvals: List[TradeSignalEvaluation] = signals.grouped(2)
-                                                   .map((pair: Seq[TradeSignal]) =>
-                                                     pair.size match {
-                                                       case 0 => null
-                                                       case 1 => TradeSignalEvaluation(pair.head, None)
-                                                       case 2 => TradeSignalEvaluation(pair.head, Some(pair(1)))
-                                                     })
-                                                   .filterNot(_ == null)
-                                                   .toList
+    val signalEvals: Set[TradeSignalPair] = signals.grouped(2)
+                                            .map((pair: Seq[TradeSignal]) =>
+                                              pair.size match {
+                                                case 0 => null
+                                                case 1 => TradeSignalPair(pair.head, None)
+                                                case 2 => TradeSignalPair(pair.head, Some(pair(1)))
+                                              })
+                                            .filterNot(_ == null)
+                                            .toSet[TradeSignalPair]
 
     new AlgoStrategyEvaluation(signalEvals)
   }

@@ -1,5 +1,6 @@
 package com.osprey.jenai.model
 
+import com.osprey.jenai.utils.Logging
 import com.osprey.securitymaster.HistoricalQuote
 
 import scala.collection.immutable
@@ -8,7 +9,8 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by Goliaeth on 4/10/2017.
   */
-class AlgoStrategyBacktester(previousCloses: List[HistoricalQuote], intraDayQuotes: List[List[HistoricalQuote]]) {
+class AlgoStrategyBacktester(previousCloses: List[HistoricalQuote],
+                             intraDayQuotes: List[List[HistoricalQuote]]) extends Logging {
 
 
   def test(strategy: AlgoStrategy): AlgoStrategyEvaluation = {
@@ -18,7 +20,17 @@ class AlgoStrategyBacktester(previousCloses: List[HistoricalQuote], intraDayQuot
       strategy.run(previousCloses.drop(i), intraDayQuotes.drop(i), Option.empty)
     }
 
-    val filteredSignals = filterSequence(signals)
+    if (logger.isInfoEnabled) {
+      println("Signals ... ")
+      signals.foreach(x => logger.info(x))
+    }
+
+    val filteredSignals = filterSequence(signals.reverse)
+
+    if (logger.isInfoEnabled) {
+      println("Filtered Signals ... ")
+      filteredSignals.foreach(x => logger.info(x))
+    }
 
     AlgoStrategyEvaluator.evaluate(filteredSignals)
   }
@@ -35,12 +47,12 @@ class AlgoStrategyBacktester(previousCloses: List[HistoricalQuote], intraDayQuot
       List[TradeSignal](signals.head)
     } else {
       val lb = new ListBuffer[TradeSignal]()
-      var previousSignal: TradeSignal = null
+      var openSignal: TradeSignal = null
 
       for (signal <- signals) {
-        if (previousSignal == null || (previousSignal != null && previousSignal.tradeType != signal.tradeType)) {
+        if (openSignal == null || (openSignal != null && openSignal.tradeType != signal.tradeType)) {
           lb += signal
-          previousSignal = signal
+          openSignal = if (openSignal == null) signal else null
         }
       }
 

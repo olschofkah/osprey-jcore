@@ -1,12 +1,14 @@
 package com.osprey.jenai.model.longshort
 
-import com.osprey.jenai.model.TACalculator.{calcMacd, calcRsi}
-import com.osprey.jenai.model.{AlgoStrategy, TAModel, TradeSignal}
+import com.osprey.jenai.model.TACalculator.{calcMacd, calcMacdLevel, calcRsi}
+import com.osprey.jenai.model.{AlgoStrategy, TACalculator, TAModel, TradeSignal}
 import com.osprey.jenai.quote.QuoteMini
 import com.osprey.jenai.trade.TradeType
 import com.osprey.jenai.utils.Logging
 import com.osprey.screen.criteria.constants.{CrossDirection, RelationalOperator}
 import com.osprey.securitymaster.HistoricalQuote
+
+import scala.collection.JavaConverters._
 
 /**
   * Note that this is not a traditional long short strategy.  This long/short means running technical analysis on both directions concurrently
@@ -32,7 +34,7 @@ class TALongShortStrategy(val closeLongModel: TAModel,
     val miniQuote = QuoteMini(currentQuote.getKey.getSymbol,
                                currentQuote.getAdjClose,
                                currentQuote.getAdjClose,
-                               currentQuote.getTimestamp.toLocalDateTime)
+                               currentQuote.getHistoricalDate.atStartOfDay())
 
     val buySignal: Boolean = longSignalVal > longSignalDial && longSignalVal > shortSignalVal
     val sellSignal: Boolean = shortSignalVal > shortSignalDial && longSignalVal < shortSignalVal
@@ -49,9 +51,8 @@ class TALongShortStrategy(val closeLongModel: TAModel,
       case _ => None
     }
 
-    if (signal.nonEmpty) logger
-                         .info("Trade signal {} produced for quote {} | Previous Signal {}",
-                                Array[Any](signal.get, miniQuote, openTradeSignal))
+    if (signal.nonEmpty && logger.isDebugEnabled)
+      logger.debug("Trade signal {} ", () => signal.get)
 
     signal
   }
@@ -62,22 +63,28 @@ class TALongShortStrategy(val closeLongModel: TAModel,
                        intraDayQuotes: List[List[HistoricalQuote]]): Double = {
     val closeRsi = calcRsi(closeModel.rsi, previousCloses, 0)
     val closeMacd = calcMacd(closeModel.macd, previousCloses)
+    val closeMacdLevel = calcMacdLevel(closeModel.macdLevel, previousCloses)
 
     // TODO determine what to do with intraday quote history
     val intraDayRsi = if (intraDayQuotes.nonEmpty) calcRsi(intraDayModel.rsi, intraDayQuotes.head, 0) else 0
     val intraDayMacd = if (intraDayQuotes.nonEmpty) calcMacd(intraDayModel.macd, intraDayQuotes.head) else 0
+    val intraDayMacdLevel = if (intraDayQuotes.nonEmpty) calcMacdLevel(closeModel.macdLevel, intraDayQuotes.head) else 0
 
     // @formatter:off
-    closeModel.weight *
+    (
+      closeModel.weight *
                 (
                   closeModel.weight_RSI * closeRsi
                 + closeModel.weight_MACD * closeMacd
+                + closeModel.weight_MACD_LEVEL * closeMacdLevel
                 )
     + intraDayModel.weight *
                 (
                   intraDayModel.weight_RSI * intraDayRsi
                 + intraDayModel.weight_MACD * intraDayMacd
+                + intraDayModel.weight_MACD_LEVEL * closeMacdLevel
                 )
+      )
     // @formatter:on
   }
 
@@ -87,13 +94,14 @@ class TALongShortStrategy(val closeLongModel: TAModel,
 object TALongShortStrategy {
   def apply(): TALongShortStrategy = {
     val longModel = TAModel()
-                    .adjustRsiRange(22)
-                    .adjustMacdRange(22)
+                    .adjustRsiComparison(40)
 
     val shortModel = longModel.adjustMacdDirection(CrossDirection.FROM_ABOVE_TO_BELOW)
-                     .adjustRsiComparison(65)
+                     .adjustRsiComparison(60)
                      .adjustRsiRelationalOperator(RelationalOperator._GT)
+                     .adjustMacdLevelRelationalOperator(RelationalOperator._GT)
+                     .adjustMacdLevel(0.5)
 
-    new TALongShortStrategy(longModel, shortModel, longModel, shortModel, 0.75f, 0.75f)
+    new TALongShortStrategy(longModel, shortModel, longModel, shortModel, 0.4f, 0.4f)
   }
 }
