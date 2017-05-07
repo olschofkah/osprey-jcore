@@ -1,5 +1,7 @@
 #!/bin/bash -v
 
+# TODO ... instead of copying blindly ... construct properties in property files on an as needed basis or use additional dev ops tools.  
+
 # Boot Projects
 cp ./main/* ../marketdata-batch/src/main/resources/
 cp ./main/* ../marketdata-events-batch/src/main/resources/
