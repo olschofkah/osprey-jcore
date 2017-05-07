@@ -18,24 +18,23 @@ object TACalculator {
   lazy val logger = LogManager.getLogger(this.getClass);
 
   def calcRsi(criteria: RelativeStrengthIndexCriteria, quotes: List[HistoricalQuote], offset: Int): Int = {
+    calcRsi(criteria, QuantLib.rsiUsingWilders(criteria.getPeriod, 0, quotes.asJava), offset)
+  }
+
+  def calcRsi(criteria: RelativeStrengthIndexCriteria, rsiCurve: Array[Double], offset: Int): Int = {
     if (offset >= criteria.getPeriodRange) {
       0
-    } else if (compare(OspreyQuantMath.rsiUsingWilders(criteria.getPeriod, offset, quotes.asJava),
-                        criteria.getRsiComparison,
-                        criteria.getRelationalOperator,
-                        ScreenType.RSI)) {
+    } else if (compare(rsiCurve(offset), criteria.getRsiComparison, criteria.getRelationalOperator, ScreenType.RSI)) {
       1
     } else {
-      calcRsi(criteria, quotes, offset + 1)
+      calcRsi(criteria, rsiCurve, offset + 1)
     }
   }
 
 
   def calcMacdLevel(criteria: MovingAverageConverganceDiverganceLevelCriteria, quotes: List[HistoricalQuote]): Int = {
-
     val macd = OspreyQuantMath.macdCurves(criteria.getFastPeriod, criteria.getSlowPeriod, criteria.getSignalPeriod, quotes.asJava)
     calcMacdLevel(criteria.getLevel, macd.get("macdSignal"), criteria.getRange, criteria.getRelationalOperator)
-
   }
 
   private def calcMacdLevel(level: Double, macdSignal: util.List[lang.Double], offset: Int, operator: RelationalOperator): Int = {
@@ -52,11 +51,10 @@ object TACalculator {
 
     val isAboveToBelow = criteria.getDirection == CrossDirection.FROM_ABOVE_TO_BELOW
 
-    val macdCurves: util.Map[String, util.List[lang.Double]] = OspreyQuantMath
-                                                               .macdCurves(criteria.getFastPeriod,
-                                                                            criteria.getSlowPeriod,
-                                                                            criteria.getSignalPeriod,
-                                                                            quotes.asJava)
+    val macdCurves: util.Map[String, util.List[lang.Double]] = OspreyQuantMath.macdCurves(criteria.getFastPeriod,
+                                                                                           criteria.getSlowPeriod,
+                                                                                           criteria.getSignalPeriod,
+                                                                                           quotes.asJava)
 
     val macdCurve: util.List[lang.Double] = macdCurves.get("macd")
     val macdSignalCurve = macdCurves.get("macdSignal")
@@ -80,7 +78,6 @@ object TACalculator {
       if (previousComp == 2 || !(((isAboveToBelow && previousComp == 1) || (!isAboveToBelow && previousComp == -1)) && previousComp != comp)) {
         calcMacd(isAboveToBelow, macdCurve, macdSignalCurve, comp, offset - 1)
       } else {
-        //  logger.debug("Successful cross for {} ", () => ScreenType.MACD)
         1
       }
     }

@@ -20,11 +20,6 @@ class AlgoStrategyBacktester(previousCloses: List[HistoricalQuote],
       strategy.run(previousCloses.drop(i), intraDayQuotes.drop(i), Option.empty)
     }
 
-    if (logger.isInfoEnabled) {
-      println("Signals ... ")
-      signals.foreach(x => logger.info(x))
-    }
-
     val filteredSignals = filterSequence(signals.reverse)
 
     if (logger.isInfoEnabled) {
@@ -32,7 +27,7 @@ class AlgoStrategyBacktester(previousCloses: List[HistoricalQuote],
       filteredSignals.foreach(x => logger.info(x))
     }
 
-    AlgoStrategyEvaluator.evaluate(filteredSignals)
+    AlgoStrategyEvaluator evaluate filteredSignals
   }
 
   /**

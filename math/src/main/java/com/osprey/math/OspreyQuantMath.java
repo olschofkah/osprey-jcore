@@ -1,5 +1,6 @@
 package com.osprey.math;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +30,7 @@ import com.osprey.securitymaster.secondary.HistoricalLossQuote;
 public final class OspreyQuantMath {
 	final static Logger logger = LogManager.getLogger(OspreyQuantMath.class);
 
-	private static final int MOVING_AVERAGE_MAGIC_NUMBER = OspreyConstants.MARKET_DAYS_IN_YEAR / 2;
+	public static final int MOVING_AVERAGE_MAGIC_NUMBER = OspreyConstants.MARKET_DAYS_IN_YEAR / 2;
 
 	public static double ema(int p, int historicalOffset, List<HistoricalQuote> prices) {
 		double alpha = 2.0 / (p + 1.0);
@@ -391,6 +392,7 @@ public final class OspreyQuantMath {
 			throw new InsufficientHistoryException();
 		}
 
+		
 		// Build a list of gains and losses for each day and use that to
 		// calculate a moving average.
 		List<HistoricalQuote> upPeriods = new ArrayList<>();

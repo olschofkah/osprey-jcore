@@ -29,6 +29,7 @@ class TALongShortStrategy(val closeLongModel: TAModel,
 
     // TODO consider stop loss trades
     // TODO switch to using intraday quotes
+    // TODO consider risk
 
     val currentQuote = previousCloses.head
     val miniQuote = QuoteMini(currentQuote.getKey.getSymbol,
@@ -61,9 +62,15 @@ class TALongShortStrategy(val closeLongModel: TAModel,
                        intraDayModel: TAModel,
                        previousCloses: List[HistoricalQuote],
                        intraDayQuotes: List[List[HistoricalQuote]]): Double = {
+    val t0 = System.currentTimeMillis()
     val closeRsi = calcRsi(closeModel.rsi, previousCloses, 0)
+    val t1 = System.currentTimeMillis()
     val closeMacd = calcMacd(closeModel.macd, previousCloses)
+    val t2 = System.currentTimeMillis()
     val closeMacdLevel = calcMacdLevel(closeModel.macdLevel, previousCloses)
+    val t3 = System.currentTimeMillis()
+
+    logger.warn(s"RSI Calc Time: ${t1 - t0} | MACD Calc Time ${t2 - t1} | MACD Level Calc Time ${t3 - t2}")
 
     // TODO determine what to do with intraday quote history
     val intraDayRsi = if (intraDayQuotes.nonEmpty) calcRsi(intraDayModel.rsi, intraDayQuotes.head, 0) else 0
