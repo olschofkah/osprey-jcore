@@ -3,12 +3,12 @@ package com.osprey.marketdata.feed;
 import java.util.Map;
 import java.util.Set;
 
-import com.osprey.securitymaster.PricedSecurity;
-import com.osprey.securitymaster.Security;
+import com.osprey.securitymaster.SecurityKey;
+import com.osprey.securitymaster.SecurityQuote;
 
 public interface ILiveSecurityQuoteService {
 
-	public PricedSecurity quote(Security s);
+	public SecurityQuote quote(SecurityKey s);
 
-	public Map<Security, PricedSecurity> quoteBatch(Set<Security> s);
+	public Map<SecurityKey, SecurityQuote> quoteBatch(Set<SecurityKey> s);
 }

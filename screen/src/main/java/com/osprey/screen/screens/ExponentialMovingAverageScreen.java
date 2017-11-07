@@ -2,13 +2,11 @@ package com.osprey.screen.screens;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 import com.osprey.math.OspreyQuantMath;
-import com.osprey.math.result.SMAPair;
+import com.osprey.math.exception.InsufficientHistoryException;
 import com.osprey.screen.criteria.ExponentialMovingAverageCriteria;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class ExponentialMovingAverageScreen implements IStockScreen {
@@ -22,11 +20,15 @@ public class ExponentialMovingAverageScreen implements IStockScreen {
 	}
 
 	@Override
-	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalSecurity> h) {
+	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), h);
-		double ema1 = OspreyQuantMath.ema(smaPair.getSma1(), smaPair.getPeriod1(), h);
-		double ema2 = OspreyQuantMath.ema(smaPair.getSma2(), smaPair.getPeriod2(), h);
+		if (criteria.getPeriod1() - 1 >= sqc.getHistoricalQuotes().size()
+				|| criteria.getPeriod2() - 1 >= sqc.getHistoricalQuotes().size()) {
+			throw new InsufficientHistoryException();
+		}
+
+		double ema1 = OspreyQuantMath.ema(criteria.getPeriod1(), 0, sqc.getHistoricalQuotes());
+		double ema2 = OspreyQuantMath.ema(criteria.getPeriod2(), 0, sqc.getHistoricalQuotes());
 
 		switch (criteria.getRelationalOperator()) {
 		case _EQ:

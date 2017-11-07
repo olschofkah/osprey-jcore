@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>math</groupId>
+	<groupId>com.osprey</groupId>
 	<artifactId>math</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>osprey-math</name>
+	<name>math</name>
 
 	<properties>
 
@@ -12,6 +12,8 @@
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<spring-framework.version>4.2.6.RELEASE</spring-framework.version>
 		<log4j.version>2.6</log4j.version>
@@ -19,7 +21,16 @@
 		<apache.commons.version>3.4</apache.commons.version>
 		<apache.math.version>3.6.1</apache.math.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
+
+		<!-- Osprey Src Versions -->
+		<osprey.integration.version>0.0.1-SNAPSHOT</osprey.integration.version>
+		<osprey.marketdata.version>0.0.1-SNAPSHOT</osprey.marketdata.version>
+		<osprey.math.version>0.0.1-SNAPSHOT</osprey.math.version>
+		<osprey.screen.version>0.0.1-SNAPSHOT</osprey.screen.version>
+		<osprey.securitymaster.version>0.0.1-SNAPSHOT</osprey.securitymaster.version>
+		<osprey.trade.version>0.0.1-SNAPSHOT</osprey.trade.version>
 	</properties>
+
 
 	<dependencies>
 		<dependency>
@@ -28,11 +39,30 @@
 			<version>${junit.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-math3</artifactId>
-		    <version>${apache.math.version}</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>${apache.math.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>securitymaster</artifactId>
+			<version>${osprey.securitymaster.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>trade</artifactId>
+			<version>${osprey.trade.version}</version>
 		</dependency>
 	</dependencies>
 
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

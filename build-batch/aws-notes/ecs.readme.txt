@@ -1,0 +1,23 @@
+A few notes on how to set up an ecs compliant container...
+
+
+1)  Select an ecs ready ec2 container image when building out a container
+
+2)  Make sure to select the IAM role ecsInstanceRole
+
+3)  Select a security group within the default VPC (Virtual Private Cloud)
+
+4)  Select the standard SSH key for access
+
+5)  Create a new cluster if required on https://console.aws.amazon.com/ecs/home?region=us-east-1#/clusters
+
+6)  SSH onto the server and configure ecs to use the desired cluster
+6.1) sudu su
+6.2) stop ecs
+6.3) rm /var/lib/ecs/data/*
+6.4) create a config file in /etc/ecs/ecs.config
+
+ECS_CLUSTER=server-cluster
+ECS_CHECKPOINT=true
+
+6.5) start ecs

@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.osprey.marketdata.feed.mock.MockMarketDataFeedService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = MarketDataDevConfiguration.class)
+@SpringApplicationConfiguration(classes = MarketDataTestConfiguration.class)
 public class MarketdataApplicationTests {
 
 	final static Logger logger = LogManager.getLogger(MockMarketDataFeedService.class);

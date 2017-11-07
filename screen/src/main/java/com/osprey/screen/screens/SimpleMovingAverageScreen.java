@@ -2,13 +2,11 @@ package com.osprey.screen.screens;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 
 import com.osprey.math.OspreyQuantMath;
 import com.osprey.math.result.SMAPair;
 import com.osprey.screen.criteria.SimpleMovingAverageCriteria;
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 import com.osprey.securitymaster.constants.OspreyConstants;
 
 public class SimpleMovingAverageScreen implements IStockScreen {
@@ -22,9 +20,10 @@ public class SimpleMovingAverageScreen implements IStockScreen {
 	}
 
 	@Override
-	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalSecurity> h) {
+	public IStockScreen doScreen(SecurityQuoteContainer sqc) {
 
-		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), h);
+		SMAPair smaPair = OspreyQuantMath.smaPair(criteria.getPeriod1(), criteria.getPeriod2(), 0, 
+				sqc.getHistoricalQuotes());
 		double sma1 = smaPair.getSma1();
 		double sma2 = smaPair.getSma2();
 

@@ -1,13 +1,10 @@
 package com.osprey.screen.screens;
 
-import java.util.List;
-
-import com.osprey.securitymaster.FundamentalPricedSecurity;
-import com.osprey.securitymaster.HistoricalSecurity;
+import com.osprey.securitymaster.SecurityQuoteContainer;
 
 public interface IStockScreen {
 
-	public IStockScreen doScreen(FundamentalPricedSecurity s, List<HistoricalSecurity> h);
+	public IStockScreen doScreen(SecurityQuoteContainer quoteContainer);
 
 	public boolean passed();
 }

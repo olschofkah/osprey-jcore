@@ -5,9 +5,10 @@
      to make all loggers asynchronous. -->
  
 <Configuration status="INFO">
+
   <Appenders>
     <!-- Async Loggers will auto-flush in batches, so switch off immediateFlush. -->
-    <RandomAccessFile name="RandomAccessFile" fileName="async.log" immediateFlush="false" append="true">
+    <RandomAccessFile name="RandomAccessFile" fileName="async.log" immediateFlush="false" append="false">
       <PatternLayout>
         <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
       </PatternLayout>

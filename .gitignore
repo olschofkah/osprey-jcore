@@ -11,11 +11,14 @@ tmp/
 *.bak
 *.swp
 *~.nib
+*.log
 local.properties
 #.settings/
 .loadpath
 .recommenders
 Servers/
+Data/
+data/
 
 # Eclipse Core
 #.project

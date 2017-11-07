@@ -1,8 +1,11 @@
 package com.osprey.screen.criteria;
 
-public class PreviousClosePriceCriteria implements IStockScreenCriteria {
+import com.osprey.screen.criteria.constants.RelationalOperator;
+import com.osprey.screen.criteria.constants.ScreenType;
 
-	private StockScreenType type;
+public class PreviousClosePriceCriteria implements IScreenCriteria {
+
+	private ScreenType type;
 	private double price;
 	private RelationalOperator relationalOperator;
 
@@ -11,12 +14,12 @@ public class PreviousClosePriceCriteria implements IStockScreenCriteria {
 	}
 
 	public PreviousClosePriceCriteria(double price, RelationalOperator operator) {
-		type = StockScreenType.PRICE;
+		type = ScreenType.PRICE;
 		this.price = price;
 		this.relationalOperator = operator;
 	}
 
-	public StockScreenType getType() {
+	public ScreenType getType() {
 		return type;
 	}
 

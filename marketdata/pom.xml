@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example.marketdata</groupId>
+	<groupId>com.osprey</groupId>
 	<artifactId>marketdata</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -25,7 +25,24 @@
 		<log4j.version>2.6</log4j.version>
 		<junit.version>4.12</junit.version>
 		<apache.commons.version>3.4</apache.commons.version>
+		<apache.net.version>3.5</apache.net.version>
+		<apache.io.version>2.5</apache.io.version>
+		<apache.httpclient.version>4.5.2</apache.httpclient.version>
+		<apache.httpcore.version>4.4.4</apache.httpcore.version>
+		<apache.codec.version>1.10</apache.codec.version>
 		<lmax.disruptor.version>3.3.4</lmax.disruptor.version>
+
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+
+
+		<!-- Osprey Src Versions -->
+		<osprey.integration.version>0.0.1-SNAPSHOT</osprey.integration.version>
+		<osprey.marketdata.version>0.0.1-SNAPSHOT</osprey.marketdata.version>
+		<osprey.math.version>0.0.1-SNAPSHOT</osprey.math.version>
+		<osprey.screen.version>0.0.1-SNAPSHOT</osprey.screen.version>
+		<osprey.securitymaster.version>0.0.1-SNAPSHOT</osprey.securitymaster.version>
+		<osprey.trade.version>0.0.1-SNAPSHOT</osprey.trade.version>
 	</properties>
 
 
@@ -34,10 +51,8 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -45,9 +60,19 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$-->
+			<version>${junit.version}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
@@ -57,15 +82,27 @@
 		</dependency>
 
 		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>${apache.net.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${apache.io.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$-->
+			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$-->
+			<version>${log4j.version}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
@@ -80,16 +117,43 @@
 			<version>${lmax.disruptor.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jersey</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+		</dependency>
+
+		<!-- Osprey Dependencies -->
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>math</artifactId>
+			<version>${osprey.math.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>securitymaster</artifactId>
+			<version>${osprey.securitymaster.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>trade</artifactId>
+			<version>${osprey.trade.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.osprey</groupId>
+			<artifactId>screen</artifactId>
+			<version>${osprey.screen.version}</version>
+		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 
 
 </project>
