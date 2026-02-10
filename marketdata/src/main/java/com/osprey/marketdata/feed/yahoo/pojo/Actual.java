@@ -4,7 +4,7 @@ package com.osprey.marketdata.feed.yahoo.pojo;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.Generated;
+import jakarta.annotation.Generated;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

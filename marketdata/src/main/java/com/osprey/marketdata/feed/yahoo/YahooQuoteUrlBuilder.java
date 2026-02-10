@@ -1,10 +1,7 @@
 package com.osprey.marketdata.feed.yahoo;
 
-import javax.annotation.concurrent.NotThreadSafe;
-
 import org.springframework.beans.factory.annotation.Value;
 
-@NotThreadSafe
 public class YahooQuoteUrlBuilder {
 
 	@Value("${yahoo.quote.stock.url}")
